@@ -42,6 +42,8 @@ Bundle 'sjl/gundo.vim'
 " autocmd FileType html,php,xml :source ~/.vim/bundle/xmledit/ftplugin/xml.vim 
 Bundle 'soh335/vim-symfony'
 Bundle 'sukima/xmledit'
+Bundle 'tpope/vim-fugitive'
+Bundle 'thinca/vim-quickrun.git'
 
 source $VIMRUNTIME/macros/matchit.vim
 
