@@ -1,0 +1,19 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use File::Spec;
+
+my $homedir = $ENV{'HOME'} || die "Environment variable HOME isn't set";
+foreach (grep { !/^\.{1,2}$/ && !/^.git$/ } glob(".*")) {
+    my $f = File::Spec->catfile($homedir, $_);
+    my $t = File::Spec->abs2rel(File::Spec->rel2abs($_), $homedir);
+    print "Creating '$f'";
+    if (-e $f) {
+        print ": already exists";
+    } else {
+        symlink($t, $f) || print ": cannot create"
+    }
+    print "\n";
+}
