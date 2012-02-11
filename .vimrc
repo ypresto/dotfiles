@@ -19,6 +19,7 @@ noremap j gj
 noremap k gk
 inoremap <C-a> <Home>
 " inoremap <C-e> <End>
+inoremap <C-d> <Del>
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>
@@ -26,17 +27,16 @@ inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
 inoremap <expr> <C-x><C-f>  neocomplcache#manual_filename_complete()
 inoremap <expr> <C-j>  &filetype == 'vim' ? "\<C-x>\<C-v>\<C-p>" : neocomplcache#manual_omni_complete()
 " C-nでneocomplcache補完
-inoremap <expr><C-n>  pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
+inoremap <expr> <C-n>  pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
 " C-pでkeyword補完
-inoremap <expr><C-p> pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
+inoremap <expr> <C-p> pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
 " 補完候補が表示されている場合は確定。そうでない場合は改行
-inoremap <expr><CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
-" 補完をキャンセル
-inoremap <expr><C-e>  pumvisible() ? neocomplcache#close_popup() : "<End>"
+inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
+" 補完をキャンセル＋End
+inoremap <expr> <C-e>  pumvisible() ? neocomplcache#close_popup() : "<End>"
 " not functioning
 inoremap <expr> <TAB> pumvisible() ? "\<Down>" : "\<TAB>"
 inoremap <expr> <S-TAB> pumvisible() ? "\<Up>" : "\<S-TAB>"
-inoremap <expr><C-e>  neocomplcache#close_popup()
 nnoremap ,m '
 nnoremap ,k '
 
@@ -87,6 +87,7 @@ Bundle 'ShowMarks'
 Bundle 'errormarker.vim'
 
 Bundle 'Shougo/neocomplcache'
+Bundle 'ujihisa/neco-look'
 let g:neocomplcache_enable_at_startup = 1
 let g:NeoComplCache_SmartCase = 1
 let g:NeoComplCache_EnableCamelCaseCompletion = 1
@@ -168,14 +169,6 @@ set undodir=~/.vim/undo
 set nobackup
 " set backupdir=~/.vim/backup
 
-"
-" IMEs
-"
-" Bundle 'anyakichi/skk.vim'
-" original: Bundle 'tyru/skk.vim'
-" Bundle 'mattn/webapi-vim'
-" Bundle 'vimtaku/vim-mlh'
-
 " 
 " Filetype specific config
 " 
@@ -210,12 +203,12 @@ Bundle 'soh335/vim-symfony'
 autocmd FileType php set omnifunc=phpcomplete
 if has("autocmd") && exists("+omnifunc")
 autocmd Filetype * 
-\ if &omnifunc == "" | 
-\   setlocal omnifunc=syntaxcomplete#Complete | 
-\ endif 
+\   if &omnifunc == "" | 
+\       setlocal omnifunc=syntaxcomplete#Complete | 
+\   endif 
 endif
 
-" :make to check perl syntax, :cw to quickfix
+"jkiadfljk:make to check perl syntax, :cw to quickfix
 autocmd FileType perl,cgi :compiler perl
 
 Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
@@ -223,20 +216,24 @@ Bundle 'AutomaticTexPlugin'
 
 autocmd BufNewFile,BufRead *.go :colorscheme go
 
-" inoremap <Leader>a <Home>
-if 0
+"
+" IMEs
+"
 
-inoremap <C-a> <Home>
-inoremap <C-e> <End>
-inoremap <C-d> <Del>
- 
-inoremap <C-h> <Left>
-inoremap <C-j> <Down>
-inoremap <C-k> <Up>
-inoremap <C-l> <Right>
+" Bundle 'anyakichi/skk.vim'
+" original: Bundle 'tyru/skk.vim'
 
-noremap j gj
-noremap k gk
-noremap <C-j> i<CR>
+Bundle 'vimtaku/vim-mlh'
+Bundle 'mattn/webapi-vim'
 
-endif
+Bundle 'tyru/eskk.vim'
+function! s:eskk_initial_pre()
+    let t = eskk#table#new('rom_to_hira*', 'rom_to_hira')
+    call t.add_map(',', '，')
+    call t.add_map('.', '．') 
+    call eskk#register_mode_table('hira', t)
+    let t = eskk#table#new('rom_to_kata*', 'rom_to_kata')
+    call t.add_map(',', '，')
+    call t.add_map('.', '．')
+    call eskk#register_mode_table('kata', t)
+endfunction
