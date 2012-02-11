@@ -39,6 +39,7 @@ inoremap <expr> <TAB> pumvisible() ? "\<Down>" : "\<TAB>"
 inoremap <expr> <S-TAB> pumvisible() ? "\<Up>" : "\<S-TAB>"
 nnoremap ,m '
 nnoremap ,k '
+inoremap <C-;> <Plug>(eskk:toggle)
 
 " Indentation / Tab
 set tabstop=8
@@ -215,6 +216,7 @@ Bundle 'vimtaku/vim-mlh'
 Bundle 'mattn/webapi-vim'
 
 Bundle 'tyru/eskk.vim'
+let g:eskk#no_default_mappings = 1
 function! s:eskk_initial_pre()
     let t = eskk#table#new('rom_to_hira*', 'rom_to_hira')
     call t.add_map(',', '，')
