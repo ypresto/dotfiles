@@ -77,7 +77,6 @@ Bundle 'kana/vim-fakeclip'
 Bundle 'Shougo/vimshell'
 Bundle 'Shougo/vimproc'
 Bundle 'tpope/vim-fugitive'
-Bundle 'vim-scripts/ManPageView'
 Bundle 'ShowMarks'
 Bundle 'errormarker.vim'
 
