@@ -103,18 +103,6 @@ let g:NeoComplCache_CachingPercentInStatusline = 1
 " \}
 let g:neocomplcache_max_list = 10
 
-Bundle 'buftabs'
-" バッファタブにパスを省略してファイル名のみ表示する
-let g:buftabs_only_basename=1
-" バッファタブをステータスライン内に表示する
-let g:buftabs_in_statusline=1
-" 現在のバッファをハイライト
-let g:buftabs_active_highlight_group="Visual"
-" ステータスライン
-set statusline=%=\ [%{(&fenc!=''?&fenc:&enc)}/%{&ff}]\[%Y]\[%04l,%04v][%p%%]
-" ステータスラインを常に表示
-set laststatus=2
-
 Bundle 'Shougo/unite.vim'
 Bundle 'tacroe/unite-mark'
 Bundle 'h1mesuke/unite-outline'
