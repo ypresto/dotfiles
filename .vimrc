@@ -46,7 +46,7 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 set autoindent
-autocmd FileType html,css,javascript set shiftwidth=2 softtabstop=2
+autocmd FileType html,css,javascript,tex set shiftwidth=2 softtabstop=2
 autocmd FileType make set softtabstop=8 shiftwidth=8 noexpandtab
 
 " Highlighting
