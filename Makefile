@@ -2,11 +2,12 @@ all:
 	echo "call 'make install' or 'make update'"
 
 install:
-	cd .vim/bundle; \
-	rm -fr vundle; \
+	cd .vim/bundle && \
+	rm -fr vundle && \
 	git clone git://github.com/gmarik/vundle.git
 	vim -c ":BundleInstall"
 	make vimproc
+	./mksymlinks
 
 update:
 	vim -c ":BundleInstall!"
@@ -15,5 +16,5 @@ update:
 	./mksymlinks
 
 vimproc:
-	cd .vim/bundle/vimproc; \
+	cd .vim/bundle/vimproc && \
 	make -fmake_gcc.mak
