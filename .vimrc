@@ -40,11 +40,14 @@ inoremap <expr><C-e>  neocomplcache#close_popup()
 nnoremap ,m '
 nnoremap ,k '
 
+" Indentation / Tab
 set tabstop=8
 set shiftwidth=4
 set softtabstop=4
 set expandtab
+set autoindent
 autocmd FileType html,css,javascript set shiftwidth=2 softtabstop=2
+autocmd FileType make set softtabstop=8 shiftwidth=8 noexpandtab
 
 " Highlighting
 " カーソル行をハイライト
@@ -59,6 +62,9 @@ augroup END
 :hi clear CursorLine
 :hi CursorLine gui=underline
 highlight CursorLine ctermbg=black guibg=black
+
+" Folding
+Bundle 'python_ifold'
 
 "
 " Extensions
