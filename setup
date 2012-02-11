@@ -2,11 +2,12 @@
 
 ./mksymlinks
 
-pushd .vim
+pushd .vim/bundle
 rm -fr vundle
 git clone git://github.com/gmarik/vundle.git
 popd
 
 vim -c ":BundleInstall"
+vim -c ":BundleClean"
 
 echo "Now you need build vimproc in .vim/bundle/vimproc"
