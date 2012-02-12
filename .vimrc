@@ -4,6 +4,9 @@ Bundle 'gmarik/vundle'
 
 filetype plugin on
 
+let eskk_enabled = 0
+let skk_enabled = 1
+
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,iso-2022-jp-3,iso-2022-jp,eucjp-ms,euc-jisx0213,euc-jp,utf-8,sjis,cp932
@@ -39,7 +42,12 @@ inoremap <expr> <TAB> pumvisible() ? "\<Down>" : "\<TAB>"
 inoremap <expr> <S-TAB> pumvisible() ? "\<Up>" : "\<S-TAB>"
 nnoremap ,m '
 nnoremap ,k '
-inoremap <C-;> <Plug>(eskk:toggle)
+if eskk_enabled
+	inoremap <expr> <C-c> eskk#toggle()
+endif
+if skk_enabled
+	let g:skk_control_j_key = '<C-c>'
+endif
 
 " Indentation / Tab
 set tabstop=8
@@ -209,21 +217,34 @@ autocmd BufNewFile,BufRead *.go :colorscheme go
 " IMEs
 "
 
-" Bundle 'anyakichi/skk.vim'
-" original: Bundle 'tyru/skk.vim'
-
 Bundle 'vimtaku/vim-mlh'
 Bundle 'mattn/webapi-vim'
 
-Bundle 'tyru/eskk.vim'
-let g:eskk#no_default_mappings = 1
-function! s:eskk_initial_pre()
-    let t = eskk#table#new('rom_to_hira*', 'rom_to_hira')
-    call t.add_map(',', '，')
-    call t.add_map('.', '．') 
-    call eskk#register_mode_table('hira', t)
-    let t = eskk#table#new('rom_to_kata*', 'rom_to_kata')
-    call t.add_map(',', '，')
-    call t.add_map('.', '．')
-    call eskk#register_mode_table('kata', t)
-endfunction
+if eskk_enabled
+    Bundle 'tyru/eskk.vim'
+    let g:eskk#no_default_mappings = 1
+    let g:eskk#large_dictionary = { 'path': "~/.vim/dict/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp', }
+    let g:eskk#enable_completion = 1
+    " function! s:eskk_initial_pre()
+    "     let t = eskk#table#new('rom_to_hira*', 'rom_to_hira')
+    "     call t.add_map(',', '，')
+    "     call t.add_map('.', '．') 
+    "     call eskk#register_mode_table('hira', t)
+    "     let t = eskk#table#new('rom_to_kata*', 'rom_to_kata')
+    "     call t.add_map(',', '，')
+    "     call t.add_map('.', '．')
+    "     call eskk#register_mode_table('kata', t)
+    " endfunction
+endif
+
+if skk_enabled
+    Bundle 'anyakichi/skk.vim'
+    " original: Bundle 'tyru/skk.vim'
+    let g:skk_jisyo = '~/.skk-jisyo'
+    let g:skk_large_jisyo = '~/.vim/dict/SKK-JISYO.L'
+    let g:skk_auto_save_jisyo = 1
+    let g:skk_keep_state = 0
+    let g:skk_egg_like_newline = 1
+    let g:skk_show_annotation = 1
+    let g:skk_use_face = 1
+endif
