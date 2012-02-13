@@ -152,9 +152,9 @@ Bundle 'kana/vim-textobj-syntax'
 Bundle 'kana/vim-textobj-user'
 
 " Snipmate settings
-Bundle "MarcWeber/vim-addon-mw-utils"
-Bundle "tomtom/tlib_vim"
-Bundle "snipmate-snippets"
+Bundle 'MarcWeber/vim-addon-mw-utils'
+Bundle 'tomtom/tlib_vim'
+Bundle 'snipmate-snippets'
 Bundle 'garbas/vim-snipmate'
 
 " Undo/Backup settings
@@ -189,7 +189,7 @@ let g:user_zen_expandabbr_key = '<c-c>'
 
 " autocmd BufFilePost Manpageview* silent execute ":NeoComplCacheCachingBuffer"
 
-Bundle "othree/html5.vim"
+Bundle 'othree/html5.vim'
 Bundle 'hail2u/vim-css3-syntax'
 " Bundle 'rstacruz/sparkup'
 Bundle 'sukima/xmledit'
