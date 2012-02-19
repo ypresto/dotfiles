@@ -3,16 +3,23 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 filetype plugin on
+filetype indent on
 
 let eskk_enabled = 0
 let skk_enabled = 1
 
 set encoding=utf-8
-set fileencoding=utf-8
 set fileencodings=ucs-bom,iso-2022-jp-3,iso-2022-jp,eucjp-ms,euc-jisx0213,euc-jp,utf-8,sjis,cp932
 set number
 set incsearch
 set hlsearch
+set laststatus=2 " always show statusline
+set showcmd
+set wildmenu " enhanced commandline completion
+set nolist
+set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:% "eol:
+
+command! FullPath :echo expand("")
 
 "
 " Editing config
@@ -20,11 +27,17 @@ set hlsearch
 
 noremap j gj
 noremap k gk
+onoremap q aW
 inoremap <C-a> <Home>
 " inoremap <C-e> <End>
 inoremap <C-d> <Del>
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
+" see :help map-alt-keys
+" inoremap <A-j> <ESC>l
+" inoremap <A-k> <ESC>l
+" inoremap <A-h> <ESC>l
+" inoremap <A-l> <ESC>l
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>
 inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
 inoremap <expr> <C-x><C-f>  neocomplcache#manual_filename_complete()
@@ -37,17 +50,24 @@ inoremap <expr> <C-p> pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
 inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
 " 補完をキャンセル＋End
 inoremap <expr> <C-e>  pumvisible() ? neocomplcache#close_popup() : "<End>"
-" not functioning
-inoremap <expr> <TAB> pumvisible() ? "\<Down>" : "\<TAB>"
-inoremap <expr> <S-TAB> pumvisible() ? "\<Up>" : "\<S-TAB>"
+" conflicts with delimitMate
+" inoremap <expr> <TAB> pumvisible() ? "\<Down>" : "\<TAB>"
+" inoremap <expr> <S-TAB> pumvisible() ? "\<Up>" : "\<S-TAB>"
 nnoremap ,m '
-nnoremap ,k '
+nnoremap ,k `
+nnoremap ,q :cwin<CR>
+" nnoremap ; :
+" nnoremap : ;
+" noremap <silent> <C-b>n :next<CR>
+" noremap <silent> <C-b>p :prev<CR>
 if eskk_enabled
-	inoremap <expr> <C-c> eskk#toggle()
+	inoremap <expr> <C-l> eskk#toggle()
 endif
 if skk_enabled
-	let g:skk_control_j_key = '<C-c>'
+	let g:skk_control_j_key = '<C-l>'
 endif
+let g:user_zen_leader_key = '<C-y>'
+let g:user_zen_expandabbr_key = '<C-y><C-y>'
 
 " Indentation / Tab
 set tabstop=8
@@ -73,30 +93,40 @@ augroup END
 highlight CursorLine ctermbg=black guibg=black
 
 " Folding
-Bundle 'python_ifold'
+Bundle 'python_fold'
 
 "
 " Extensions
 "
 
-runtime macros/matchit.vim
-Bundle 'tpope/vim-surround'
-" Bundle 'kana/vim-smartchr'
-" to use smartchr: noremap <expr> _ smartchr#one_of(' <- ', '_')
-" Bundle 'scrooloose/nerdcommenter'
+" TODO: To be used
 Bundle 'thinca/vim-qfreplace'
-Bundle 'thinca/vim-ref'
-Bundle 'Lokaltog/vim-easymotion'
 Bundle 'thinca/vim-quickrun'
 Bundle 'kana/vim-fakeclip'
+Bundle 'TaskList.vim'
+" Bundle 'scrooloose/nerdcommenter'
+" Bundle 'ervandew/supertab'
+
+runtime macros/matchit.vim
+Bundle 'tpope/vim-surround'
+Bundle 'Lokaltog/vim-easymotion'
+Bundle 'thinca/vim-ref'
 Bundle 'Shougo/vimshell'
 Bundle 'Shougo/vimproc'
 Bundle 'tpope/vim-fugitive'
 Bundle 'ShowMarks'
 Bundle 'errormarker.vim'
 
+" MiniBuf settings
+" Bundle 'fholgado/minibufexpl.vim' " conflicts with unite-outline
+" let g:miniBufExplMapWindowNavVim = 1
+" let g:miniBufExplMapWindowNavArrows = 1
+" let g:miniBufExplMapCTabSwitchBuffs = 1
+" let g:miniBufExplModSelTarget = 1
+
+" neocomplcache settings
 Bundle 'Shougo/neocomplcache'
-Bundle 'ujihisa/neco-look'
+" Bundle 'ujihisa/neco-look' " too heavy
 let g:neocomplcache_enable_at_startup = 1
 let g:NeoComplCache_SmartCase = 1
 let g:NeoComplCache_EnableCamelCaseCompletion = 1
@@ -106,29 +136,51 @@ let g:NeoComplCache_EnableUnderbarCompletion = 1
 " let g:NeoComplCache_ManualCompletionStartLength = 0
 let g:NeoComplCache_CachingPercentInStatusline = 1
 " let g:NeoComplCache_PluginCompleteLength = {
-" \   'snipMate_complete' : 1,
+" \   'snipmate_complete' : 1,
 " \   'keyword_complete'  : 2,
 " \   'syntax_complete'   : 2
 " \}
-let g:neocomplcache_max_list = 10
+let g:neocomplcache_max_list = 100
+if !exists('g:neocomplcache_keyword_patterns')
+   let g:neocomplcache_keyword_patterns = {}
+endif
+let g:neocomplcache_keyword_patterns['default'] = '\h\w*' " avoid japanese keywords
 
+" unite.vim settings
 Bundle 'Shougo/unite.vim'
 Bundle 'tacroe/unite-mark'
 Bundle 'h1mesuke/unite-outline'
 " 入力モードで開始する
 " let g:unite_enable_start_insert=1
+nnoremap ,u: :Unite -direction=botright -auto-resize 
+nnoremap ,U: :Unite -create -no-quit -toggle  -vertical -direction=botright -winwidth=30 
 " バッファ一覧
-nnoremap <silent> ,ub :<C-u>Unite buffer<CR>
+nmap ,ub ,u:buffer<CR>
+nmap ,Ub ,U:buffer<CR>
 " ファイル一覧
-nnoremap <silent> ,uf :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+nmap ,uf :UniteWithBufferDir -direction=botright -auto-resize -auto-preview -buffer-name=files file<CR>
+nmap ,Uf :UniteWithCurrentDir -create -no-quit -toggle  -vertical -direction=botright -winwidth=30 -buffer-name=files file<CR>
 " レジスタ一覧
-nnoremap <silent> ,ur :<C-u>Unite -buffer-name=register register<CR>
+nmap ,ur :Unite -auto-preview -buffer-name=register register<CR>
 " 最近使用したファイル一覧
-nnoremap <silent> ,us :<C-u>Unite file_mru<CR>
+nmap ,us ,u:file_mru<CR>
+nmap ,Us ,U:file_mru<CR>
 " 全部乗せ
-nnoremap <silent> ,ua :<C-u>UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
+nmap ,ua :UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
 " unite-mark
-nnoremap <silent> ,um :<C-u>Unite mark<CR>
+nmap ,um ,u:-auto-preview mark<CR>
+nmap ,Um ,U:-auto-preview mark<CR>
+" unite-outline
+nmap ,uo ,u:-auto-preview outline<CR>
+nmap ,Uo ,U:-auto-preview outline<CR>
+" history/yankの有効化
+let g:unite_source_history_yank_enable = 1
+nmap ,uy ,u:-auto-resize -direction=botright history/yank<CR>
+nmap ,Uy ,U:-auto-resize -direction=botright history/yank<CR>
+" others
+" nnoremap <silent> ,Uo :40vnew<CR><C-w>n:Unite -create -no-quit -no-split outline<CR><C-w>j:Unite -create -no-quit -no-split buffer<CR>
+" nnoremap <silent> ,uO :Unite -create -no-quit -no-split outline<CR>
+
 " ウィンドウを分割して開く
 au FileType unite nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
 au FileType unite inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
@@ -150,12 +202,27 @@ Bundle 'kana/vim-textobj-jabraces'
 Bundle 'kana/vim-textobj-lastpat'
 Bundle 'kana/vim-textobj-syntax'
 Bundle 'kana/vim-textobj-user'
+Bundle 'thinca/vim-textobj-comment'
 
 " Snipmate settings
+" XXX: freezes with inputting {<TAB>}
 Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
 Bundle 'snipmate-snippets'
 Bundle 'garbas/vim-snipmate'
+
+" delimitMate settings
+Bundle 'Raimondi/delimitMate'
+
+" smartchr settings
+Bundle 'kana/vim-smartchr'
+if skk_enabled || eskk_enabled
+    autocmd BufNewFile,BufRead *.tex,*.txt inoremap <expr> , smartchr#one_of(',', '，')
+    autocmd BufNewFile,BufRead *.tex,*.txt inoremap <expr> . smartchr#one_of('.', '．')
+else
+    inoremap <expr> , smartchr#one_of(', ', ',')
+endif
+autocmd FileType perl inoremap <expr> : smartchr#one_of(': ', '::', ' => ')
 
 " Undo/Backup settings
 Bundle 'sjl/gundo.vim'
@@ -185,7 +252,6 @@ let g:user_zen_settings = {
 \   'lang': "ja"
 \}
 let g:use_zen_complete_tag = 1
-let g:user_zen_expandabbr_key = '<c-c>'
 
 " autocmd BufFilePost Manpageview* silent execute ":NeoComplCacheCachingBuffer"
 
@@ -208,8 +274,8 @@ endif
 "jkiadfljk:make to check perl syntax, :cw to quickfix
 autocmd FileType perl,cgi :compiler perl
 
-Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
-Bundle 'AutomaticTexPlugin'
+" Bundle 'git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex'
+Bundle 'AutomaticLaTexPlugin'
 
 autocmd BufNewFile,BufRead *.go :colorscheme go
 
