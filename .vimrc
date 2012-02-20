@@ -121,6 +121,8 @@ Bundle 'Shougo/vimproc'
 Bundle 'tpope/vim-fugitive'
 Bundle 'ShowMarks'
 Bundle 'errormarker.vim'
+Bundle 'mattn/gist-vim'
+Bundle 'sudo.vim'
 
 " MiniBuf settings
 " Bundle 'fholgado/minibufexpl.vim' " conflicts with unite-outline
@@ -288,7 +290,7 @@ autocmd BufNewFile,BufRead *.go :colorscheme go
 " IMEs
 "
 
-Bundle 'vimtaku/vim-mlh'
+" Bundle 'vimtaku/vim-mlh'
 Bundle 'mattn/webapi-vim'
 
 if eskk_enabled
