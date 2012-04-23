@@ -130,6 +130,8 @@ Bundle 'kana/vim-fakeclip'
 Bundle 'TaskList.vim'
 " Bundle 'scrooloose/nerdcommenter'
 " Bundle 'ervandew/supertab'
+Bundle 'scrooloose/nerdtree'
+Bundle 'Align'
 
 runtime macros/matchit.vim
 Bundle 'tpope/vim-surround'
