@@ -31,7 +31,9 @@ command! FullPath :echo expand("%")
 "
 
 noremap j gj
+noremap gj j
 noremap k gk
+noremap gk k
 onoremap q aW
 inoremap <C-a> <Home>
 " inoremap <C-e> <End>
