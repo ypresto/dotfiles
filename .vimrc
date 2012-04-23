@@ -23,6 +23,7 @@ if skk_enabled
 else
     set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 endif
+highlight SignColumn ctermfg=white ctermbg=black cterm=none
 
 command! FullPath :echo expand("%")
 
@@ -86,7 +87,6 @@ autocmd FileType html,css,javascript,tex set shiftwidth=2 softtabstop=2
 autocmd FileType make set softtabstop=8 shiftwidth=8 noexpandtab
 
 " Highlighting
-" カーソル行をハイライト
 set cursorline
 " カレントウィンドウにのみ罫線を引く
 augroup cch
@@ -94,10 +94,23 @@ augroup cch
     autocmd WinLeave * set nocursorline
     autocmd WinEnter,BufRead * set cursorline
 augroup END
-
-:hi clear CursorLine
-:hi CursorLine gui=underline
+highlight clear CursorLine
 highlight CursorLine ctermbg=black guibg=black
+
+" ZenkakuSpace
+function! ZenkakuSpace()
+  highlight ZenkakuSpace cterm=underline ctermfg=darkgrey gui=underline guifg=darkgrey
+endfunction
+if has('syntax')
+  augroup ZenkakuSpace
+    autocmd!
+    " ZenkakuSpaceをカラーファイルで設定するなら次の行は削除
+    autocmd ColorScheme       * call ZenkakuSpace()
+    " 全角スペースのハイライト指定
+    autocmd VimEnter,WinEnter * match ZenkakuSpace /　/
+  augroup END
+  call ZenkakuSpace()
+endif
 
 " Folding
 Bundle 'python_fold'
