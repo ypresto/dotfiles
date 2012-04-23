@@ -132,6 +132,7 @@ Bundle 'TaskList.vim'
 " Bundle 'ervandew/supertab'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Align'
+Bundle 'FuzzyFinder'
 
 runtime macros/matchit.vim
 Bundle 'tpope/vim-surround'
