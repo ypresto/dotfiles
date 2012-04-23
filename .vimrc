@@ -42,10 +42,7 @@ inoremap <C-d> <Del>
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 " see :help map-alt-keys
-" inoremap <A-j> <ESC>l
-" inoremap <A-k> <ESC>l
-" inoremap <A-h> <ESC>l
-" inoremap <A-l> <ESC>l
+inoremap <silent> <C-[> <Esc>
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>
 inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
 inoremap <expr> <C-x><C-f>  neocomplcache#manual_filename_complete()
@@ -115,12 +112,19 @@ endif
 " Folding
 Bundle 'python_fold'
 
+" QuickFix
+Bundle 'dannyob/quickfixstatus'
+Bundle 'thinca/vim-qfreplace'
+command! -nargs=+ QfArgs let b:quickrun_config = {'args': substitute(<f-args>, ',', ' ', 'g')}
+
+" Templates
+autocmd BufNewFile *.pl 0r $HOME/.vim/template/perl.pl
+
 "
 " Extensions
 "
 
 " TODO: To be used
-Bundle 'thinca/vim-qfreplace'
 Bundle 'thinca/vim-quickrun'
 Bundle 'kana/vim-fakeclip'
 Bundle 'TaskList.vim'
@@ -135,9 +139,9 @@ Bundle 'Shougo/vimshell'
 Bundle 'Shougo/vimproc'
 Bundle 'tpope/vim-fugitive'
 Bundle 'ShowMarks'
-Bundle 'errormarker.vim'
 Bundle 'mattn/gist-vim'
 Bundle 'sudo.vim'
+Bundle 'scrooloose/syntastic'
 
 " MiniBuf settings
 " Bundle 'fholgado/minibufexpl.vim' " conflicts with unite-outline
@@ -145,6 +149,13 @@ Bundle 'sudo.vim'
 " let g:miniBufExplMapWindowNavArrows = 1
 " let g:miniBufExplMapCTabSwitchBuffs = 1
 " let g:miniBufExplModSelTarget = 1
+
+" errormarker.vim settings
+Bundle 'errormarker.vim'
+let g:errormarker_errorgroup = "my_error_mark"
+let g:errormarker_warninggroup = "my_warning_mark"
+highlight my_error_mark ctermbg=red cterm=none
+highlight my_warning_mark ctermbg=blue cterm=none
 
 " neocomplcache settings
 Bundle 'Shougo/neocomplcache'
