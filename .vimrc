@@ -31,6 +31,7 @@ command! FullPath :echo expand("%")
 " Editing config
 "
 
+noremap ZJ :w<CR>
 noremap j gj
 noremap gj j
 noremap k gk
@@ -60,7 +61,10 @@ inoremap <expr> <C-e>  pumvisible() ? neocomplcache#close_popup() : "<End>"
 " inoremap <expr> <S-TAB> pumvisible() ? "\<Up>" : "\<S-TAB>"
 nnoremap ,m '
 nnoremap ,k `
-nnoremap ,q :cwin<CR>
+nnoremap ,c :cwin<CR>
+nnoremap ,C :cclose<CR>
+nnoremap ,l :lwin<CR>
+nnoremap ,L :lclose<CR>
 " nnoremap ; :
 " nnoremap : ;
 " noremap <silent> <C-b>n :next<CR>
@@ -177,11 +181,14 @@ Bundle 'scrooloose/syntastic'
 " let g:miniBufExplModSelTarget = 1
 
 " errormarker.vim settings
+if 0
 Bundle 'errormarker.vim'
 let g:errormarker_errorgroup = "my_error_mark"
 let g:errormarker_warninggroup = "my_warning_mark"
 highlight my_error_mark ctermbg=red cterm=none
 highlight my_warning_mark ctermbg=blue cterm=none
+autocmd BufWritePost *.pl,*.pm,*.t silent make
+endif
 
 " neocomplcache settings
 Bundle 'Shougo/neocomplcache'
