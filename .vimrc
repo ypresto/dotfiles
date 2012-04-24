@@ -120,6 +120,27 @@ command! -nargs=+ QfArgs let b:quickrun_config = {'args': substitute(<f-args>, '
 " Templates
 autocmd BufNewFile *.pl 0r $HOME/.vim/template/perl.pl
 
+" Braces
+inoremap <expr><CR> <SID>BlockCompl()
+function! s:BlockCompl()
+    if col('.') == col('$')
+        let l = getline('.')
+        if l =~ '{$'
+            return "\<CR>}\<Up>\<End>\<CR>"
+        elseif l =~ '($'
+            return "\<CR>)\<Up>\<End>\<CR>"
+        elseif l =~ '[$'
+            return "\<CR>]\<Up>\<End>\<CR>"
+        else
+            return "\<CR>"
+        endif
+    elseif getline(".")[col(".") - 1] =~ '[})\]]$'
+        return "\<CR>\<C-o>O"
+    else
+        return "\<CR>"
+    endif
+endfunction
+
 "
 " Extensions
 "
