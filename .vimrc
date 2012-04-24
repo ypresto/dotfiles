@@ -153,6 +153,8 @@ Bundle 'TaskList.vim'
 " Bundle 'ervandew/supertab'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Align'
+" required by fuzzyfinder
+Bundle 'L9'
 Bundle 'FuzzyFinder'
 
 runtime macros/matchit.vim
