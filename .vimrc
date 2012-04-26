@@ -201,16 +201,20 @@ let g:NeoComplCache_EnableUnderbarCompletion = 1
 " let g:NeoComplCache_MinSyntaxLength = 3
 " let g:NeoComplCache_ManualCompletionStartLength = 0
 let g:NeoComplCache_CachingPercentInStatusline = 1
-" let g:NeoComplCache_PluginCompleteLength = {
-" \   'snipmate_complete' : 1,
-" \   'keyword_complete'  : 2,
-" \   'syntax_complete'   : 2
-" \}
+let g:NeoComplCache_PluginCompleteLength = {
+  \ 'snipMate_complete' : 1,
+  \ 'buffer_complete' : 1,
+  \ 'include_complete' : 2,
+  \ 'syntax_complete' : 2,
+  \ 'filename_complete' : 2,
+  \ 'keyword_complete' : 2,
+  \ 'omni_complete' : 1
+  \ }
 let g:neocomplcache_max_list = 100
 if !exists('g:neocomplcache_keyword_patterns')
    let g:neocomplcache_keyword_patterns = {}
 endif
-let g:neocomplcache_keyword_patterns['default'] = '\h\w*' " avoid japanese keywords
+" let g:neocomplcache_keyword_patterns['default'] = '\h\w*' " avoid japanese keywords
 
 " unite.vim settings
 Bundle 'Shougo/unite.vim'
