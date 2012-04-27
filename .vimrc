@@ -160,6 +160,7 @@ Bundle 'Align'
 " required by fuzzyfinder
 Bundle 'L9'
 Bundle 'FuzzyFinder'
+Bundle 'kana/vim-smartchr'
 
 runtime macros/matchit.vim
 Bundle 'tpope/vim-surround'
@@ -283,16 +284,6 @@ Bundle 'garbas/vim-snipmate'
 
 " delimitMate settings
 Bundle 'Raimondi/delimitMate'
-
-" smartchr settings
-Bundle 'kana/vim-smartchr'
-if skk_enabled || eskk_enabled
-    autocmd BufNewFile,BufRead *.tex,*.txt inoremap <expr> , smartchr#one_of(',', '，')
-    autocmd BufNewFile,BufRead *.tex,*.txt inoremap <expr> . smartchr#one_of('.', '．')
-else
-    inoremap <expr> , smartchr#one_of(', ', ',')
-endif
-autocmd FileType perl inoremap <expr> : smartchr#one_of(': ', '::', ' => ')
 
 " Undo/Backup settings
 Bundle 'sjl/gundo.vim'
