@@ -4,6 +4,7 @@ Bundle 'gmarik/vundle'
 
 filetype plugin on
 filetype indent on
+syntax on " for os x
 
 let eskk_enabled = 0
 let skk_enabled = 1
@@ -628,3 +629,5 @@ if skk_enabled
         \. "Q	SkkSetHenkanPoint1(kana)\<NL>"
         \. "/	SkkAbbrevMode(kana)\<NL>"
 endif
+
+Bundle 'yko/mojo.vim'
