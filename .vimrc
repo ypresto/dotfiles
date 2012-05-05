@@ -13,6 +13,10 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 " }}}
 
+" *** Edit *** {{{
+set backspace=2 " for os x
+" }}}
+
 " *** File *** {{{
 
 " ** Encoding / Syntax ** {{{
