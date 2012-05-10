@@ -339,7 +339,7 @@ command! -nargs=+ QfArgs let b:quickrun_config = {'args': substitute(<f-args>, '
 
 " ** IME ** {{{
 
-Bundle 'vimtaku/vim-mlh'
+" Bundle 'vimtaku/vim-mlh'
 Bundle 'mattn/webapi-vim'
 
 if eskk_enabled
@@ -414,4 +414,13 @@ autocmd BufNewFile,BufRead *.go :colorscheme go
 " Bundle 'AutomaticLaTexPlugin'
 " ** }}}
 "
+" *** }}}
+
+" *** Bleeding Edge *** {{{
+Bundle 'fuenor/qfixgrep'
+noremap <C-j> :cnext<CR>
+noremap <C-k> :cprev<CR>
+Bundle 'sgur/unite-qf'
+nmap ,uq ,u:-auto-resize -direction=botright quickfix<CR>
+nmap ,Uq ,U:-auto-resize -direction=botright quickfix<CR>
 " *** }}}
