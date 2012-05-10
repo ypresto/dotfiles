@@ -110,6 +110,7 @@ nnoremap ,l :lwin<CR>
 nnoremap ,L :lclose<CR>
 let g:user_zen_leader_key = '<C-y>'
 let g:user_zen_expandabbr_key = '<C-y><C-y>'
+nnoremap ,g :GundoToggle<CR>
 
 " ** neocomplcache ** {{{
 inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
