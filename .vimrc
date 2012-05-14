@@ -25,7 +25,7 @@ filetype indent on
 syntax on " for os x
 set encoding=utf-8
 " FIXME: buggy, defaulting to iso-2022
-set fileencodings=ucs-bom,iso-2022-jp-3,iso-2022-jp,eucjp-ms,euc-jisx0213,euc-jp,utf-8,sjis,cp932
+set fileencodings=ucs-bom,utf-8,iso-2022-jp-3,iso-2022-jp,eucjp-ms,euc-jisx0213,euc-jp,sjis,cp932
 " ** }}}
 
 " ** Indentation and Tab ** {{{
