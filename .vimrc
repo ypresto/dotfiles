@@ -406,4 +406,15 @@ noremap <C-k> :cprev<CR>
 Bundle 'sgur/unite-qf'
 nmap ,uq ,u:-auto-resize -direction=botright quickfix<CR>
 nmap ,Uq ,U:-auto-resize -direction=botright quickfix<CR>
+Bundle 'JavaScript-syntax'
+Bundle 'JQuery'
+" reffer: http://vimwiki.net/?'viminfo'
+set history=50
+set viminfo='50,<50,s10,%
+Bundle 'yankring'
+Bundle 'buftabs'
+Bundle 'basyura/TweetVim'
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'Rainbow-Parenthesis'
+Bundle 'vimtaku/vim-textobj-keyvalue'
 " *** }}}
