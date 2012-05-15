@@ -412,7 +412,7 @@ Bundle 'sgur/unite-qf'
 nmap ,uq ,u:-auto-resize -direction=botright qf<CR>
 nmap ,Uq ,U:-auto-resize -direction=botright qf<CR>
 Bundle 'JavaScript-syntax'
-Bundle 'JQuery'
+Bundle 'nono/jquery.vim'
 " reffer: http://vimwiki.net/?'viminfo'
 set history=50
 set viminfo='50,<50,s10,%
