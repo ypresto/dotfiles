@@ -58,6 +58,7 @@ set showcmd
 set wildmenu " enhanced commandline completion
 set nolist
 set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:% "eol:
+set foldmethod=marker
 if skk_enabled
     set statusline=%<%f\ %h%m%r\ %{SkkGetModeStr()}%=%-14.(%l,%c%V%)\ %P
 else
@@ -76,7 +77,7 @@ highlight CursorLine ctermbg=black guibg=black
 highlight SignColumn ctermfg=white ctermbg=black cterm=none
 " * ZenkakuSpace * {{{
 function! ZenkakuSpace()
-  highlight ZenkakuSpace cterm=underline ctermfg=darkgrey gui=underline guifg=darkgrey
+  highlight ZenkakuSpace cterm=underline ctermbg=darkgray gui=underline guifg=darkgrey
 endfunction
 if has('syntax')
   augroup ZenkakuSpace
@@ -388,7 +389,7 @@ Bundle 'soh335/vim-symfony'
 " ** }}}
 
 " ** Python ** {{{
-Bundle 'python_fold'
+Bundle 'tmhedberg/SimpylFold'
 " ** }}}
 
 " ** Others ** {{{
@@ -403,9 +404,13 @@ autocmd BufNewFile,BufRead *.go :colorscheme go
 Bundle 'fuenor/qfixgrep'
 noremap <C-j> :cnext<CR>
 noremap <C-k> :cprev<CR>
+noremap <C-n> :lnext<CR>
+noremap <C-p> :lprev<CR>
+noremap <Leader>n :next<CR>
+noremap <Leader>p :prev<CR>
 Bundle 'sgur/unite-qf'
-nmap ,uq ,u:-auto-resize -direction=botright quickfix<CR>
-nmap ,Uq ,U:-auto-resize -direction=botright quickfix<CR>
+nmap ,uq ,u:-auto-resize -direction=botright qf<CR>
+nmap ,Uq ,U:-auto-resize -direction=botright qf<CR>
 Bundle 'JavaScript-syntax'
 Bundle 'JQuery'
 " reffer: http://vimwiki.net/?'viminfo'
@@ -417,4 +422,5 @@ Bundle 'basyura/TweetVim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'Rainbow-Parenthesis'
 Bundle 'vimtaku/vim-textobj-keyvalue'
+Bundle 't9md/vim-phrase'
 " *** }}}

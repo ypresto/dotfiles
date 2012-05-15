@@ -1,0 +1,16 @@
+[user]
+	name = Yuya Tanaka
+	email = yuya.presto@gmail.com
+[core]
+	excludesfile = ~/.gitignore_global
+	editor = /usr/bin/env vim
+[color]
+	ui = auto
+[alias]
+	co = checkout
+	ci = commit
+	st = status
+	br = branch
+	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+	rs = reset
+	rsh = reset --hard
