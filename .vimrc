@@ -425,4 +425,5 @@ Bundle 'vimtaku/vim-textobj-keyvalue'
 Bundle 't9md/vim-phrase'
 inoremap <C-k> <C-o>D
 nnoremap <C-w>a <C-w>\|<C-w>_
+set showtabline=2
 " *** }}}
