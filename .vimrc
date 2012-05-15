@@ -402,12 +402,12 @@ autocmd BufNewFile,BufRead *.go :colorscheme go
 
 " *** Bleeding Edge *** {{{
 Bundle 'fuenor/qfixgrep'
-noremap <C-j> :cnext<CR>
-noremap <C-k> :cprev<CR>
-noremap <C-n> :lnext<CR>
-noremap <C-p> :lprev<CR>
-noremap <Leader>n :next<CR>
-noremap <Leader>p :prev<CR>
+nnoremap <C-j> :cnext<CR>
+nnoremap <C-k> :cprev<CR>
+nnoremap <C-n> :lnext<CR>
+nnoremap <C-p> :lprev<CR>
+nnoremap <Leader>n :next<CR>
+nnoremap <Leader>p :prev<CR>
 Bundle 'sgur/unite-qf'
 nmap ,uq ,u:-auto-resize -direction=botright qf<CR>
 nmap ,Uq ,U:-auto-resize -direction=botright qf<CR>
@@ -423,4 +423,6 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'Rainbow-Parenthesis'
 Bundle 'vimtaku/vim-textobj-keyvalue'
 Bundle 't9md/vim-phrase'
+inoremap <C-k> <C-o>D
+nnoremap <C-w>a <C-w>\|<C-w>_
 " *** }}}
