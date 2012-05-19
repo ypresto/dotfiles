@@ -2,6 +2,13 @@
 " * .vimrc for yuya_presto
 " *
 
+" *** Reloadable config *** {{{
+autocmd!
+autocmd BufWritePost $MYVIMRC source $MYVIMRC |
+            \if has('gui_running') | source $MYGVIMRC
+autocmd BufWritePost $MYGVIMRC if has('gui_running') | source $MYGVIMRC
+" *** }}}
+
 " *** Config for this script *** {{{
 let eskk_enabled = 0
 let skk_enabled = 1
@@ -95,18 +102,18 @@ endif
 
 " *** Keymapping *** {{{
 noremap ZJ :w<CR>
-noremap j gj
-noremap gj j
-noremap k gk
-noremap gk k
-onoremap q aW
-inoremap <C-a> <Home>
+noremap <silent> j gj
+noremap <silent> gj j
+noremap <silent> k gk
+noremap <silent> gk k
+onoremap <silent> q aW
+inoremap <silent> <C-a> <C-o>^
 " inoremap <C-e> <End>
-inoremap <C-d> <Del>
-cnoremap <C-p> <Up>
-cnoremap <C-n> <Down>
+inoremap <silent> <C-d> <Del>
+cnoremap <silent> <C-p> <Up>
+cnoremap <silent> <C-n> <Down>
 inoremap <silent> <C-[> <Esc>
-nnoremap <silent> <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>
+nnoremap <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>
 nnoremap ,c :cwin<CR>
 nnoremap ,C :cclose<CR>
 nnoremap ,l :lwin<CR>
@@ -250,9 +257,6 @@ Bundle 'thinca/vim-ref'
 " git support
 Bundle 'tpope/vim-fugitive'
 Bundle 'mattn/gist-vim'
-
-" show markers in CursorLine
-Bundle 'ShowMarks'
 
 " read/write by sudo with `vim sudo:file.txt`
 Bundle 'sudo.vim'
@@ -426,4 +430,8 @@ Bundle 't9md/vim-phrase'
 inoremap <C-k> <C-o>D
 nnoremap <C-w>a <C-w>\|<C-w>_
 set showtabline=2
+Bundle 'kmnk/vim-unite-giti.git'
+nmap ,ug ,u:-auto-resize -direction=botright giti<CR>
+nmap ,Ug ,U:-auto-resize -direction=botright giti<CR>
+set scrolloff=1
 " *** }}}
