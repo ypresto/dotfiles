@@ -4,9 +4,9 @@
 
 " *** Reloadable config *** {{{
 autocmd!
-autocmd BufWritePost $MYVIMRC source $MYVIMRC |
+autocmd BufWritePost $MYVIMRC,$HOME/dotfiles/.vimrc source $MYVIMRC |
             \if has('gui_running') | source $MYGVIMRC
-autocmd BufWritePost $MYGVIMRC if has('gui_running') | source $MYGVIMRC
+autocmd BufWritePost $MYGVIMRC,$HOME/dotfiles/.gvimrc if has('gui_running') | source $MYGVIMRC
 " *** }}}
 
 " *** Config for this script *** {{{
@@ -284,8 +284,8 @@ endif
 Bundle 'Shougo/neocomplcache'
 " Bundle 'ujihisa/neco-look' " too heavy
 let g:neocomplcache_enable_at_startup = 1
-"let g:neocomplcache_enable_camel_case_completion = 1
-"let g:neocomplcache_enable_underbar_completion = 1
+let g:neocomplcache_enable_camel_case_completion = 1
+let g:neocomplcache_enable_underbar_completion = 1
 " ** }}}
 
 " ** unite ** {{{
@@ -328,6 +328,7 @@ command! -nargs=+ QfArgs let b:quickrun_config = {'args': substitute(<f-args>, '
 " ** IME ** {{{
 
 Bundle 'vimtaku/vim-mlh'
+autocmd VimEnter * :ToggleVimMlhKeymap
 Bundle 'mattn/webapi-vim'
 
 if eskk_enabled
@@ -373,14 +374,6 @@ Bundle 'sukima/xmledit'
 
 " ** JavaScript ** {{{
 autocmd BufNewFile,BufRead *.json set filetype=javascript
-
-Bundle 'basyura/jslint.vim'
-function! s:javascript_filetype_settings()
-    autocmd BufLeave     <buffer> call jslint#clear()
-    autocmd BufWritePost <buffer> call jslint#check()
-    autocmd CursorMoved  <buffer> call jslint#message()
-endfunction
-autocmd FileType javascript call s:javascript_filetype_settings()
 " ** }}}
 
 " ** Perl ** {{{
@@ -415,23 +408,64 @@ nnoremap <Leader>p :prev<CR>
 Bundle 'sgur/unite-qf'
 nmap ,uq ,u:-auto-resize -direction=botright qf<CR>
 nmap ,Uq ,U:-auto-resize -direction=botright qf<CR>
-Bundle 'JavaScript-syntax'
+Bundle 'jelera/vim-javascript-syntax'
 Bundle 'nono/jquery.vim'
 " reffer: http://vimwiki.net/?'viminfo'
 set history=50
 set viminfo='50,<50,s10,%
-Bundle 'yankring'
+Bundle 'YankRing.vim'
 Bundle 'buftabs'
+let g:buftabs_only_basename = 1
+let g:buftabs_in_statusline = 1
 Bundle 'basyura/TweetVim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'Rainbow-Parenthesis'
 Bundle 'vimtaku/vim-textobj-keyvalue'
-Bundle 't9md/vim-phrase'
+" Bundle 't9md/vim-phrase'
+" TODO: using at end of line causes backspace
 inoremap <C-k> <C-o>D
+" Maximizes current split, <C-w>= to restore
 nnoremap <C-w>a <C-w>\|<C-w>_
-set showtabline=2
-Bundle 'kmnk/vim-unite-giti.git'
-nmap ,ug ,u:-auto-resize -direction=botright giti<CR>
-nmap ,Ug ,U:-auto-resize -direction=botright giti<CR>
+" set showtabline=2
+" Bundle 'kmnk/vim-unite-giti.git'
+" nmap ,ug ,u:-auto-resize -direction=botright giti<CR>
+" nmap ,Ug ,U:-auto-resize -direction=botright giti<CR>
+" scroll
 set scrolloff=1
+Bundle 'vimtaku/vim-textobj-sigil'
+" simple vim ref for .vimrc
+autocmd FileType vim call MapVimHelp()
+function! MapVimHelp()
+    map K :help <C-r><C-w><CR>
+    " TODO: visual mode
+endfunction
+
+set ignorecase
+set smartcase
+set cmdheight=1
+"Bundle 'Shougo/neocomplcache-snippets-complete'
+imap <expr> <Tab> '<Plug>'.HandleTabKey(0)
+"imap <expr> <Tab> HandleTabKey(0)
+imap <expr> <S-Tab> '<Plug>'.HandleTabKey(1)
+function! HandleTabKey(back)
+    if exists('g:snipPos')
+        if a:back == 0
+            return 'local_SnipmateTabForward'
+        else
+            return 'local_SnipmateTabBackward'
+        endif
+    elseif a:back != 0
+        return 'local_SnipmateTabForward'
+    elseif pumvisible()
+        return 'local_neocomClosePopup'
+    else
+        " tab to escape from parensises
+        return 'delimitMateS-Tab'
+    endif
+endfunction
+inoremap <expr> <Plug>local_neocomClosePopup neocomplcache#close_popup()
+let g:snips_trigger_key='<Plug>local_SnipmateTabForward'
+let g:snips_trigger_key_backwords='<Plug>local_SnipmateTabBackward'
+" Bundle 'mbriggs/mark.vim'
+Bundle 'mattn/benchvimrc-vim'
 " *** }}}

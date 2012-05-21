@@ -16,3 +16,8 @@
 	rsh = reset --hard
 	di = diff
 	lg = log
+	dt = difftool
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = true
