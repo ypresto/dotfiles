@@ -1,0 +1,120 @@
+#
+# .zshrc is sourced in interactive shells.
+# It should contain commands to set up aliases,
+# functions, options, key bindings, etc.
+#
+
+autoload -U compinit
+compinit
+
+#allow tab completion in the middle of a word
+setopt COMPLETE_IN_WORD
+
+## keep background processes at full speed
+#setopt NOBGNICE
+## restart running processes on exit
+#setopt HUP
+
+## history
+#setopt APPEND_HISTORY
+## for sharing history between zsh processes
+#setopt INC_APPEND_HISTORY
+#setopt SHARE_HISTORY
+
+## never ever beep ever
+#setopt NO_BEEP
+
+## automatically decide when to page a list of completions
+#LISTMAX=0
+
+## disable mail checking
+#MAILCHECK=0
+
+# autoload -U colors
+#colors
+
+
+# *** config by r7kamura ***
+
+autoload -U colors
+autoload -U add-zsh-hook
+autoload -Uz vcs_info
+autoload -U compinit
+autoload history-search-end
+
+# Prompt
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git:*' stagedstr "+"
+zstyle ':vcs_info:git:*' unstagedstr "-"
+zstyle ':vcs_info:git:*' formats '(%b)%c%u'
+zstyle ':vcs_info:git:*' actionformats '(%b|%a)%c%u'
+function _update_vcs_info_msg() {
+  psvar=()
+  LANG=en_US.UTF-8 vcs_info
+  [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+}
+add-zsh-hook precmd _update_vcs_info_msg
+colors
+PROMPT="%{${fg[yellow]}%}✘╹◡╹✘%{${reset_color}%} "
+PROMPT2="%{${fg[blue]}%}%_> %{${reset_color}%}"
+SPROMPT="%{${fg[red]}%}correct: %R -> %r [nyae]? %{${reset_color}%}"
+VCS_PROMPT="%1(v|%F{green} %1v%f|)"
+DIR_PROMPT="%{${fg[blue]}%}[%~]%{${reset_color}%}"
+RPROMPT="$VCS_PROMPT $DIR_PROMPT"
+
+setopt auto_cd
+setopt auto_pushd
+
+# History
+HISTFILE=~/.zsh_history
+HISTSIZE=1000000
+SAVEHIST=1000000
+setopt extended_history
+setopt hist_expand
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+bindkey -e
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey "^P" history-beginning-search-backward-end
+bindkey "^N" history-beginning-search-forward-end
+
+compinit
+zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
+zstyle ':completion:*' max-errors 50
+zstyle ':completion:*' list-colors ''
+zstyle :compinstall filename "$HOME/.zshrc"
+
+if zle -la | grep -q '^history-incremental-pattern-search'; then
+  bindkey '^R' history-incremental-pattern-search-backward
+  bindkey '^S' history-incremental-pattern-search-forward
+fi
+
+# Move each word to press Ctrl + Arrow-key
+bindkey ";5C" forward-word
+bindkey ";5D" backward-word
+
+# ENV
+export PATH="$HOME/bin:$PATH"
+export EDITOR=vim
+export CLICOLOR=YES
+
+alias g="git"
+alias v='vim "$@"'
+alias d='git diff'
+alias s='git status --short'
+alias t='tig'
+alias :q='exit'
+alias :z='v ~/.zshrc'
+alias :zz='. ~/.zshrc'
+alias :v='v ~/.vimrc'
+alias :d='cd ~/dotfiles'
+#alias snip='open ~/.vim/bundle/snipMate/snippets'
+a() { git add . $1; git status --short }
+m() { git commit -m "$*" }
+
+copy-line() { print -rn $BUFFER | pbcopy; zle -M "Copied: ${BUFFER}" }
+zle -N copy-line
+bindkey '\@' copy-line
+
+bindkey -v
