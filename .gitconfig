@@ -15,7 +15,8 @@
 	rs = reset
 	rsh = reset --hard
 	di = diff
-	lg = log
+	dc = diff --cached
+	lo = log
 	dt = difftool
 [diff]
 	tool = vimdiff

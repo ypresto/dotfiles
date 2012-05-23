@@ -4,6 +4,9 @@
 # functions, options, key bindings, etc.
 #
 
+#bindkey -v
+bindkey -e
+
 autoload -U compinit
 compinit
 
@@ -55,7 +58,7 @@ function _update_vcs_info_msg() {
 }
 add-zsh-hook precmd _update_vcs_info_msg
 colors
-PROMPT="%{${fg[yellow]}%}✘╹◡╹✘%{${reset_color}%} "
+#PROMPT="%{${fg[yellow]}%}✘╹◡╹✘%{${reset_color}%} "
 PROMPT2="%{${fg[blue]}%}%_> %{${reset_color}%}"
 SPROMPT="%{${fg[red]}%}correct: %R -> %r [nyae]? %{${reset_color}%}"
 VCS_PROMPT="%1(v|%F{green} %1v%f|)"
@@ -73,7 +76,7 @@ setopt extended_history
 setopt hist_expand
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
-bindkey -e
+#bindkey -e
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 bindkey "^P" history-beginning-search-backward-end
@@ -108,6 +111,7 @@ alias :q='exit'
 alias :z='v ~/.zshrc'
 alias :zz='. ~/.zshrc'
 alias :v='v ~/.vimrc'
+alias :g='v ~/.gitconfig'
 alias :d='cd ~/dotfiles'
 #alias snip='open ~/.vim/bundle/snipMate/snippets'
 a() { git add . $1; git status --short }
@@ -115,6 +119,25 @@ m() { git commit -m "$*" }
 
 copy-line() { print -rn $BUFFER | pbcopy; zle -M "Copied: ${BUFFER}" }
 zle -N copy-line
-bindkey '\@' copy-line
+#bindkey '\@' copy-line
 
-bindkey -v
+#zshプロンプトにモード表示####################################
+PROMPT="%{$fg[red]%}[%{$reset_color%}%n%{$fg[red]%}]%#%{$reset_color%} "
+if false; then
+function zle-line-init zle-keymap-select {
+  case $KEYMAP in
+    vicmd)
+    PROMPT="%{$fg[red]%}[%{$reset_color%}%n/%{$fg_bold[red]%}NOR%{$reset_color%}%{$fg[red]%}]%#%{$reset_color%} "
+    ;;
+    main|viins)
+    PROMPT="%{$fg[red]%}[%{$reset_color%}%n/%{$fg_bold[cyan]%}INS%{$reset_color%}%{$fg[red]%}]%#%{$reset_color%} "
+    ;;
+  esac
+  zle reset-prompt
+}
+zle -N zle-line-init
+zle -N zle-keymap-select
+fi
+
+bindkey "^A" beginning-of-line
+bindkey "^E" end-of-line

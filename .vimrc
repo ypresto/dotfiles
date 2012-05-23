@@ -188,7 +188,8 @@ endif
 " *** Custom Scripts *** {{{
 
 " ** Braces ** {{{
-inoremap <expr><CR> <SID>BlockCompl()
+"inoremap <expr><CR> <SID>BlockCompl()
+set cindent
 function! s:BlockCompl()
     if col('.') == col('$')
         let l = getline('.')
@@ -468,4 +469,7 @@ let g:snips_trigger_key='<Plug>local_SnipmateTabForward'
 let g:snips_trigger_key_backwords='<Plug>local_SnipmateTabBackward'
 " Bundle 'mbriggs/mark.vim'
 Bundle 'mattn/benchvimrc-vim'
+let g:neocomplcache_ctags_arguments_list = {
+  \ 'perl' : '-R -h ".pm"'
+  \ }
 " *** }}}
