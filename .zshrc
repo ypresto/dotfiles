@@ -37,6 +37,8 @@ setopt COMPLETE_IN_WORD
 #colors
 
 
+source ~/.bashrc
+
 # *** config by r7kamura ***
 
 autoload -U colors
