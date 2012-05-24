@@ -110,12 +110,12 @@ alias d='git diff'
 alias s='git status --short'
 alias t='tig'
 alias :q='exit'
-alias :z='v ~/.zshrc'
+alias :z='v ~/dotfiles/.zshrc'
 alias :zz='. ~/.zshrc'
-alias :b='v ~/.bashrc'
+alias :b='v ~/dotfiles/.bashrc'
 alias :bb='. ~/.bashrc'
-alias :v='v ~/.vimrc'
-alias :g='v ~/.gitconfig'
+alias :v='v ~/dotfiles/.vimrc'
+alias :g='v ~/dotfiles/.gitconfig'
 alias :d='cd ~/dotfiles'
 #alias snip='open ~/.vim/bundle/snipMate/snippets'
 a() { git add . $1; git status --short }
@@ -145,3 +145,7 @@ fi
 
 bindkey "^A" beginning-of-line
 bindkey "^E" end-of-line
+
+if [ -f "$HOME/.zshrc.local" ]; then
+    source "$HOME/.zshrc.local"
+fi
