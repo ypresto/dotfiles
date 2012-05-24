@@ -1,0 +1,7 @@
+alias ls='ls --color=auto'
+
+ssh_auth_sock_path=~/.ssh/ssh_auth_sock
+if [ $SSH_AUTH_SOCK != $ssh_auth_sock_path ]; then
+    ln -sf $SSH_AUTH_SOCK $ssh_auth_sock_path
+    export SSH_AUTH_SOCK=$ssh_auth_sock_path
+fi
