@@ -107,6 +107,7 @@ export CLICOLOR=YES
 alias g="git"
 alias v='vim "$@"'
 alias d='git diff'
+alias c='git diff --cached'
 alias s='git status --short'
 alias t='tig'
 alias :q='exit'
@@ -118,6 +119,7 @@ alias :bb='. ~/.bashrc'
 alias :v='v ~/dotfiles/.vimrc'
 alias :g='v ~/dotfiles/.gitconfig'
 alias :d='cd ~/dotfiles'
+alias :h='cd ~/homebrew'
 #alias snip='open ~/.vim/bundle/snipMate/snippets'
 a() { git add . $1; git status --short }
 m() { git commit -m "$*" }
