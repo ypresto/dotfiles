@@ -496,7 +496,14 @@ function! DoInitNeco()
     :NeoComplCacheEnable
 endfunction
 Bundle 'altercation/vim-colors-solarized'
+set t_Co=256
 set background=dark
 " let g:solarized_termcolors=256
+" let g:solarized_degrade=1
+let g:solarized_termcolors=16
+let g:solarized_termtrans=1
+let g:solarized_bold=1
+let g:solarized_underline=1
+let g:solarized_italic=1
 colorscheme solarized
 " *** }}}

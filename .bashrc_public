@@ -1,4 +1,5 @@
 alias ls='ls --color=auto'
+eval `dircolors ~/dotfiles/dircolors-solarized/dircolors.ansi-dark`
 
 ssh_auth_sock_path=~/.ssh/ssh_auth_sock
 if [ $SSH_AUTH_SOCK != $ssh_auth_sock_path ]; then
