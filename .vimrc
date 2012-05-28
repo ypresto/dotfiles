@@ -400,6 +400,8 @@ nnoremap <C-k> :cprev<CR>
 " nnoremap <C-p> :lprev<CR>
 " nnoremap <Leader>n :next<CR>
 " nnoremap <Leader>p :prev<CR>
+" nnoremap <C-n> :tn<CR>
+" nnoremap <C-p> :tp<CR>
 if unite_enabled
 Bundle 'sgur/unite-qf'
 nmap ,uq ,u:-auto-resize -direction=botright qf<CR>
@@ -445,25 +447,24 @@ set cmdheight=1
 imap <expr> <Tab> '<Plug>'.HandleTabKey(0)
 "imap <expr> <Tab> HandleTabKey(0)
 imap <expr> <S-Tab> '<Plug>'.HandleTabKey(1)
-function! HandleTabKey(back)
+function! HandleTabKey(shift)
     if exists('g:snipPos')
-        if a:back == 0
+        if a:shift== 0
             return 'local_SnipmateTabForward'
         else
             return 'local_SnipmateTabBackward'
         endif
-    elseif a:back != 0
-        return 'local_SnipmateTabForward'
+    elseif a:shift!= 0
+        return 'delimitMateS-Tab'
     elseif pumvisible()
         return 'local_neocomClosePopup'
     else
-        " tab to escape from parenthesis
-        return 'delimitMateS-Tab'
+        return 'local_SnipmateTabForward'
     endif
 endfunction
 inoremap <expr> <Plug>local_neocomClosePopup neocomplcache#close_popup()
 let g:snips_trigger_key='<Plug>local_SnipmateTabForward'
-let g:snips_trigger_key_backwords='<Plug>local_SnipmateTabBackward'
+let g:snips_trigger_key_backwards='<Plug>local_SnipmateTabBackward'
 " Bundle 'mbriggs/mark.vim'
 " Bundle 'mattn/benchvimrc-vim'
 let g:neocomplcache_ctags_arguments_list = {
