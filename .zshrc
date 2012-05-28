@@ -117,9 +117,10 @@ alias :b='v ~/dotfiles/.bashrc_public'
 alias :B='v ~/.bashrc'
 alias :bb='. ~/.bashrc'
 alias :v='v ~/dotfiles/.vimrc'
-alias :g='v ~/dotfiles/.gitconfig'
+alias :gc='v ~/dotfiles/.gitconfig'
 alias :d='cd ~/dotfiles'
 alias :h='cd ~/homebrew'
+alias :g='cd ~/repo/github.com'
 #alias snip='open ~/.vim/bundle/snipMate/snippets'
 a() { git add . $1; git status --short }
 m() { git commit -m "$*" }
@@ -152,3 +153,6 @@ bindkey "^E" end-of-line
 if [ -f "$HOME/.zshrc.local" ]; then
     source "$HOME/.zshrc.local"
 fi
+
+stty stop undef
+stty start undef

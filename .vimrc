@@ -10,8 +10,10 @@ autocmd BufWritePost $MYGVIMRC,$HOME/dotfiles/.gvimrc if has('gui_running') | so
 " *** }}}
 
 " *** Config for this script *** {{{
+let unite_enabled = 0
+let mlh_enabled = 1
+let skk_enabled = 0
 let eskk_enabled = 0
-let skk_enabled = 1
 " *** }}}
 
 " *** Vundler *** {{{
@@ -118,8 +120,8 @@ nnoremap ,c :cwin<CR>
 nnoremap ,C :cclose<CR>
 nnoremap ,l :lwin<CR>
 nnoremap ,L :lclose<CR>
-let g:user_zen_leader_key = '<C-y>'
-let g:user_zen_expandabbr_key = '<C-y><C-y>'
+let g:user_zen_leader_key = '<C-q>'
+let g:user_zen_expandabbr_key = '<C-q><C-q>'
 nnoremap ,g :GundoToggle<CR>
 
 " ** neocomplcache ** {{{
@@ -137,6 +139,7 @@ inoremap <expr> <C-e>  pumvisible() ? neocomplcache#close_popup() : "<End>"
 " ** }}}
 
 " ** unite ** {{{
+if unite_enabled
 " デフォルト
 nnoremap ,u: :Unite -direction=botright -auto-resize 
 nnoremap ,U: :Unite -create -no-quit -toggle  -vertical -direction=botright -winwidth=30 
@@ -172,6 +175,7 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vspli
 " ESCキーを2回押すと終了する
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
+endif
 " ** }}}
 
 " ** IME ** {{{
@@ -223,34 +227,32 @@ Bundle 'Shougo/vimproc'
 
 " TODO: To be used {{{
 Bundle 'thinca/vim-quickrun'
-Bundle 'kana/vim-fakeclip'
 Bundle 'TaskList.vim'
-" Bundle 'scrooloose/nerdcommenter'
-" Bundle 'ervandew/supertab'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Align'
 " required by fuzzyfinder
 Bundle 'L9'
-Bundle 'FuzzyFinder'
-Bundle 'kana/vim-smartchr'
+" Bundle 'FuzzyFinder'
+" Bundle 'kana/vim-smartchr'
 " Snipmate
-" XXX: freezes when inputting {<TAB>}
 Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
 Bundle 'snipmate-snippets'
 Bundle 'garbas/vim-snipmate'
-Bundle 'Shougo/vimshell'
+" Bundle 'Shougo/vimshell'
 " }}}
 
 " extended % key matching
 runtime macros/matchit.vim
 
-" 
+" autocompletes parenthesis, braces and more
 Bundle 'Raimondi/delimitMate'
 
 " moving
+" Bundle 'Lokaltog/vim-easymotion'
+
+" convenient functions for surrounding characters [ds'], [ys'], etc.
 Bundle 'tpope/vim-surround'
-Bundle 'Lokaltog/vim-easymotion'
 
 " open some reference manual with K key
 Bundle 'thinca/vim-ref'
@@ -269,49 +271,40 @@ Bundle 'scrooloose/syntastic'
 Bundle 'sjl/gundo.vim'
 let g:gundo_right = 1
 
-" errormarker.vim: more customizable syntastic {{{
-if 0
-Bundle 'errormarker.vim'
-let g:errormarker_errorgroup = "my_error_mark"
-let g:errormarker_warninggroup = "my_warning_mark"
-highlight my_error_mark ctermbg=red cterm=none
-highlight my_warning_mark ctermbg=blue cterm=none
-autocmd BufWritePost *.pl,*.pm,*.t silent make
-endif
-" }}}
-
 " ** neocomplcache ** {{{
 " TODO
 Bundle 'Shougo/neocomplcache'
 " Bundle 'ujihisa/neco-look' " too heavy
-let g:neocomplcache_enable_at_startup = 1
+" let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_underbar_completion = 1
 " ** }}}
 
 " ** unite ** {{{
+if unite_enabled
 Bundle 'Shougo/unite.vim'
-Bundle 'tacroe/unite-mark'
+" Bundle 'tacroe/unite-mark'
 Bundle 'h1mesuke/unite-outline'
 " 入力モードで開始する
-" let g:unite_enable_start_insert=1
+let g:unite_enable_start_insert=1
+endif
 " ** }}}
 
 " ** textobj ** {{{
 " framework
 Bundle 'kana/vim-textobj-user'
 " too many, refer help
-Bundle 'kana/vim-textobj-diff'
+" Bundle 'kana/vim-textobj-diff'
 " [ai]e
-Bundle 'kana/vim-textobj-entire'
+" Bundle 'kana/vim-textobj-entire'
 " [ai]z
-Bundle 'kana/vim-textobj-fold'
+" Bundle 'kana/vim-textobj-fold'
 " [ai]f
 Bundle 'kana/vim-textobj-function'
 " [ai][iI]
 Bundle 'kana/vim-textobj-indent'
 " [ai][/?] 
-Bundle 'kana/vim-textobj-lastpat'
+" Bundle 'kana/vim-textobj-lastpat'
 " [ai]y
 Bundle 'kana/vim-textobj-syntax'
 " [ai]c
@@ -322,15 +315,17 @@ Bundle 'thinca/vim-textobj-comment'
 " show quickfix text of current line on statusline
 Bundle 'dannyob/quickfixstatus'
 " edit quickfix lines
-Bundle 'thinca/vim-qfreplace'
-command! -nargs=+ QfArgs let b:quickrun_config = {'args': substitute(<f-args>, ',', ' ', 'g')}
+" Bundle 'thinca/vim-qfreplace'
+" command! -nargs=+ QfArgs let b:quickrun_config = {'args': substitute(<f-args>, ',', ' ', 'g')}
 " ** }}}
 
 " ** IME ** {{{
 
-Bundle 'vimtaku/vim-mlh'
-autocmd VimEnter * :ToggleVimMlhKeymap
-Bundle 'mattn/webapi-vim'
+if mlh_enabled
+    Bundle 'vimtaku/vim-mlh'
+    autocmd VimEnter * :ToggleVimMlhKeymap
+    Bundle 'mattn/webapi-vim'
+endif
 
 if eskk_enabled
     Bundle 'tyru/eskk.vim'
@@ -383,7 +378,7 @@ Bundle 'yko/mojo.vim'
 " ** }}}
 
 " ** PHP ** {{{
-Bundle 'soh335/vim-symfony'
+" Bundle 'soh335/vim-symfony'
 " ** }}}
 
 " ** Python ** {{{
@@ -395,20 +390,21 @@ autocmd BufNewFile,BufRead *.go :colorscheme go
 " too large to load always
 " Bundle 'AutomaticLaTexPlugin'
 " ** }}}
-"
 " *** }}}
 
 " *** Bleeding Edge *** {{{
-Bundle 'fuenor/qfixgrep'
+" Bundle 'fuenor/qfixgrep'
 nnoremap <C-j> :cnext<CR>
 nnoremap <C-k> :cprev<CR>
-nnoremap <C-n> :lnext<CR>
-nnoremap <C-p> :lprev<CR>
-nnoremap <Leader>n :next<CR>
-nnoremap <Leader>p :prev<CR>
+" nnoremap <C-n> :lnext<CR>
+" nnoremap <C-p> :lprev<CR>
+" nnoremap <Leader>n :next<CR>
+" nnoremap <Leader>p :prev<CR>
+if unite_enabled
 Bundle 'sgur/unite-qf'
 nmap ,uq ,u:-auto-resize -direction=botright qf<CR>
 nmap ,Uq ,U:-auto-resize -direction=botright qf<CR>
+endif
 Bundle 'jelera/vim-javascript-syntax'
 Bundle 'nono/jquery.vim'
 " reffer: http://vimwiki.net/?'viminfo'
@@ -418,10 +414,11 @@ Bundle 'YankRing.vim'
 Bundle 'buftabs'
 let g:buftabs_only_basename = 1
 let g:buftabs_in_statusline = 1
-Bundle 'basyura/TweetVim'
+" Bundle 'basyura/TweetVim'
 Bundle 'scrooloose/nerdcommenter'
-Bundle 'Rainbow-Parenthesis'
-Bundle 'vimtaku/vim-textobj-keyvalue'
+Bundle 'kien/rainbow_parentheses.vim'
+autocmd VimEnter * :RainbowParenthesesToggle
+" Bundle 'vimtaku/vim-textobj-keyvalue'
 " Bundle 't9md/vim-phrase'
 " TODO: using at end of line causes backspace
 inoremap <C-k> <C-o>D
@@ -435,7 +432,7 @@ nnoremap <C-w>a <C-w>\|<C-w>_
 set scrolloff=1
 Bundle 'vimtaku/vim-textobj-sigil'
 " simple vim ref for .vimrc
-autocmd FileType vim call MapVimHelp()
+autocmd! FileType vim call MapVimHelp()
 function! MapVimHelp()
     map K :help <C-r><C-w><CR>
     " TODO: visual mode
@@ -460,7 +457,7 @@ function! HandleTabKey(back)
     elseif pumvisible()
         return 'local_neocomClosePopup'
     else
-        " tab to escape from parensises
+        " tab to escape from parenthesis
         return 'delimitMateS-Tab'
     endif
 endfunction
@@ -468,8 +465,37 @@ inoremap <expr> <Plug>local_neocomClosePopup neocomplcache#close_popup()
 let g:snips_trigger_key='<Plug>local_SnipmateTabForward'
 let g:snips_trigger_key_backwords='<Plug>local_SnipmateTabBackward'
 " Bundle 'mbriggs/mark.vim'
-Bundle 'mattn/benchvimrc-vim'
+" Bundle 'mattn/benchvimrc-vim'
 let g:neocomplcache_ctags_arguments_list = {
   \ 'perl' : '-R -h ".pm"'
   \ }
+" Bundle 'astashov/vim-ruby-debugger'
+Bundle 'kien/ctrlp.vim'
+let g:ctrlp_map = '<C-c>'
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
+nmap ,up :Unite -direction=botright -auto-resize -auto-preview -buffer-name=files file_rec<CR>
+nmap ,Up :Unite -create -no-quit -toggle  -vertical -direction=botright -winwidth=30 -buffer-name=files file_rec<CR>
+" Bundle 'taku-o/vim-copypath'
+Bundle 'kana/vim-altr'
+nmap <Leader>f <Plug>(altr-forward)
+Bundle 'Smooth-Scroll'
+set noeb vb t_vb=
+Bundle 'mileszs/ack.vim'
+Bundle 'jpalardy/vim-slime'
+augroup InitNeCo
+    autocmd!
+    autocmd CursorMovedI * call DoInitNeco()
+    autocmd CursorHold * call DoInitNeco()
+augroup END
+function! DoInitNeco()
+    echo "Initializing NeCo..."
+    augroup InitNeCo
+        autocmd!
+    augroup END
+    :NeoComplCacheEnable
+endfunction
+Bundle 'altercation/vim-colors-solarized'
+set background=dark
+" let g:solarized_termcolors=256
+colorscheme solarized
 " *** }}}
