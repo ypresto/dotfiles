@@ -400,8 +400,8 @@ nnoremap <C-k> :cprev<CR>
 " nnoremap <C-p> :lprev<CR>
 " nnoremap <Leader>n :next<CR>
 " nnoremap <Leader>p :prev<CR>
-" nnoremap <C-n> :tn<CR>
-" nnoremap <C-p> :tp<CR>
+nnoremap <C-h> :tn<CR>
+nnoremap <C-l> :tp<CR>
 if unite_enabled
 Bundle 'sgur/unite-qf'
 nmap ,uq ,u:-auto-resize -direction=botright qf<CR>
@@ -468,7 +468,7 @@ let g:snips_trigger_key_backwards='<Plug>local_SnipmateTabBackward'
 " Bundle 'mbriggs/mark.vim'
 " Bundle 'mattn/benchvimrc-vim'
 let g:neocomplcache_ctags_arguments_list = {
-  \ 'perl' : '-R -h ".pm"'
+  \ 'perl' : '-R --languages=Perl --langmap=Perl:+.t'
   \ }
 " Bundle 'astashov/vim-ruby-debugger'
 Bundle 'kien/ctrlp.vim'
@@ -506,4 +506,16 @@ let g:solarized_bold=1
 let g:solarized_underline=1
 let g:solarized_italic=1
 colorscheme solarized
+
+augroup TriggerUpdateTags
+    autocmd!
+    autocmd CursorHold * call g:UpdateTags()
+    autocmd CursorHoldI * call g:UpdateTags()
+augroup END
+function! g:UpdateTags()
+  NeoComplCacheCachingInclude
+    for filename in neocomplcache#sources#include_complete#get_include_files(bufnr('%'))
+      execute "setlocal tags+=" . neocomplcache#cache#encode_name('include_tags', filename)
+    endfor
+endfunction
 " *** }}}
