@@ -10,7 +10,7 @@ autocmd BufWritePost $MYGVIMRC,$HOME/dotfiles/.gvimrc if has('gui_running') | so
 " *** }}}
 
 " *** Config for this script *** {{{
-let unite_enabled = 0
+let unite_enabled = 1
 let mlh_enabled = 1
 let skk_enabled = 0
 let eskk_enabled = 0
@@ -522,4 +522,6 @@ endfunction
 " http://d.hatena.ne.jp/kitak/20100830/1283180007
 set splitbelow
 set splitright
+
+set hidden
 " *** }}}
