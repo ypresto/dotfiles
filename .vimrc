@@ -518,4 +518,8 @@ function! g:UpdateTags()
       execute "setlocal tags+=" . neocomplcache#cache#encode_name('include_tags', filename)
     endfor
 endfunction
+
+" http://d.hatena.ne.jp/kitak/20100830/1283180007
+set splitbelow
+set splitright
 " *** }}}
