@@ -394,8 +394,8 @@ autocmd BufNewFile,BufRead *.go :colorscheme go
 
 " *** Bleeding Edge *** {{{
 " Bundle 'fuenor/qfixgrep'
-nnoremap <C-j> :cnext<CR>
-nnoremap <C-k> :cprev<CR>
+nnoremap <C-j> :lnext<CR>
+nnoremap <C-k> :lprev<CR>
 " nnoremap <C-n> :lnext<CR>
 " nnoremap <C-p> :lprev<CR>
 " nnoremap <Leader>n :next<CR>
