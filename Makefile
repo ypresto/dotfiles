@@ -25,3 +25,7 @@ skkdict:
 	cd .vim/dict && \
 	wget http://openlab.jp/skk/dic/SKK-JISYO.L.gz && \
 	gzip -df SKK-JISYO.L.gz
+
+perldict:
+	cd .vim/dict && \
+	wget https://raw.github.com/Cside/dotfiles/master/.vim/dict/perl.dict
