@@ -380,6 +380,13 @@ autocmd BufNewFile,BufRead *.json set filetype=javascript
 let perl_fold=1
 let perl_fold_blocks=1
 Bundle 'yko/mojo.vim'
+augroup Perl
+    autocmd!
+    autocmd FileType perl call SigilMaps()
+augroup END
+function! SigilMaps()
+    inoremap <C-y> $
+endfunction
 " ** }}}
 
 " ** PHP ** {{{
@@ -447,7 +454,7 @@ endfunction
 
 set ignorecase
 set smartcase
-set cmdheight=1
+set cmdheight=2
 "Bundle 'Shougo/neocomplcache-snippets-complete'
 imap <expr> <Tab> '<Plug>'.HandleTabKey(0)
 "imap <expr> <Tab> HandleTabKey(0)
@@ -473,7 +480,7 @@ let g:snips_trigger_key_backwards='<Plug>local_SnipmateTabBackward'
 " Bundle 'mbriggs/mark.vim'
 " Bundle 'mattn/benchvimrc-vim'
 let g:neocomplcache_ctags_arguments_list = {
-  \ 'perl' : '-R --languages=Perl --langmap=Perl:+.t'
+  \ 'perl' : '-R -h ".pm"'
   \ }
 " Bundle 'astashov/vim-ruby-debugger'
 Bundle 'kien/ctrlp.vim'
@@ -530,6 +537,8 @@ set splitright
 
 set hidden
 
+" TODO: This does not solve slow performance on repeating undo
+
 " http://vim.wikia.com/wiki/Keep_folds_closed_while_inserting_text
 " Don't screw up folds when inserting text that might affect them, until
 " leaving insert mode. Foldmethod is local to the window. Protect against
@@ -537,4 +546,21 @@ set hidden
 autocmd InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
 autocmd InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
 
+" function! FdmPause()
+"     if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
+"     augroup FdmPauser
+"         autocmd CursorMoved,CursorHold,WinLeave * call FdmRestore()
+"     augroup END
+" endfunction
+" function! FdmRestore()
+"     if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
+"     augroup FdmPauser
+"         autocmd FileAppendPre * call FdmPause()
+"     augroup END
+" endfunction
+" call FdmRestore()
+inoremap <C-f> <C-o>l
+inoremap <C-b> <C-o>h
+" TODO: current search pattern
+command! -nargs=+ G :vimgrep /<args>/ % | cwin
 " *** }}}
