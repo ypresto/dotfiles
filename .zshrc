@@ -122,7 +122,7 @@ alias :d='cd ~/dotfiles'
 alias :h='cd ~/homebrew'
 alias :g='cd ~/repo/github.com'
 #alias snip='open ~/.vim/bundle/snipMate/snippets'
-a() { git add . $1; git status --short }
+a() { git add ${1:-.}; git status --short }
 m() { git commit -m "$*" }
 
 copy-line() { print -rn $BUFFER | pbcopy; zle -M "Copied: ${BUFFER}" }
@@ -169,3 +169,5 @@ stty stop undef
 stty start undef
 
 alias vless='/usr/share/vim/vim73/macros/less.sh'
+
+export WORDCHARS='*?_[]~=&;!#$%^(){}-'
