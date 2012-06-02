@@ -563,4 +563,10 @@ inoremap <C-f> <C-o>l
 inoremap <C-b> <C-o>h
 " TODO: current search pattern
 command! -nargs=+ G :vimgrep /<args>/ % | cwin
+
+Bundle 'kana/vim-smartword.git'
+map w <Plug>(smartword-w)
+map b <Plug>(smartword-b)
+map e <Plug>(smartword-e)
+map ge <Plug>(smartword-ge)
 " *** }}}
