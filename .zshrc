@@ -167,3 +167,5 @@ fi
 
 stty stop undef
 stty start undef
+
+alias vless='/usr/share/vim/vim73/macros/less.sh'
