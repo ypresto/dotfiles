@@ -1,5 +1,15 @@
-alias ls='ls --color=auto'
-eval `dircolors ~/dotfiles/dircolors-solarized/dircolors.ansi-dark`
+if which gls >/dev/null 2>&1; then
+    # os x with homebrew/coreutils
+    alias ls='gls --color=auto'
+    eval `gdircolors ~/dotfiles/dircolors-solarized/dircolors.ansi-dark`
+elif [ -d /Library ]; then
+    # os x without homebrew/coreutils
+    alias ls='ls -G'
+else
+    # maybe linux
+    alias ls='ls --color=auto'
+    eval `dircolors ~/dotfiles/dircolors-solarized/dircolors.ansi-dark`
+fi
 
 ssh_auth_sock_path=~/.ssh/ssh_auth_sock
 if [ $SSH_AUTH_SOCK != $ssh_auth_sock_path ]; then
