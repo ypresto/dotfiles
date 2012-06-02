@@ -172,3 +172,14 @@ stty start undef
 alias vless='/usr/share/vim/vim73/macros/less.sh'
 
 export WORDCHARS='*?_[]~=&;!#$%^(){}-'
+
+
+#=============================
+# source auto-fu.zsh
+#=============================
+source ~/dotfiles/auto-fu.zsh/auto-fu.zsh
+function zle-line-init () {
+    auto-fu-init
+}
+zle -N zle-line-init
+zstyle ':completion:*' completer _oldlist _complete

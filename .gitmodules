@@ -1,3 +1,6 @@
 [submodule "dircolors-solarized"]
 	path = dircolors-solarized
 	url = https://github.com/seebi/dircolors-solarized.git
+[submodule "auto-fu.zsh"]
+	path = auto-fu.zsh
+	url = git://github.com/hchbaw/auto-fu.zsh.git
