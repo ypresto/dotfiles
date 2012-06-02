@@ -110,6 +110,7 @@ alias d='git diff'
 alias c='git diff --cached'
 alias s='git status --short'
 alias t='tig'
+alias p='popd'
 alias :q='exit'
 alias :z='v ~/dotfiles/.zshrc'
 alias :zz='. ~/.zshrc'
@@ -149,13 +150,12 @@ fi
 
 bindkey "^A" beginning-of-line
 bindkey "^E" end-of-line
-bindkey "^[d" backward-delete-word
-bindkey "^h" vi-kill-line
+bindkey "^U" vi-kill-line
 # wrong mappings
 # bindkey "^[;3C" forward-word
 # bindkey "^[;3D" backward-word
 
-# http://gry.sakura.ne.jp/2009/06/08/183ndkey "^?"    backward-delete-char
+# http://gry.sakura.ne.jp/2009/06/08/183
 bindkey "^H"    backward-delete-char
 bindkey "^[[3~" delete-char
 bindkey "^[[1~" beginning-of-line
@@ -165,6 +165,7 @@ if [ -f "$HOME/.zshrc.local" ]; then
     source "$HOME/.zshrc.local"
 fi
 
+# Release Ctrl-Q and Ctrl-S from tty
 stty stop undef
 stty start undef
 
