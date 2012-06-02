@@ -10,12 +10,13 @@ install:
 	make _up
 
 update:
+	./mksymlinks
 	vim -c ":BundleInstall!"
 	vim -c ":BundleClean"
 	make _up
 	./mksymlinks
 
-_up: vimproc skkdict
+_up: vimproc skkdict perldict gitsubmodules
 	
 vimproc:
 	cd .vim/bundle/vimproc && \
@@ -29,3 +30,8 @@ skkdict:
 perldict:
 	cd .vim/dict && \
 	wget https://raw.github.com/Cside/dotfiles/master/.vim/dict/perl.dict
+
+gitsubmodules:
+	git submodule sync
+	git submodule update --init
+	git submodule foreach 'git checkout master; git pull'
