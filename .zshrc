@@ -174,6 +174,13 @@ alias vless='/usr/share/vim/vim73/macros/less.sh'
 export WORDCHARS='*?_[]~=&;!#$%^(){}-'
 
 
+# cdr
+autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+add-zsh-hook chpwd chpwd_recent_dirs
+zstyle ':chpwd:*' recent-dirs-max 5000
+zstyle ':chpwd:*' recent-dirs-default yes
+zstyle ':completion:*' recent-dirs-insert both
+
 #=============================
 # source auto-fu.zsh
 #=============================
@@ -183,3 +190,9 @@ function zle-line-init () {
 }
 zle -N zle-line-init
 zstyle ':completion:*' completer _oldlist _complete
+
+# zaw.zsh
+# FIXME: conflicts with auto-fu, use Ctrl-C to avoid
+source ~/dotfiles/zaw/zaw.zsh
+zstyle ":filter-select" case-insensitive yes
+bindkey "^V" zaw-cdr
