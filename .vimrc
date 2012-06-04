@@ -583,4 +583,5 @@ noremap <Leader>pt :call Search_pm('tabe')<CR>
 
 set foldlevelstart=1
 
+command! P :echo expand('%')
 " *** }}}
