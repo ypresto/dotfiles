@@ -572,4 +572,15 @@ map ge <Plug>(smartword-ge)
 
 " :rename
 Bundle 'danro/rename.vim'
+
+" ~/.vimlocal {{{
+set rtp+=~/.vimlocal
+noremap <Leader>pg :call Search_pm('vne')<CR>
+noremap <Leader>pf :call Search_pm('e')<CR>
+noremap <Leader>pd :call Search_pm('sp')<CR>
+noremap <Leader>pt :call Search_pm('tabe')<CR>
+" }}}
+
+set foldlevelstart=1
+
 " *** }}}
