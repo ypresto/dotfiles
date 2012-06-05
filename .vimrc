@@ -25,7 +25,7 @@ Bundle 'gmarik/vundle'
 " }}}
 
 " *** Edit *** {{{
-set backspace=2 " for os x
+set backspace=indent,eol,start
 " }}}
 
 " *** File *** {{{
@@ -484,7 +484,7 @@ let g:neocomplcache_ctags_arguments_list = {
   \ }
 " Bundle 'astashov/vim-ruby-debugger'
 Bundle 'kien/ctrlp.vim'
-let g:ctrlp_map = '<C-c>'
+let g:ctrlp_map = '<Leader><C-p>'
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
 nmap ,up :Unite -direction=botright -auto-resize -auto-preview -buffer-name=files file_rec<CR>
 nmap ,Up :Unite -create -no-quit -toggle  -vertical -direction=botright -winwidth=30 -buffer-name=files file_rec<CR>
@@ -563,6 +563,7 @@ inoremap <C-f> <C-o>l
 inoremap <C-b> <C-o>h
 " TODO: current search pattern
 command! -nargs=+ G :vimgrep /<args>/ % | cwin
+command! -nargs=+ GB :cexpr "" | :cwin | :bufdo vimgrepadd /<args>/ %
 
 Bundle 'kana/vim-smartword.git'
 map w <Plug>(smartword-w)
@@ -583,5 +584,6 @@ noremap <Leader>pt :call Search_pm('tabe')<CR>
 
 set foldlevelstart=1
 
-command! P :echo expand('%')
+command! F :echo expand('%')
+
 " *** }}}
