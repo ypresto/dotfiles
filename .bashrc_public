@@ -11,6 +11,10 @@ else
     eval `dircolors ~/dotfiles/dircolors-solarized/dircolors.ansi-dark`
 fi
 
+if which gfind >/dev/null 2>&1; then
+    alias find='gfind'
+fi
+
 ssh_auth_sock_path=~/.ssh/ssh_auth_sock
 if [ $SSH_AUTH_SOCK != $ssh_auth_sock_path ]; then
     ln -sf $SSH_AUTH_SOCK $ssh_auth_sock_path

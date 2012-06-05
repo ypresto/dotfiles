@@ -7,6 +7,8 @@
 #bindkey -v
 bindkey -e
 
+fpath=(~/.zsh/functions/Completion ~/homebrew/local/share/zsh/{site-,}functions /usr/local/share/zsh/{site-,}functions ${fpath})
+
 autoload -U compinit
 compinit
 
