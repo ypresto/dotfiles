@@ -22,3 +22,5 @@
 	tool = vimdiff
 [difftool]
 	prompt = true
+[github]
+	user = yuya-presto
