@@ -18,10 +18,11 @@ let eskk_enabled = 0
 
 " *** Start up *** {{{
 if has('vim_starting')
+    set nocompatible
     set rtp+=~/.vim/bundle/vundle/
     call vundle#rc()
     set rtp+=~/.vimlocal/
-    set nocompatible
+    let $PERL5LIB='./lib:'.expand('$PERL5LIB')
 endif
 Bundle 'gmarik/vundle'
 " }}}
@@ -159,7 +160,7 @@ nmap <Leader>Uf :UniteWithCurrentDir -create -no-quit -toggle  -vertical -direct
 nmap <Leader>ur :Unite -auto-preview -buffer-name=register register<CR>
 " 最近使用したファイル一覧
 nmap <Leader>us <Leader>u:file_mru<CR>
-nmap <Leader>Us <Leader>U:file_mru<CR>
+nmap <Leader>Us <Leader>U:file_mru -winwidth=80<CR>
 " 全部乗せ
 nmap <Leader>ua :UniteWithBufferDir -direction=botright -buffer-name=files buffer file_mru bookmark file<CR>
 " unite-mark
@@ -535,6 +536,8 @@ augroup FoldRenewer
     autocmd!
     autocmd VimEnter,WinEnter * call DelayedStashFold()
     autocmd InsertLeave,CursorHold,CursorHoldI * call RenewFold()
+    " for editing single file on multiple split
+    autocmd WinLeave * call StashFold()
 augroup END
 
 " Let foldmethod create folds first, then preserve it.
@@ -634,7 +637,8 @@ endif
 
 set modelines=0
 
-set notimeout
+set timeout
+set timeoutlen=1000
 set ttimeout
 set ttimeoutlen=150
 
@@ -679,8 +683,11 @@ nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 
 command! DiffOrig vert new | set bt=nofile | r ++edit # | 0d_
                 \ | diffthis | wincmd p | diffthis
-autocmd! VimEnter * let $PERL5LIB="./lib:".expand('$PERL5LIB')
 
 nmap <Leader>ut <Leader>u: tab<CR>
 nmap <Leader>Ut <Leader>U: tab<CR>
+
+Bundle 'buftabs'
+
+vnoremap <Leader>th :<c-u>AlignCtrl l-l<cr>gv:Align =><cr>
 " *** }}}
