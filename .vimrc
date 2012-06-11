@@ -16,10 +16,12 @@ let skk_enabled = 0
 let eskk_enabled = 0
 " *** }}}
 
-" *** Vundler *** {{{
+" *** Start up *** {{{
 if has('vim_starting')
     set rtp+=~/.vim/bundle/vundle/
     call vundle#rc()
+    set rtp+=~/.vimlocal/
+    set nocompatible
 endif
 Bundle 'gmarik/vundle'
 " }}}
@@ -44,11 +46,15 @@ set tabstop=8
 set shiftwidth=4
 set softtabstop=4
 set expandtab
+set smarttab
 set autoindent
-autocmd FileType html,css,javascript,tex set shiftwidth=2 softtabstop=2
-autocmd FileType make set softtabstop=8 shiftwidth=8 noexpandtab
+set smartindent
+" set shiftround
+autocmd FileType html,css,javascript,yaml,tex set shiftwidth=2 softtabstop=2 nosmartindent
+autocmd FileType make setlocal softtabstop=8 shiftwidth=8 noexpandtab
+autocmd FileType python setlocal nosmartindent
+autocmd FileType c,cpp,java setlocal cindent
 " ** }}}
-
 " ** Undo / Backup ** {{{
 set undofile
 set undodir=~/.vim/undo
@@ -115,11 +121,11 @@ inoremap <silent> <C-d> <Del>
 cnoremap <silent> <C-p> <Up>
 cnoremap <silent> <C-n> <Down>
 inoremap <silent> <C-[> <Esc>
-nnoremap <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>
-nnoremap ,c :cwin<CR>
-nnoremap ,C :cclose<CR>
-nnoremap ,l :lwin<CR>
-nnoremap ,L :lclose<CR>
+nnoremap <silent> <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>
+" nnoremap ,c :cwin<CR>
+" nnoremap ,C :cclose<CR>
+" nnoremap ,l :lwin<CR>
+" nnoremap ,L :lclose<CR>
 let g:user_zen_leader_key = '<C-q>'
 let g:user_zen_expandabbr_key = '<C-q><C-q>'
 nnoremap ,g :GundoToggle<CR>
@@ -127,7 +133,7 @@ nnoremap ,g :GundoToggle<CR>
 " ** neocomplcache ** {{{
 inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
 inoremap <expr> <C-x><C-f>  neocomplcache#manual_filename_complete()
-inoremap <expr> <C-j>  &filetype == 'vim' ? "\<C-x>\<C-v>\<C-p>" : neocomplcache#manual_omni_complete()
+inoremap <expr> <C-m>  &filetype == 'vim' ? "\<C-x>\<C-v>\<C-p>" : neocomplcache#manual_omni_complete()
 " C-nでneocomplcache補完
 inoremap <expr> <C-n>  pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
 " C-pでkeyword補完
@@ -141,31 +147,31 @@ inoremap <expr> <C-e>  pumvisible() ? neocomplcache#close_popup() : "<End>"
 " ** unite ** {{{
 if unite_enabled
 " デフォルト
-nnoremap ,u: :Unite -direction=botright -auto-resize 
-nnoremap ,U: :Unite -create -no-quit -toggle  -vertical -direction=botright -winwidth=30 
+nnoremap <Leader>u: :Unite -direction=botright -auto-resize 
+nnoremap <Leader>U: :Unite -create -no-quit -toggle  -vertical -direction=botright -winwidth=30 
 " バッファ一覧
-nmap ,ub ,u:buffer<CR>
-nmap ,Ub ,U:buffer<CR>
+nmap <Leader>ub <Leader>u:buffer<CR>
+nmap <Leader>Ub <Leader>U:buffer<CR>
 " ファイル一覧
-nmap ,uf :UniteWithBufferDir -direction=botright -auto-resize -auto-preview -buffer-name=files file<CR>
-nmap ,Uf :UniteWithCurrentDir -create -no-quit -toggle  -vertical -direction=botright -winwidth=30 -buffer-name=files file<CR>
+nmap <Leader>uf :UniteWithBufferDir -direction=botright -auto-resize -auto-preview -buffer-name=files file<CR>
+nmap <Leader>Uf :UniteWithCurrentDir -create -no-quit -toggle  -vertical -direction=botright -winwidth=30 -buffer-name=files file<CR>
 " レジスタ一覧
-nmap ,ur :Unite -auto-preview -buffer-name=register register<CR>
+nmap <Leader>ur :Unite -auto-preview -buffer-name=register register<CR>
 " 最近使用したファイル一覧
-nmap ,us ,u:file_mru<CR>
-nmap ,Us ,U:file_mru<CR>
+nmap <Leader>us <Leader>u:file_mru<CR>
+nmap <Leader>Us <Leader>U:file_mru<CR>
 " 全部乗せ
-nmap ,ua :UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
+nmap <Leader>ua :UniteWithBufferDir -direction=botright -buffer-name=files buffer file_mru bookmark file<CR>
 " unite-mark
-nmap ,um ,u:-auto-preview mark<CR>
-nmap ,Um ,U:-auto-preview mark<CR>
+nmap <Leader>um <Leader>u:-auto-preview mark<CR>
+nmap <Leader>Um <Leader>U:-auto-preview mark<CR>
 " unite-outline
-nmap ,uo ,u:-auto-preview outline<CR>
-nmap ,Uo ,U:-auto-preview outline<CR>
+nmap <Leader>uo <Leader>u:-auto-preview outline<CR>
+nmap <Leader>Uo <Leader>U:-auto-preview outline<CR>
 " history/yankの有効化
 let g:unite_source_history_yank_enable = 1
-nmap ,uy ,u:-auto-resize -direction=botright history/yank<CR>
-nmap ,Uy ,U:-auto-resize -direction=botright history/yank<CR>
+nmap <Leader>uy <Leader>u:-auto-resize -direction=botright history/yank<CR>
+nmap <Leader>Uy <Leader>U:-auto-resize -direction=botright history/yank<CR>
 " ウィンドウを分割して開く
 au FileType unite nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
 au FileType unite inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
@@ -173,8 +179,8 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split
 au FileType unite nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
 au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
 " ESCキーを2回押すと終了する
-au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
-au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
+au FileType unite nmap <silent> <buffer> <ESC><ESC> q
+au FileType unite imap <silent> <buffer> <ESC><ESC> <ESC>q
 endif
 " ** }}}
 
@@ -192,8 +198,7 @@ endif
 " *** Custom Scripts *** {{{
 
 " ** Braces ** {{{
-"inoremap <expr><CR> <SID>BlockCompl()
-set cindent
+inoremap <expr><CR> <SID>BlockCompl()
 function! s:BlockCompl()
     if col('.') == col('$')
         let l = getline('.')
@@ -228,17 +233,13 @@ Bundle 'Shougo/vimproc'
 " TODO: To be used {{{
 Bundle 'thinca/vim-quickrun'
 Bundle 'TaskList.vim'
-Bundle 'scrooloose/nerdtree'
+" Bundle 'scrooloose/nerdtree'
 Bundle 'Align'
 " required by fuzzyfinder
-Bundle 'L9'
+" Bundle 'L9'
 " Bundle 'FuzzyFinder'
 " Bundle 'kana/vim-smartchr'
-" Snipmate
-Bundle 'MarcWeber/vim-addon-mw-utils'
-Bundle 'tomtom/tlib_vim'
-Bundle 'snipmate-snippets'
-Bundle 'garbas/vim-snipmate'
+
 " Bundle 'Shougo/vimshell'
 " }}}
 
@@ -270,10 +271,13 @@ Bundle 'scrooloose/syntastic'
 " rich-formatted undo history
 Bundle 'sjl/gundo.vim'
 let g:gundo_right = 1
+let g:gundo_close_on_revert = 1
 
 " ** neocomplcache ** {{{
 " TODO
 Bundle 'Shougo/neocomplcache'
+Bundle 'Shougo/neocomplcache-snippets-complete'
+Bundle 'honza/snipmate-snippets'
 " Bundle 'ujihisa/neco-look' " too heavy
 " let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_camel_case_completion = 1
@@ -416,8 +420,8 @@ nnoremap <C-h> :tn<CR>
 nnoremap <C-l> :tp<CR>
 if unite_enabled
 Bundle 'sgur/unite-qf'
-nmap ,uq ,u:-auto-resize -direction=botright qf<CR>
-nmap ,Uq ,U:-auto-resize -direction=botright qf<CR>
+nmap <Leader>uq <Leader>u:-auto-resize -direction=botright qf<CR>
+nmap <Leader>Uq <Leader>U:-auto-resize -direction=botright qf<CR>
 endif
 Bundle 'jelera/vim-javascript-syntax'
 Bundle 'nono/jquery.vim'
@@ -425,14 +429,12 @@ Bundle 'nono/jquery.vim'
 set history=50
 set viminfo='50,<50,s10,%
 Bundle 'YankRing.vim'
-Bundle 'buftabs'
-let g:buftabs_only_basename = 1
-let g:buftabs_in_statusline = 1
 " Bundle 'basyura/TweetVim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'kien/rainbow_parentheses.vim'
 autocmd VimEnter * :RainbowParenthesesToggle
-" Bundle 'vimtaku/vim-textobj-keyvalue'
+" [ai][kv]
+Bundle 'vimtaku/vim-textobj-keyvalue'
 " Bundle 't9md/vim-phrase'
 " TODO: using at end of line causes backspace
 inoremap <C-k> <C-o>D
@@ -440,10 +442,11 @@ inoremap <C-k> <C-o>D
 nnoremap <C-w>a <C-w>\|<C-w>_
 " set showtabline=2
 " Bundle 'kmnk/vim-unite-giti.git'
-" nmap ,ug ,u:-auto-resize -direction=botright giti<CR>
-" nmap ,Ug ,U:-auto-resize -direction=botright giti<CR>
+" nmap <Leader>ug <Leader>u:-auto-resize -direction=botright giti<CR>
+" nmap <Leader>Ug <Leader>U:-auto-resize -direction=botright giti<CR>
 " scroll
 set scrolloff=1
+" [ai]g, a: includes index/key/arrow, i: symbol only
 Bundle 'vimtaku/vim-textobj-sigil'
 " simple vim ref for .vimrc
 autocmd! FileType vim call MapVimHelp()
@@ -455,28 +458,7 @@ endfunction
 set ignorecase
 set smartcase
 set cmdheight=2
-"Bundle 'Shougo/neocomplcache-snippets-complete'
-imap <expr> <Tab> '<Plug>'.HandleTabKey(0)
-"imap <expr> <Tab> HandleTabKey(0)
-imap <expr> <S-Tab> '<Plug>'.HandleTabKey(1)
-function! HandleTabKey(shift)
-    if exists('g:snipPos')
-        if a:shift== 0
-            return 'local_SnipmateTabForward'
-        else
-            return 'local_SnipmateTabBackward'
-        endif
-    elseif a:shift!= 0
-        return 'delimitMateS-Tab'
-    elseif pumvisible()
-        return 'local_neocomClosePopup'
-    else
-        return 'local_SnipmateTabForward'
-    endif
-endfunction
-inoremap <expr> <Plug>local_neocomClosePopup neocomplcache#close_popup()
-let g:snips_trigger_key='<Plug>local_SnipmateTabForward'
-let g:snips_trigger_key_backwards='<Plug>local_SnipmateTabBackward'
+
 " Bundle 'mbriggs/mark.vim'
 " Bundle 'mattn/benchvimrc-vim'
 let g:neocomplcache_ctags_arguments_list = {
@@ -486,15 +468,15 @@ let g:neocomplcache_ctags_arguments_list = {
 Bundle 'kien/ctrlp.vim'
 let g:ctrlp_map = '<Leader><C-p>'
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
-nmap ,up :Unite -direction=botright -auto-resize -auto-preview -buffer-name=files file_rec<CR>
-nmap ,Up :Unite -create -no-quit -toggle  -vertical -direction=botright -winwidth=30 -buffer-name=files file_rec<CR>
+nmap <Leader>up :Unite -direction=botright -auto-resize -auto-preview -buffer-name=files file_rec<CR>
+nmap <Leader>Up :Unite -create -no-quit -toggle  -vertical -direction=botright -winwidth=30 -buffer-name=files file_rec<CR>
 " Bundle 'taku-o/vim-copypath'
 Bundle 'kana/vim-altr'
 nmap <Leader>f <Plug>(altr-forward)
 Bundle 'Smooth-Scroll'
 set noeb vb t_vb=
 Bundle 'mileszs/ack.vim'
-Bundle 'jpalardy/vim-slime'
+" Bundle 'jpalardy/vim-slime'
 augroup InitNeCo
     autocmd!
     autocmd CursorMovedI * call DoInitNeco()
@@ -543,8 +525,49 @@ set hidden
 " Don't screw up folds when inserting text that might affect them, until
 " leaving insert mode. Foldmethod is local to the window. Protect against
 " screwing up folding when switching between windows.
-autocmd InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
-autocmd InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
+" autocmd InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
+" autocmd InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
+
+
+" *** Fold Renewer *** {{{
+" work around for performance problem of expr/syntax foldmethods
+augroup FoldRenewer
+    autocmd!
+    autocmd VimEnter,WinEnter * call DelayedStashFold()
+    autocmd InsertLeave,CursorHold,CursorHoldI * call RenewFold()
+augroup END
+
+" Let foldmethod create folds first, then preserve it.
+" CursorMoved called also after file loaded, 
+function! DelayedStashFold()
+    if &foldmethod != 'expr' && &foldmethod != 'syntax'
+        return
+    endif
+    augroup StashFoldRegister
+        autocmd!
+        autocmd CursorMoved,CursorMovedI * call StashFold()
+    augroup END
+endfunction
+ 
+function! RenewFold()
+    if exists('w:last_fdm')
+        if &foldmethod == 'manual'
+            let &l:foldmethod=w:last_fdm
+        endif
+        unlet w:last_fdm
+    endif
+    call DelayedStashFold()
+endfunction
+
+function! StashFold()
+    if !exists('w:last_fdm') && (&foldmethod == 'expr' || &foldmethod == 'syntax')
+        let w:last_fdm=&foldmethod
+        setlocal foldmethod=manual
+    endif
+    augroup StashFoldRegister
+        autocmd!
+    augroup END
+endfunction
 
 " function! FdmPause()
 "     if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
@@ -559,31 +582,96 @@ autocmd InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:las
 "     augroup END
 " endfunction
 " call FdmRestore()
+
 inoremap <C-f> <C-o>l
 inoremap <C-b> <C-o>h
 " TODO: current search pattern
-command! -nargs=+ G :vimgrep /<args>/ % | cwin
-command! -nargs=+ GB :cexpr "" | :cwin | :bufdo vimgrepadd /<args>/ %
+" XXX: ack.vim is recommended
+" command! -nargs=+ G :vimgrep /<args>/ % | cwin
+" command! -nargs=+ GB :cexpr "" | :cwin | :bufdo vimgrepadd /<args>/ %
 
-Bundle 'kana/vim-smartword.git'
-map w <Plug>(smartword-w)
-map b <Plug>(smartword-b)
-map e <Plug>(smartword-e)
-map ge <Plug>(smartword-ge)
+" Bundle 'kana/vim-smartword.git'
+" map w <Plug>(smartword-w)
+" map b <Plug>(smartword-b)
+" map e <Plug>(smartword-e)
+" map ge <Plug>(smartword-ge)
 
 " :rename
 Bundle 'danro/rename.vim'
 
 " ~/.vimlocal {{{
-set rtp+=~/.vimlocal
 noremap <Leader>pg :call Search_pm('vne')<CR>
 noremap <Leader>pf :call Search_pm('e')<CR>
 noremap <Leader>pd :call Search_pm('sp')<CR>
 noremap <Leader>pt :call Search_pm('tabe')<CR>
 " }}}
 
-set foldlevelstart=1
+set foldlevelstart=0
 
 command! F :echo expand('%')
+
+if 0
+" [ai]l
+Bundle 'kana/vim-textobj-line'
+set shortmess+=I
+set textwidth=0
+set colorcolumn=+1,+2,+3,+4
+if has('mouse')
+    let g:_toggle_mouse_state=0
+    command! Tm set mouse=a
+    function! ToggleMouse()
+        if g:_toggle_mouse_state == 0
+            set mouse=a
+        else
+            set mouse=
+        endif
+    endfunction
+endif
+
+set modelines=0
+
+set notimeout
+set ttimeout
+set ttimeoutlen=150
+
+Bundle 'kablamo/VimDebug'
+
+" if has('mac') pbcopy
+
+" QuickFix Toggle {{{
+" refer: http://vim.wikia.com/wiki/Toggle_to_open_or_close_the_quickfix_window
+
+function! GetBufferList()
+  redir =>buflist
+  silent! ls
+  redir END
+  return buflist
+endfunction
+
+function! ToggleList(bufname, pfx)
+  let buflist = GetBufferList()
+  for bufnum in map(filter(split(buflist, '\n'), 'v:val =~ "'.a:bufname.'"'), 'str2nr(matchstr(v:val, "\\d\\+"))')
+    if bufwinnr(bufnum) != -1
+      exec(a:pfx.'close')
+      return
+    endif
+  endfor
+  if a:pfx == 'l' && len(getloclist(0)) == 0
+      echohl ErrorMsg
+      echo "Location List is Empty."
+      return
+  endif
+  let winnr = winnr()
+  exec('botright '.a:pfx.'open')
+  if winnr() != winnr
+    wincmd p
+  endif
+endfunction
+
+nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
+nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
+
+" }}}
+endif
 
 " *** }}}

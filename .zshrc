@@ -124,6 +124,7 @@ alias :gc='v ~/dotfiles/.gitconfig'
 alias :d='cd ~/dotfiles'
 alias :h='cd ~/homebrew'
 alias :g='cd ~/repo/github.com'
+alias :bl='v ~/.bashrc'
 #alias snip='open ~/.vim/bundle/snipMate/snippets'
 a() { git add ${1:-.}; git status --short }
 m() { git commit -m "$*" }
@@ -198,3 +199,10 @@ zstyle ':completion:*' completer _oldlist _complete
 source ~/dotfiles/zaw/zaw.zsh
 zstyle ":filter-select" case-insensitive yes
 bindkey "^V" zaw-cdr
+
+unsetopt list_beep
+unsetopt beep
+bindkey M afu "^[" afu+cancel
+bindkey -M afu "^G" afu+cancel
+# bindkey -M afu "^J" afu+cancel afu+accept-line
+# bindkey -M afu "^M" afu+cancel afu+accept-line
