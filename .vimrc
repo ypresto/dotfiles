@@ -590,11 +590,13 @@ inoremap <C-b> <C-o>h
 " command! -nargs=+ G :vimgrep /<args>/ % | cwin
 " command! -nargs=+ GB :cexpr "" | :cwin | :bufdo vimgrepadd /<args>/ %
 
-" Bundle 'kana/vim-smartword.git'
-" map w <Plug>(smartword-w)
-" map b <Plug>(smartword-b)
-" map e <Plug>(smartword-e)
-" map ge <Plug>(smartword-ge)
+if 0
+Bundle 'kana/vim-smartword.git'
+map w <Plug>(smartword-w)
+map b <Plug>(smartword-b)
+map e <Plug>(smartword-e)
+map ge <Plug>(smartword-ge)
+endif
 
 " :rename
 Bundle 'danro/rename.vim'
@@ -610,7 +612,6 @@ set foldlevelstart=0
 
 command! F :echo expand('%')
 
-if 0
 " [ai]l
 Bundle 'kana/vim-textobj-line'
 set shortmess+=I
@@ -618,14 +619,17 @@ set textwidth=0
 set colorcolumn=+1,+2,+3,+4
 if has('mouse')
     let g:_toggle_mouse_state=0
-    command! Tm set mouse=a
+    command! Mouse call ToggleMouse()
     function! ToggleMouse()
         if g:_toggle_mouse_state == 0
             set mouse=a
+            let g:_toggle_mouse_state = 1
         else
             set mouse=
+            let g:_toggle_mouse_state = 0
         endif
     endfunction
+    call ToggleMouse()
 endif
 
 set modelines=0
@@ -672,6 +676,11 @@ nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
 nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 
 " }}}
-endif
 
+command! DiffOrig vert new | set bt=nofile | r ++edit # | 0d_
+                \ | diffthis | wincmd p | diffthis
+autocmd! VimEnter * let $PERL5LIB="./lib:".expand('$PERL5LIB')
+
+nmap <Leader>ut <Leader>u: tab<CR>
+nmap <Leader>Ut <Leader>U: tab<CR>
 " *** }}}
