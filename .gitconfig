@@ -5,7 +5,7 @@
 	excludesfile = ~/.gitignore_global
 	editor = /usr/bin/env vim
 [color]
-	ui = always
+	ui = auto
 [alias]
 	co = checkout
 	ci = commit
