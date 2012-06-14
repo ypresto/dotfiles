@@ -536,7 +536,8 @@ augroup FoldRenewer
     autocmd!
     autocmd VimEnter,WinEnter * call DelayedStashFold()
     autocmd InsertLeave,CursorHold,CursorHoldI * call RenewFold()
-    " for editing single file on multiple split
+    " workaround for buffer change from outside of current window,
+    " like gundo plugin and multi split of single file
     autocmd WinLeave * call StashFold()
 augroup END
 
@@ -621,18 +622,12 @@ set shortmess+=I
 set textwidth=0
 set colorcolumn=+1,+2,+3,+4
 if has('mouse')
-    let g:_toggle_mouse_state=0
-    command! Mouse call ToggleMouse()
-    function! ToggleMouse()
-        if g:_toggle_mouse_state == 0
-            set mouse=a
-            let g:_toggle_mouse_state = 1
-        else
-            set mouse=
-            let g:_toggle_mouse_state = 0
-        endif
-    endfunction
-    call ToggleMouse()
+    " use {shift|command}+drag to use terminal side mouse
+    set mouse=a
+    " http://www.machu.jp/diary/20070310.html#p01
+    if &term == 'screen'
+        set ttymouse=xterm2
+    endif
 endif
 
 set modelines=0

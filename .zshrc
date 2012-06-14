@@ -128,6 +128,7 @@ alias :bl='v ~/.bashrc'
 #alias snip='open ~/.vim/bundle/snipMate/snippets'
 a() { git add ${1:-.}; git status --short }
 m() { git commit -m "$*" }
+alias gpr='git pull --rebase'
 
 copy-line() { print -rn $BUFFER | pbcopy; zle -M "Copied: ${BUFFER}" }
 zle -N copy-line
@@ -197,12 +198,13 @@ zstyle ':completion:*' completer _oldlist _complete
 # zaw.zsh
 # FIXME: conflicts with auto-fu, use Ctrl-C to avoid
 source ~/dotfiles/zaw/zaw.zsh
-zstyle ":filter-select" case-insensitive yes
-bindkey "^V" zaw-cdr
+zstyle ':filter-select' case-insensitive yes
+bindkey '^V' zaw-cdr
 
 unsetopt list_beep
 unsetopt beep
-bindkey M afu "^[" afu+cancel
-bindkey -M afu "^G" afu+cancel
+# bindkey -M afu '^[' afu+cancel # conflicts with ^[[Z
+bindkey -M afu '^G' afu+cancel
+bindkey '^[[Z' reverse-menu-complete
 # bindkey -M afu "^J" afu+cancel afu+accept-line
 # bindkey -M afu "^M" afu+cancel afu+accept-line
