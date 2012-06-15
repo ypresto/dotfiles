@@ -2,6 +2,8 @@
 " * .vimrc for yuya_presto
 " *
 
+let mapleader=" "
+
 " *** Reloadable config *** {{{
 autocmd!
 autocmd BufWritePost $MYVIMRC,$HOME/dotfiles/.vimrc source $MYVIMRC |
@@ -19,12 +21,21 @@ let eskk_enabled = 0
 " *** Start up *** {{{
 if has('vim_starting')
     set nocompatible
-    set rtp+=~/.vim/bundle/vundle/
-    call vundle#rc()
-    set rtp+=~/.vimlocal/
-    let $PERL5LIB='./lib:'.expand('$PERL5LIB')
+    set rtp+=~/.vim/bundle/neobundle.vim/
+    call neobundle#rc(expand('~/.vim/bundle/'))
+    set rtp+=~/.vimlocal
+    let $PERL5LIB='./lib:./t:./t/inc:'.expand('$PERL5LIB')
 endif
-Bundle 'gmarik/vundle'
+NeoBundle 'Shougo/neobundle.vim'
+NeoBundle 'Shougo/vimproc', {
+\   'build' : {
+\       'windows' : 'echo "Sorry, cannot update vimproc binary file in Windows."',
+\       'cygwin' : 'make -f make_cygwin.mak',
+\       'mac' : 'make -f make_mac.mak',
+\       'unix' : 'make -f make_unix.mak',
+\      },
+\   }
+
 " }}}
 
 " *** Edit *** {{{
@@ -129,7 +140,7 @@ nnoremap <silent> <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>
 " nnoremap ,L :lclose<CR>
 let g:user_zen_leader_key = '<C-q>'
 let g:user_zen_expandabbr_key = '<C-q><C-q>'
-nnoremap ,g :GundoToggle<CR>
+nnoremap <Leader>g :GundoToggle<CR>
 
 " ** neocomplcache ** {{{
 inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
@@ -148,21 +159,21 @@ inoremap <expr> <C-e>  pumvisible() ? neocomplcache#close_popup() : "<End>"
 " ** unite ** {{{
 if unite_enabled
 " デフォルト
-nnoremap <Leader>u: :Unite -direction=botright -auto-resize 
-nnoremap <Leader>U: :Unite -create -no-quit -toggle  -vertical -direction=botright -winwidth=30 
+nnoremap <Leader>u: :Unite 
+nnoremap <Leader>U: :Unite -create -no-quit -toggle  -vertical -winwidth=30 
 " バッファ一覧
 nmap <Leader>ub <Leader>u:buffer<CR>
 nmap <Leader>Ub <Leader>U:buffer<CR>
 " ファイル一覧
-nmap <Leader>uf :UniteWithBufferDir -direction=botright -auto-resize -auto-preview -buffer-name=files file<CR>
-nmap <Leader>Uf :UniteWithCurrentDir -create -no-quit -toggle  -vertical -direction=botright -winwidth=30 -buffer-name=files file<CR>
+nmap <Leader>uf :UniteWithBufferDir -auto-preview -buffer-name=files file<CR>
+nmap <Leader>Uf :UniteWithCurrentDir -create -no-quit -toggle  -vertical -winwidth=30 -buffer-name=files file<CR>
 " レジスタ一覧
 nmap <Leader>ur :Unite -auto-preview -buffer-name=register register<CR>
 " 最近使用したファイル一覧
 nmap <Leader>us <Leader>u:file_mru<CR>
 nmap <Leader>Us <Leader>U:file_mru -winwidth=80<CR>
 " 全部乗せ
-nmap <Leader>ua :UniteWithBufferDir -direction=botright -buffer-name=files buffer file_mru bookmark file<CR>
+nmap <Leader>ua :UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
 " unite-mark
 nmap <Leader>um <Leader>u:-auto-preview mark<CR>
 nmap <Leader>Um <Leader>U:-auto-preview mark<CR>
@@ -171,8 +182,8 @@ nmap <Leader>uo <Leader>u:-auto-preview outline<CR>
 nmap <Leader>Uo <Leader>U:-auto-preview outline<CR>
 " history/yankの有効化
 let g:unite_source_history_yank_enable = 1
-nmap <Leader>uy <Leader>u:-auto-resize -direction=botright history/yank<CR>
-nmap <Leader>Uy <Leader>U:-auto-resize -direction=botright history/yank<CR>
+nmap <Leader>uy <Leader>u: history/yank<CR>
+nmap <Leader>Uy <Leader>U: history/yank<CR>
 " ウィンドウを分割して開く
 au FileType unite nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
 au FileType unite inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
@@ -228,14 +239,11 @@ autocmd BufNewFile *.pl 0r $HOME/.vim/template/perl.pl
 
 " *** Plugins *** {{{
 
-" Shared by many modules
-Bundle 'Shougo/vimproc'
-
 " TODO: To be used {{{
-Bundle 'thinca/vim-quickrun'
-Bundle 'TaskList.vim'
+NeoBundle 'thinca/vim-quickrun'
+NeoBundle 'TaskList.vim'
 " Bundle 'scrooloose/nerdtree'
-Bundle 'Align'
+NeoBundle 'Align'
 " required by fuzzyfinder
 " Bundle 'L9'
 " Bundle 'FuzzyFinder'
@@ -248,37 +256,37 @@ Bundle 'Align'
 runtime macros/matchit.vim
 
 " autocompletes parenthesis, braces and more
-Bundle 'Raimondi/delimitMate'
+NeoBundle 'Raimondi/delimitMate'
 
 " moving
 " Bundle 'Lokaltog/vim-easymotion'
 
 " convenient functions for surrounding characters [ds'], [ys'], etc.
-Bundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-surround'
 
 " open some reference manual with K key
-Bundle 'thinca/vim-ref'
+NeoBundle 'thinca/vim-ref'
 
 " git support
-Bundle 'tpope/vim-fugitive'
-Bundle 'mattn/gist-vim'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'mattn/gist-vim'
 
 " read/write by sudo with `vim sudo:file.txt`
-Bundle 'sudo.vim'
+NeoBundle 'sudo.vim'
 
 " shows syntax error on every save
-Bundle 'scrooloose/syntastic'
+NeoBundle 'scrooloose/syntastic'
 
 " rich-formatted undo history
-Bundle 'sjl/gundo.vim'
+NeoBundle 'sjl/gundo.vim'
 let g:gundo_right = 1
 let g:gundo_close_on_revert = 1
 
 " ** neocomplcache ** {{{
 " TODO
-Bundle 'Shougo/neocomplcache'
-Bundle 'Shougo/neocomplcache-snippets-complete'
-Bundle 'honza/snipmate-snippets'
+NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'Shougo/neocomplcache-snippets-complete'
+NeoBundle 'honza/snipmate-snippets'
 " Bundle 'ujihisa/neco-look' " too heavy
 " let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_camel_case_completion = 1
@@ -291,9 +299,9 @@ let g:neocomplcache_dictionary_filetype_lists = {
 
 " ** unite ** {{{
 if unite_enabled
-Bundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/unite.vim'
 " Bundle 'tacroe/unite-mark'
-Bundle 'h1mesuke/unite-outline'
+NeoBundle 'h1mesuke/unite-outline'
 " 入力モードで開始する
 let g:unite_enable_start_insert=1
 endif
@@ -301,7 +309,7 @@ endif
 
 " ** textobj ** {{{
 " framework
-Bundle 'kana/vim-textobj-user'
+NeoBundle 'kana/vim-textobj-user'
 " too many, refer help
 " Bundle 'kana/vim-textobj-diff'
 " [ai]e
@@ -309,20 +317,20 @@ Bundle 'kana/vim-textobj-user'
 " [ai]z
 " Bundle 'kana/vim-textobj-fold'
 " [ai]f
-Bundle 'kana/vim-textobj-function'
+NeoBundle 'kana/vim-textobj-function'
 " [ai][iI]
-Bundle 'kana/vim-textobj-indent'
+NeoBundle 'kana/vim-textobj-indent'
 " [ai][/?] 
 " Bundle 'kana/vim-textobj-lastpat'
 " [ai]y
-Bundle 'kana/vim-textobj-syntax'
+NeoBundle 'kana/vim-textobj-syntax'
 " [ai]c
-Bundle 'thinca/vim-textobj-comment'
+NeoBundle 'thinca/vim-textobj-comment'
 " ** }}}
 
 " ** QuickFix ** {{{
 " show quickfix text of current line on statusline
-Bundle 'dannyob/quickfixstatus'
+NeoBundle 'dannyob/quickfixstatus'
 " edit quickfix lines
 " Bundle 'thinca/vim-qfreplace'
 " command! -nargs=+ QfArgs let b:quickrun_config = {'args': substitute(<f-args>, ',', ' ', 'g')}
@@ -331,20 +339,20 @@ Bundle 'dannyob/quickfixstatus'
 " ** IME ** {{{
 
 if mlh_enabled
-    Bundle 'vimtaku/vim-mlh'
+NeoBundle 'vimtaku/vim-mlh'
     autocmd VimEnter * :ToggleVimMlhKeymap
-    Bundle 'mattn/webapi-vim'
+NeoBundle 'mattn/webapi-vim'
 endif
 
 if eskk_enabled
-    Bundle 'tyru/eskk.vim'
+NeoBundle 'tyru/eskk.vim'
     let g:eskk#no_default_mappings = 1
     let g:eskk#large_dictionary = { 'path': "~/.vim/dict/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp', }
     let g:eskk#enable_completion = 1
 endif
 
 if skk_enabled
-    Bundle 'anyakichi/skk.vim'
+NeoBundle 'anyakichi/skk.vim'
     " original: Bundle 'tyru/skk.vim'
     let g:skk_jisyo = '~/.skk-jisyo'
     let g:skk_large_jisyo = '~/.vim/dict/SKK-JISYO.L'
@@ -365,15 +373,15 @@ endif
 " *** Filetype *** {{{
 
 " ** HTML / CSS / XML ** {{{
-Bundle 'mattn/zencoding-vim'
+NeoBundle 'mattn/zencoding-vim'
 let g:user_zen_settings = {
 \   'lang': "ja"
 \}
 let g:use_zen_complete_tag = 1
 
-Bundle 'othree/html5.vim'
-Bundle 'hail2u/vim-css3-syntax'
-Bundle 'sukima/xmledit'
+NeoBundle 'othree/html5.vim'
+NeoBundle 'hail2u/vim-css3-syntax'
+NeoBundle 'sukima/xmledit'
 " see http://nanasi.jp/articles/vim/xml-plugin.html
 " ** }}}
 
@@ -384,7 +392,7 @@ autocmd BufNewFile,BufRead *.json set filetype=javascript
 " ** Perl ** {{{
 let perl_fold=1
 let perl_fold_blocks=1
-Bundle 'yko/mojo.vim'
+NeoBundle 'yko/mojo.vim'
 augroup Perl
     autocmd!
     autocmd FileType perl call SigilMaps()
@@ -399,7 +407,7 @@ endfunction
 " ** }}}
 
 " ** Python ** {{{
-Bundle 'tmhedberg/SimpylFold'
+NeoBundle 'tmhedberg/SimpylFold'
 " ** }}}
 
 " ** Others ** {{{
@@ -420,22 +428,22 @@ nnoremap <C-k> :lprev<CR>
 nnoremap <C-h> :tn<CR>
 nnoremap <C-l> :tp<CR>
 if unite_enabled
-Bundle 'sgur/unite-qf'
-nmap <Leader>uq <Leader>u:-auto-resize -direction=botright qf<CR>
-nmap <Leader>Uq <Leader>U:-auto-resize -direction=botright qf<CR>
+NeoBundle 'sgur/unite-qf'
+nmap <Leader>uq <Leader>u:-auto-resize qf<CR>
+nmap <Leader>Uq <Leader>U:-auto-resize qf<CR>
 endif
-Bundle 'jelera/vim-javascript-syntax'
-Bundle 'nono/jquery.vim'
+NeoBundle 'jelera/vim-javascript-syntax'
+NeoBundle 'nono/jquery.vim'
 " reffer: http://vimwiki.net/?'viminfo'
 set history=50
 set viminfo='50,<50,s10,%
-Bundle 'YankRing.vim'
+NeoBundle 'YankRing.vim'
 " Bundle 'basyura/TweetVim'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'kien/rainbow_parentheses.vim'
+NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'kien/rainbow_parentheses.vim'
 autocmd VimEnter * :RainbowParenthesesToggle
 " [ai][kv]
-Bundle 'vimtaku/vim-textobj-keyvalue'
+NeoBundle 'vimtaku/vim-textobj-keyvalue'
 " Bundle 't9md/vim-phrase'
 " TODO: using at end of line causes backspace
 inoremap <C-k> <C-o>D
@@ -443,12 +451,12 @@ inoremap <C-k> <C-o>D
 nnoremap <C-w>a <C-w>\|<C-w>_
 " set showtabline=2
 " Bundle 'kmnk/vim-unite-giti.git'
-" nmap <Leader>ug <Leader>u:-auto-resize -direction=botright giti<CR>
-" nmap <Leader>Ug <Leader>U:-auto-resize -direction=botright giti<CR>
+" nmap <Leader>ug <Leader>u:-auto-resize giti<CR>
+" nmap <Leader>Ug <Leader>U:-auto-resize giti<CR>
 " scroll
 set scrolloff=1
 " [ai]g, a: includes index/key/arrow, i: symbol only
-Bundle 'vimtaku/vim-textobj-sigil'
+NeoBundle 'vimtaku/vim-textobj-sigil'
 " simple vim ref for .vimrc
 autocmd! FileType vim call MapVimHelp()
 function! MapVimHelp()
@@ -466,17 +474,17 @@ let g:neocomplcache_ctags_arguments_list = {
   \ 'perl' : '-R -h ".pm"'
   \ }
 " Bundle 'astashov/vim-ruby-debugger'
-Bundle 'kien/ctrlp.vim'
+NeoBundle 'kien/ctrlp.vim'
 let g:ctrlp_map = '<Leader><C-p>'
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
-nmap <Leader>up :Unite -direction=botright -auto-resize -auto-preview -buffer-name=files file_rec<CR>
-nmap <Leader>Up :Unite -create -no-quit -toggle  -vertical -direction=botright -winwidth=30 -buffer-name=files file_rec<CR>
+nmap <Leader>up :Unite -auto-resize -auto-preview -buffer-name=files file_rec<CR>
+nmap <Leader>Up :Unite -create -no-quit -toggle  -vertical -winwidth=30 -buffer-name=files file_rec<CR>
 " Bundle 'taku-o/vim-copypath'
-Bundle 'kana/vim-altr'
+NeoBundle 'kana/vim-altr'
 nmap <Leader>f <Plug>(altr-forward)
-Bundle 'Smooth-Scroll'
+NeoBundle 'Smooth-Scroll'
 set noeb vb t_vb=
-Bundle 'mileszs/ack.vim'
+NeoBundle 'mileszs/ack.vim'
 " Bundle 'jpalardy/vim-slime'
 augroup InitNeCo
     autocmd!
@@ -490,7 +498,7 @@ function! DoInitNeco()
     augroup END
     :NeoComplCacheEnable
 endfunction
-Bundle 'altercation/vim-colors-solarized'
+NeoBundle 'altercation/vim-colors-solarized'
 set t_Co=256
 set background=dark
 " let g:solarized_termcolors=256
@@ -595,7 +603,7 @@ inoremap <C-b> <C-o>h
 " command! -nargs=+ GB :cexpr "" | :cwin | :bufdo vimgrepadd /<args>/ %
 
 if 0
-Bundle 'kana/vim-smartword.git'
+NeoBundle 'kana/vim-smartword.git'
 map w <Plug>(smartword-w)
 map b <Plug>(smartword-b)
 map e <Plug>(smartword-e)
@@ -603,21 +611,14 @@ map ge <Plug>(smartword-ge)
 endif
 
 " :rename
-Bundle 'danro/rename.vim'
-
-" ~/.vimlocal {{{
-noremap <Leader>pg :call Search_pm('vne')<CR>
-noremap <Leader>pf :call Search_pm('e')<CR>
-noremap <Leader>pd :call Search_pm('sp')<CR>
-noremap <Leader>pt :call Search_pm('tabe')<CR>
-" }}}
+NeoBundle 'danro/rename.vim'
 
 set foldlevelstart=0
 
 command! F :echo expand('%')
 
 " [ai]l
-Bundle 'kana/vim-textobj-line'
+NeoBundle 'kana/vim-textobj-line'
 set shortmess+=I
 set textwidth=0
 set colorcolumn=+1,+2,+3,+4
@@ -637,7 +638,7 @@ set timeoutlen=1000
 set ttimeout
 set ttimeoutlen=150
 
-Bundle 'kablamo/VimDebug'
+NeoBundle 'kablamo/VimDebug'
 
 " if has('mac') pbcopy
 
@@ -682,7 +683,23 @@ command! DiffOrig vert new | set bt=nofile | r ++edit # | 0d_
 nmap <Leader>ut <Leader>u: tab<CR>
 nmap <Leader>Ut <Leader>U: tab<CR>
 
-Bundle 'buftabs'
+NeoBundle 'buftabs'
 
+" TODO
 vnoremap <Leader>th :<c-u>AlignCtrl l-l<cr>gv:Align =><cr>
+
+imap <Tab> <Plug>(neocomplcache_snippets_expand)
+smap <Tab> <Plug>(neocomplcache_snippets_expand)
+
+let g:unite_update_time=50
+nmap <Leader>ud :Unite -auto-resize -auto-preview -buffer-name=files file_rec<CR>
+nmap <Leader>Ud :Unite -create -no-quit -toggle  -vertical -winwidth=30 -buffer-name=files file_rec<CR>
+inoremap <Esc>t <C-d>
+map <Leader>ta <Plug>TaskList
+" *** }}}
+
+" *** Local Script *** {{{
+if filereadable(expand('~/.vimlocal/.vimrc'))
+    source $HOME/.vimlocal/.vimrc
+endif
 " *** }}}
