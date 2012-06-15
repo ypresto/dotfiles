@@ -129,6 +129,7 @@ alias :bl='v ~/.bashrc'
 a() { git add ${1:-.}; git status --short }
 m() { git commit -m "$*" }
 alias gpr='git pull --rebase'
+alias gms='git merge --squash'
 
 copy-line() { print -rn $BUFFER | pbcopy; zle -M "Copied: ${BUFFER}" }
 zle -N copy-line
