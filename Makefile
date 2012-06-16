@@ -1,26 +1,36 @@
+UNAME := $(shell uname)
+
 all:
 	echo "call 'make install' or 'make update'"
 
 install:
 	./mksymlinks
 	cd .vim/bundle && \
-	rm -fr vundle && \
-	git clone git://github.com/gmarik/vundle.git
-	vim -c ":BundleInstall"
+	rm -fr neobundle.vim && \
+	git clone git://github.com/Shougo/neobundle.vim.git
+	vim -c ":NeoBundleInstall"
 	make _up
 
 update:
 	./mksymlinks
-	vim -c ":BundleInstall!"
-	vim -c ":BundleClean"
+	vim -c ":NeoBundleInstall!"
+	vim -c ":NeoBundleClean"
 	make _up
 	./mksymlinks
 
 _up: vimproc skkdict perldict gitsubmodules
 	
 vimproc:
+ifeq ($(UNAME),Linux)
 	cd .vim/bundle/vimproc && \
+	make -fmake_unix.mak clean && \
 	make -fmake_unix.mak
+endif
+ifeq ($(UNAME),Darwin)
+	cd .vim/bundle/vimproc && \
+	make -fmake_mac.mak clean && \
+	make -fmake_mac.mak
+endif
 
 skkdict:
 	cd .vim/dict && \
