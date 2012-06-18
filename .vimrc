@@ -729,6 +729,12 @@ NeoBundle 'thinca/vim-visualstar'
 imap <Esc><Tab> <Plug>delimitMateS-Tab
 inoremap <silent> <Esc><S-Tab> <C-r>=delimitMate#JumpAny('')<CR>
 
+NeoBundle 'nakatakeshi/jump2pm.vim'
+noremap <Leader>pg :call Jump2pm('vne')<CR>
+noremap <Leader>pf :call Jump2pm('e')<CR>
+noremap <Leader>pd :call Jump2pm('sp')<CR>
+noremap <Leader>pt :call Jump2pm('tabe')<CR>
+
 " *** Local Script *** {{{
 if filereadable(expand('~/.vimlocal/.vimrc'))
     source $HOME/.vimlocal/.vimrc
