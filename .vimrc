@@ -435,13 +435,21 @@ endif
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'nono/jquery.vim'
 " reffer: http://vimwiki.net/?'viminfo'
-set history=50
-set viminfo='50,<50,s10,%
+set history=100
+set viminfo='100,<100,s10,%
 NeoBundle 'YankRing.vim'
 " Bundle 'basyura/TweetVim'
 NeoBundle 'scrooloose/nerdcommenter'
+let NERDSpaceDelims = 1
+xmap <Leader>ct <Plug>NERDCommenterToggle
+nmap <Leader>ct <Plug>NERDCommenterToggle
 NeoBundle 'kien/rainbow_parentheses.vim'
-autocmd VimEnter * :RainbowParenthesesToggle
+augroup RainbowParentheses
+    autocmd!
+    autocmd VimEnter * :RainbowParenthesesToggle
+    autocmd Syntax * call DelayedExecute('RainbowParenthesesLoadRound')
+    autocmd Syntax * call DelayedExecute('call rainbow_parentheses#activate()')
+augroup END
 " [ai][kv]
 NeoBundle 'vimtaku/vim-textobj-keyvalue'
 " Bundle 't9md/vim-phrase'
@@ -450,9 +458,9 @@ inoremap <C-k> <C-o>D
 " Maximizes current split, <C-w>= to restore
 nnoremap <C-w>a <C-w>\|<C-w>_
 " set showtabline=2
-" Bundle 'kmnk/vim-unite-giti.git'
-" nmap <Leader>ug <Leader>u:-auto-resize giti<CR>
-" nmap <Leader>Ug <Leader>U:-auto-resize giti<CR>
+NeoBundle 'kmnk/vim-unite-giti.git'
+nmap <Leader>ug <Leader>u:-auto-resize giti<CR>
+nmap <Leader>Ug <Leader>U:-auto-resize giti<CR>
 " scroll
 set scrolloff=1
 " [ai]g, a: includes index/key/arrow, i: symbol only
@@ -528,39 +536,48 @@ set splitright
 
 set hidden
 
-" TODO: This does not solve slow performance on repeating undo
+" *** Utility Function *** {{{
 
-" http://vim.wikia.com/wiki/Keep_folds_closed_while_inserting_text
-" Don't screw up folds when inserting text that might affect them, until
-" leaving insert mode. Foldmethod is local to the window. Protect against
-" screwing up folding when switching between windows.
-" autocmd InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
-" autocmd InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
+" ** DelayedExecute ** {{{
+" Promising the order of autocmd executions, e.g. set hl after main syntax
+function! DelayedExecute(command)
+    if !exists('s:delayed_execute_queue')
+        let s:delayed_execute_queue = []
+    endif
+    call add(s:delayed_execute_queue, a:command)
+    augroup DelayedExecutor
+        autocmd!
+        autocmd CursorHold,CursorHoldI,CursorMoved,CursorMovedI * call RunDelayedExecute()
+    augroup END
+endfunction
+function! RunDelayedExecute()
+    augroup DelayedExecutor
+        autocmd!
+    augroup END
+    for cmd in s:delayed_execute_queue
+        execute cmd
+        unlet cmd
+    endfor
+    unlet s:delayed_execute_queue
+endfunction
 
+" ** }}}
 
-" *** Fold Renewer *** {{{
+" ** Fold Renewer ** {{{
+" inspired by: http://vim.wikia.com/wiki/Keep_folds_closed_while_inserting_text
 " work around for performance problem of expr/syntax foldmethods
 augroup FoldRenewer
     autocmd!
-    autocmd VimEnter,WinEnter * call DelayedStashFold()
-    autocmd InsertLeave,CursorHold,CursorHoldI * call RenewFold()
+    " VimEnter: for delayed stashing
+    " WinEnter: because foldmethod is window-specific
+    " CursorHold: for normal mode editing e.g. undo/redo
+    autocmd VimEnter,WinEnter,InsertLeave,CursorHold,CursorHoldI * call RenewFold()
     " workaround for buffer change from outside of current window,
     " like gundo plugin and multi split of single file
     autocmd WinLeave * call StashFold()
 augroup END
 
 " Let foldmethod create folds first, then preserve it.
-" CursorMoved called also after file loaded, 
-function! DelayedStashFold()
-    if &foldmethod != 'expr' && &foldmethod != 'syntax'
-        return
-    endif
-    augroup StashFoldRegister
-        autocmd!
-        autocmd CursorMoved,CursorMovedI * call StashFold()
-    augroup END
-endfunction
- 
 function! RenewFold()
     if exists('w:last_fdm')
         if &foldmethod == 'manual'
@@ -568,7 +585,14 @@ function! RenewFold()
         endif
         unlet w:last_fdm
     endif
-    call DelayedStashFold()
+    if &foldmethod != 'expr' && &foldmethod != 'syntax'
+        return
+    endif
+    augroup DelayedStashFold
+        autocmd!
+        " CursorMoved: because called at start, after ready to edit
+        autocmd CursorMoved,CursorMovedI * call StashFold()
+    augroup END
 endfunction
 
 function! StashFold()
@@ -576,25 +600,15 @@ function! StashFold()
         let w:last_fdm=&foldmethod
         setlocal foldmethod=manual
     endif
-    augroup StashFoldRegister
+    augroup DelayedStashFold
         autocmd!
     augroup END
 endfunction
 
-" function! FdmPause()
-"     if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
-"     augroup FdmPauser
-"         autocmd CursorMoved,CursorHold,WinLeave * call FdmRestore()
-"     augroup END
-" endfunction
-" function! FdmRestore()
-"     if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
-"     augroup FdmPauser
-"         autocmd FileAppendPre * call FdmPause()
-"     augroup END
-" endfunction
-" call FdmRestore()
+" ** }}}
 
+" *** }}}
+ 
 inoremap <C-f> <C-o>l
 inoremap <C-b> <C-o>h
 " TODO: current search pattern
@@ -688,15 +702,32 @@ NeoBundle 'buftabs'
 " TODO
 vnoremap <Leader>th :<c-u>AlignCtrl l-l<cr>gv:Align =><cr>
 
-imap <Tab> <Plug>(neocomplcache_snippets_expand)
-smap <Tab> <Plug>(neocomplcache_snippets_expand)
-
 let g:unite_update_time=50
 nmap <Leader>ud :Unite -auto-resize -auto-preview -buffer-name=files file_rec<CR>
 nmap <Leader>Ud :Unite -create -no-quit -toggle  -vertical -winwidth=30 -buffer-name=files file_rec<CR>
 inoremap <Esc>t <C-d>
 map <Leader>ta <Plug>TaskList
 " *** }}}
+
+NeoBundle 'tpope/vim-repeat'
+NeoBundle 'nathanaelkane/vim-indent-guides'
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_guide_size = 1
+NeoBundle 'choplin/unite-vim_hacks'
+NeoBundle 'vimtaku/vim-textobj-doublecolon'
+NeoBundle 'vimtaku/textobj-wiw'
+NeoBundle 'thinca/vim-poslist'
+map <Esc>, <Plug>(poslist-next-pos)
+map <Esc>. <Plug>(poslist-prev-pos)
+imap <Esc>, <C-o><Plug>(poslist-next-pos)
+imap <Esc>. <C-o><Plug>(poslist-prev-pos)
+NeoBundle 'garbas/vim-snipmate'
+NeoBundle 'MarcWeber/vim-addon-mw-utils'
+NeoBundle 'tomtom/tlib_vim'
+NeoBundle 'thinca/vim-visualstar'
+
+imap <Esc><Tab> <Plug>delimitMateS-Tab
+inoremap <silent> <Esc><S-Tab> <C-r>=delimitMate#JumpAny('')<CR>
 
 " *** Local Script *** {{{
 if filereadable(expand('~/.vimlocal/.vimrc'))
