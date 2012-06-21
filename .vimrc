@@ -726,8 +726,8 @@ NeoBundle 'MarcWeber/vim-addon-mw-utils'
 NeoBundle 'tomtom/tlib_vim'
 NeoBundle 'thinca/vim-visualstar'
 
-imap <Esc><Tab> <Plug>delimitMateS-Tab
-inoremap <silent> <Esc><S-Tab> <C-r>=delimitMate#JumpAny('')<CR>
+imap <C-g><S-Tab> <Plug>delimitMateS-Tab
+inoremap <silent> <C-g><Tab> <C-r>=delimitMate#JumpAny('')<CR>
 
 NeoBundle 'nakatakeshi/jump2pm.vim'
 noremap <Leader>pg :call Jump2pm('vne')<CR>
