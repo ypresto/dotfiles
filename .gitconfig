@@ -24,3 +24,5 @@
 	prompt = true
 [github]
 	user = yuya-presto
+[push]
+	default = tracking
