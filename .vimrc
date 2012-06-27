@@ -165,34 +165,41 @@ nnoremap <Leader>U: :Unite -create -no-quit -toggle  -vertical -winwidth=30
 nmap <Leader>ub <Leader>u:buffer<CR>
 nmap <Leader>Ub <Leader>U:buffer<CR>
 " ファイル一覧
-nmap <Leader>uf :UniteWithBufferDir -auto-preview -buffer-name=files file<CR>
+nmap <Leader>uf :UniteWithBufferDir -buffer-name=files file<CR>
 nmap <Leader>Uf :UniteWithCurrentDir -create -no-quit -toggle  -vertical -winwidth=30 -buffer-name=files file<CR>
 " レジスタ一覧
-nmap <Leader>ur :Unite -auto-preview -buffer-name=register register<CR>
+nmap <Leader>ur :Unite -buffer-name=register register<CR>
 " 最近使用したファイル一覧
 nmap <Leader>us <Leader>u:file_mru<CR>
 nmap <Leader>Us <Leader>U:file_mru -winwidth=80<CR>
 " 全部乗せ
 nmap <Leader>ua :UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
 " unite-mark
-nmap <Leader>um <Leader>u:-auto-preview mark<CR>
-nmap <Leader>Um <Leader>U:-auto-preview mark<CR>
+nmap <Leader>um <Leader>u: mark<CR>
+nmap <Leader>Um <Leader>U: mark<CR>
 " unite-outline
-nmap <Leader>uo <Leader>u:-auto-preview outline<CR>
-nmap <Leader>Uo <Leader>U:-auto-preview outline<CR>
+nmap <Leader>uo <Leader>u: outline<CR>
+nmap <Leader>Uo <Leader>U: outline<CR>
 " history/yankの有効化
 let g:unite_source_history_yank_enable = 1
 nmap <Leader>uy <Leader>u: history/yank<CR>
 nmap <Leader>Uy <Leader>U: history/yank<CR>
-" ウィンドウを分割して開く
-au FileType unite nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
-au FileType unite inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
-" ウィンドウを縦に分割して開く
-au FileType unite nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
-au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
-" ESCキーを2回押すと終了する
-au FileType unite nmap <silent> <buffer> <ESC><ESC> q
-au FileType unite imap <silent> <buffer> <ESC><ESC> <ESC>q
+augroup UniteKeys
+    autocmd!
+    autocmd FileType unite nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+    autocmd FileType unite inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+    autocmd FileType unite nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+    autocmd FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+    autocmd FileType unite nmap <silent> <buffer> <ESC><ESC> q
+    autocmd FileType unite imap <silent> <buffer> <ESC><ESC> <ESC>q
+    autocmd FileType unite call AltUnmap()
+augroup END
+function! AltUnmap()
+    try
+        iunmap <Esc>t
+    catch
+    endtry
+endfunction
 endif
 " ** }}}
 
@@ -300,7 +307,7 @@ let g:neocomplcache_dictionary_filetype_lists = {
 " ** unite ** {{{
 if unite_enabled
 NeoBundle 'Shougo/unite.vim'
-" Bundle 'tacroe/unite-mark'
+NeoBundle 'tacroe/unite-mark'
 NeoBundle 'h1mesuke/unite-outline'
 " 入力モードで開始する
 let g:unite_enable_start_insert=1
@@ -393,12 +400,14 @@ autocmd BufNewFile,BufRead *.json set filetype=javascript
 let perl_fold=1
 let perl_fold_blocks=1
 NeoBundle 'yko/mojo.vim'
-augroup Perl
+augroup PerlKeys
     autocmd!
-    autocmd FileType perl call SigilMaps()
+    autocmd FileType perl inoremap <C-l> $
+    autocmd FileType perl snoremap <C-l> $
+    autocmd FileType perl nmap <Esc>; A;<Esc><Plug>(poslist-prev-pos)
+    autocmd FileType perl imap <Esc>; <C-o><Esc>;
 augroup END
 function! SigilMaps()
-    inoremap <C-y> $
 endfunction
 " ** }}}
 
@@ -429,8 +438,8 @@ nnoremap <C-h> :tn<CR>
 nnoremap <C-l> :tp<CR>
 if unite_enabled
 NeoBundle 'sgur/unite-qf'
-nmap <Leader>uq <Leader>u:-auto-resize qf<CR>
-nmap <Leader>Uq <Leader>U:-auto-resize qf<CR>
+nmap <Leader>uq <Leader>u: qf<CR>
+nmap <Leader>Uq <Leader>U: qf<CR>
 endif
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'nono/jquery.vim'
@@ -459,8 +468,8 @@ inoremap <C-k> <C-o>D
 nnoremap <C-w>a <C-w>\|<C-w>_
 " set showtabline=2
 NeoBundle 'kmnk/vim-unite-giti.git'
-nmap <Leader>ug <Leader>u:-auto-resize giti<CR>
-nmap <Leader>Ug <Leader>U:-auto-resize giti<CR>
+nmap <Leader>ug <Leader>u: giti<CR>
+nmap <Leader>Ug <Leader>U: giti<CR>
 " scroll
 set scrolloff=1
 " [ai]g, a: includes index/key/arrow, i: symbol only
@@ -703,7 +712,7 @@ NeoBundle 'buftabs'
 vnoremap <Leader>th :<c-u>AlignCtrl l-l<cr>gv:Align =><cr>
 
 let g:unite_update_time=50
-nmap <Leader>ud :Unite -auto-resize -auto-preview -buffer-name=files file_rec<CR>
+nmap <Leader>ud :Unite -auto-preview -buffer-name=files file_rec<CR>
 nmap <Leader>Ud :Unite -create -no-quit -toggle  -vertical -winwidth=30 -buffer-name=files file_rec<CR>
 inoremap <Esc>t <C-d>
 map <Leader>ta <Plug>TaskList
@@ -713,7 +722,6 @@ NeoBundle 'tpope/vim-repeat'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_guide_size = 1
-NeoBundle 'choplin/unite-vim_hacks'
 NeoBundle 'vimtaku/vim-textobj-doublecolon'
 NeoBundle 'vimtaku/textobj-wiw'
 NeoBundle 'thinca/vim-poslist'
@@ -734,6 +742,9 @@ noremap <Leader>pg :call Jump2pm('vne')<CR>
 noremap <Leader>pf :call Jump2pm('e')<CR>
 noremap <Leader>pd :call Jump2pm('sp')<CR>
 noremap <Leader>pt :call Jump2pm('tabe')<CR>
+
+cnoreabbrev Pod Ref perldoc
+command! Upod :Unite ref/perldoc
 
 " *** Local Script *** {{{
 if filereadable(expand('~/.vimlocal/.vimrc'))
