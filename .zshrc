@@ -126,7 +126,7 @@ alias :h='cd ~/homebrew'
 alias :g='cd ~/repo/github.com'
 alias :bl='v ~/.bashrc'
 #alias snip='open ~/.vim/bundle/snipMate/snippets'
-a() { git add ${1:-.}; git status --short }
+a() { 1=${1:--A}; git add $*; git status --short }
 m() { git commit -m "$*" }
 alias gpr='git pull --rebase'
 alias gms='git merge --squash'
@@ -209,3 +209,7 @@ bindkey -M afu '^G' afu+cancel
 bindkey '^[[Z' reverse-menu-complete
 # bindkey -M afu "^J" afu+cancel afu+accept-line
 # bindkey -M afu "^M" afu+cancel afu+accept-line
+
+__git_files () {
+    _wanted files expl ‘local files’ _files
+}
