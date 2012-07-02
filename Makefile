@@ -25,7 +25,7 @@ update:
 	make _up
 	./mksymlinks
 
-_up: skkdict perldict gitsubmodules bash-completion
+_up: skkdict perldict gitsubmodules bashcompl
 	
 vimproc:
 # build automatically by NeoBundle when vimproc updated
@@ -55,6 +55,6 @@ gitsubmodules:
 	git submodule update --init
 	git submodule foreach 'git checkout master; git pull'
 
-bash-completion:
+bashcompl:
 	cd bash-completion && \
-	curl -O https://raw.github.com/git/git/master/contrib/completion/git-completion.bash
+	wget https://raw.github.com/git/git/master/contrib/completion/git-completion.bash
