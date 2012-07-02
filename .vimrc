@@ -743,9 +743,9 @@ imap <C-g>J <Plug>delimitMateS-Tab
 inoremap <silent> <C-g>j <C-r>=delimitMate#JumpAny('')<CR>
 
 NeoBundle 'nakatakeshi/jump2pm.vim'
-noremap <Leader>pg :call Jump2pm('vne')<CR>
+noremap <Leader>pv :call Jump2pm('vne')<CR>
 noremap <Leader>pf :call Jump2pm('e')<CR>
-noremap <Leader>pd :call Jump2pm('sp')<CR>
+noremap <Leader>ps :call Jump2pm('sp')<CR>
 noremap <Leader>pt :call Jump2pm('tabe')<CR>
 
 cnoreabbrev Pod Ref perldoc
