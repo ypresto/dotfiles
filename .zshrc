@@ -210,6 +210,5 @@ bindkey '^[[Z' reverse-menu-complete
 # bindkey -M afu "^J" afu+cancel afu+accept-line
 # bindkey -M afu "^M" afu+cancel afu+accept-line
 
-__git_files () {
-    _wanted files expl ‘local files’ _files
-}
+# git completion
+source ~/dotfiles/bash-completion/git-completion.bash

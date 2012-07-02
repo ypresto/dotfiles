@@ -2,6 +2,7 @@
 " * .vimrc for yuya_presto
 " *
 
+set nocompatible
 let mapleader=" "
 
 " *** Reloadable config *** {{{
@@ -19,6 +20,9 @@ let eskk_enabled = 0
 " *** }}}
 
 " *** Start up *** {{{
+" for neobundle
+filetype off
+filetype plugin indent off
 if has('vim_starting')
     set nocompatible
     set rtp+=~/.vim/bundle/neobundle.vim/
@@ -533,7 +537,8 @@ augroup TriggerUpdateTags
     autocmd CursorHoldI * call g:UpdateTags()
 augroup END
 function! g:UpdateTags()
-  NeoComplCacheCachingInclude
+    if !exists(":NeoComplCacheCachingInclude") | return | endif
+    NeoComplCacheCachingInclude
     for filename in neocomplcache#sources#include_complete#get_include_files(bufnr('%'))
       execute "setlocal tags+=" . neocomplcache#cache#encode_name('include_tags', filename)
     endfor
@@ -734,8 +739,8 @@ NeoBundle 'MarcWeber/vim-addon-mw-utils'
 NeoBundle 'tomtom/tlib_vim'
 NeoBundle 'thinca/vim-visualstar'
 
-imap <C-g><S-Tab> <Plug>delimitMateS-Tab
-inoremap <silent> <C-g><Tab> <C-r>=delimitMate#JumpAny('')<CR>
+imap <C-g>J <Plug>delimitMateS-Tab
+inoremap <silent> <C-g>j <C-r>=delimitMate#JumpAny('')<CR>
 
 NeoBundle 'nakatakeshi/jump2pm.vim'
 noremap <Leader>pg :call Jump2pm('vne')<CR>
