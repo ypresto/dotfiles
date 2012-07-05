@@ -659,7 +659,7 @@ if has('mouse')
     endif
 endif
 
-set modelines=0
+" set modelines=0
 
 set timeout
 set timeoutlen=1000
@@ -750,6 +750,8 @@ noremap <Leader>pt :call Jump2pm('tabe')<CR>
 
 cnoreabbrev Pod Ref perldoc
 command! Upod :Unite ref/perldoc
+
+NeoBundle 'thinca/textobj-function-perl'
 
 " *** Local Script *** {{{
 if filereadable(expand('~/.vimlocal/.vimrc'))
