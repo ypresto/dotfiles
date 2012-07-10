@@ -2,3 +2,10 @@
 snippet dump
 	use Data::Dumper;
 	warn Dumper ${1:$_};
+
+# Test::More
+snippet subtest
+	subtest ${1:name} => sub {
+		${2:# TODO}
+	};
+
