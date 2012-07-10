@@ -1,11 +1,22 @@
-# Data::Dumper
+# Data::Dumper debugging
 snippet dump
 	use Data::Dumper;
 	warn Dumper ${1:$_};
-
-# Test::More
+# subtest of Test::More
 snippet subtest
 	subtest ${1:name} => sub {
 		${2:# TODO}
 	};
+# package template
+snippet package
+	package ${1:Package::Name};
 
+	use strict;
+	use warnings;
+
+# sub new {...} / also refer 'cl' snippet
+snippet new
+	sub new {
+		my $class = shift;
+		return bless {${1}}, $class;
+	}
