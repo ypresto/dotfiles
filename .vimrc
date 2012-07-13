@@ -659,18 +659,22 @@ augroup FoldRenewer
     " VimEnter: for delayed stashing
     " WinEnter: because foldmethod is window-specific
     " CursorHold: for normal mode editing e.g. undo/redo
-    autocmd VimEnter,WinEnter,InsertLeave,CursorHold,CursorHoldI * call RenewFold()
+    autocmd VimEnter,WinEnter,CursorHold,CursorHoldI * call RenewFold(0)
+    autocmd InsertLeave * call RenewFold(1)
     " workaround for buffer change from outside of current window,
     " like gundo plugin and multi split of single file
     autocmd WinLeave * call StashFold()
 augroup END
 
 " Let foldmethod create folds first, then preserve it.
-function! RenewFold()
+function! RenewFold(foldopen)
     if exists('w:last_fdm')
         if &foldmethod == 'manual'
             let &l:foldmethod=w:last_fdm
-            execute "normal" "zv"
+            if a:foldopen != 0
+                " open folds under the cursor
+                execute "normal" "zv"
+            endif
         endif
         unlet w:last_fdm
     endif
@@ -685,7 +689,6 @@ function! RenewFold()
 endfunction
 
 function! StashFold()
-    echo 'StashFold' 
     if !exists('w:last_fdm') && (&foldmethod == 'expr' || &foldmethod == 'syntax')
         let w:last_fdm=&foldmethod
         setlocal foldmethod=manual
@@ -821,6 +824,14 @@ NeoBundle 'tpope/vim-unimpaired'
 " Bundle 'basyura/TweetVim'
 
 " *** }}}
+
+
+" from vimrc_example.vim
+" jump to the last known cursos position when opening file
+autocmd BufReadPost *
+  \ if line("'\"") > 1 && line("'\"") <= line("$") |
+  \   exe "normal! g`\"" |
+  \ endif
 
 " *** Local Script *** {{{
 if filereadable(expand('~/.vimlocal/.vimrc'))
