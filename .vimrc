@@ -823,15 +823,17 @@ NeoBundle 'tpope/vim-unimpaired'
 
 " Bundle 'basyura/TweetVim'
 
-" *** }}}
-
-
 " from vimrc_example.vim
 " jump to the last known cursos position when opening file
+" 'zv' was added by ypresto
 autocmd BufReadPost *
   \ if line("'\"") > 1 && line("'\"") <= line("$") |
   \   exe "normal! g`\"" |
-  \ endif
+  \ endif |
+  \ execute "normal" "zv"
+
+" *** }}}
+
 
 " *** Local Script *** {{{
 if filereadable(expand('~/.vimlocal/.vimrc'))
