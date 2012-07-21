@@ -363,7 +363,7 @@ endif
 
 " *** Plugins *** {{{1
 
-" ** YOU SHOULD USE THESE AND BE IMproved! *** {{{2
+" ** Recommended: YOU SHOULD USE THESE AND BE IMproved! *** {{{2
 
 " C-[np] after paste, textobj [ai]'"()[]{} , and more, more!!
 NeoBundle 'YankRing.vim'
@@ -398,7 +398,7 @@ NeoBundle 'sjl/gundo.vim'
 let g:gundo_right = 1
 let g:gundo_close_on_revert = 1
 
-" SnipMate, TextMate like snippet with <Tab>
+" SnipMate, TextMate like snippet use with <Tab>
 NeoBundle 'garbas/vim-snipmate'
 NeoBundle 'honza/snipmate-snippets'
 " Dependencies
