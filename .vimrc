@@ -531,8 +531,11 @@ NeoBundle 'Smooth-Scroll'
 " Alternative for vimgrep, :Ack and :LAck
 NeoBundle 'mileszs/ack.vim'
 
-" :Rename file
+" :Rename current file on disk
 NeoBundle 'danro/rename.vim'
+
+" Bulk renamer
+NeoBundle 'renamer.vim'
 
 " Buffer list in bottom of window
 NeoBundle 'buftabs'
@@ -943,6 +946,8 @@ NeoBundle 'tpope/vim-unimpaired'
 " Bundle 'basyura/TweetVim'
 
 NeoBundle 'fuzzyjump.vim'
+
+NeoBundle 'mikewest/vimroom'
 
 " *** }}}
 
