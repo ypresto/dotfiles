@@ -14,8 +14,8 @@
 	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	rs = reset
 	rsh = reset --hard
-	di = diff
-	dc = diff --cached
+	ds = diff --stat
+	dsc = diff --stat --cached
 	lo = log
 	dt = difftool
 	pr = pull --rebase
