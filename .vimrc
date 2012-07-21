@@ -5,7 +5,7 @@
 set nocompatible
 let mapleader=" "
 
-" *** Reloadable config *** {{{
+" *** Make This Reloadable *** {{{1
 " reset global autocmd
 autocmd!
 " reload when writing .vimrc
@@ -14,14 +14,14 @@ autocmd BufWritePost $MYVIMRC,$HOME/dotfiles/.vimrc source $MYVIMRC |
 autocmd BufWritePost $MYGVIMRC,$HOME/dotfiles/.gvimrc if has('gui_running') | source $MYGVIMRC
 " *** }}}
 
-" *** Config for this script *** {{{
+" *** Switches  *** {{{1
 " IMEs
 let mlh_enabled = 1
 let skk_enabled = 0
 let eskk_enabled = 0
 " *** }}}
 
-" *** Start up *** {{{
+" *** Start up *** {{{1
 
 " for neobundle
 filetype off
@@ -32,7 +32,7 @@ if has('vim_starting')
     set nocompatible
     set rtp+=~/.vim/bundle/neobundle.vim/
     call neobundle#rc(expand('~/.vim/bundle/'))
-    set rtp+=~/.vimlocal
+    " For Perl, add paths for running or test
     let $PERL5LIB='./lib:./t:./t/inc:'.expand('$PERL5LIB')
 endif
 NeoBundle 'Shougo/neobundle.vim'
@@ -45,25 +45,22 @@ NeoBundle 'Shougo/vimproc', {
 \      },
 \   }
 
-" }}}
+" *** }}}
 
-" *** Edit *** {{{
-" make backspace delete line breaks
-set backspace=indent,eol,start
-" }}}
+" *** Editor Functionality *** {{{1
 
-" *** File *** {{{
+" ** Encoding / Syntax ** {{{2
 
-" ** Encoding / Syntax ** {{{
 filetype plugin on
 filetype indent on
 syntax on " for os x
 set encoding=utf-8
-" FIXME: buggy, defaulting to iso-2022
+" FIXME: maybe below line has some bug
 set fileencodings=ucs-bom,utf-8,iso-2022-jp-3,iso-2022-jp,eucjp-ms,euc-jisx0213,euc-jp,sjis,cp932
+
 " ** }}}
 
-" ** Indent / Tab ** {{{
+" ** Indent / Tab ** {{{2
 
 set tabstop=8     " <Tab>s are shown with this num of <Space>s
 set softtabstop=4 " Use this num of spaces as <Tab> on insert and delete
@@ -74,7 +71,7 @@ set autoindent    " Use same indent level on next line
 set smartindent   " Auto indent for C-like code with '{...}' blocks
 set shiftround    " Round indent when < or > is used
 
-" * Filetype specific indent {{{
+" * Filetype specific indent * {{{
 
 " Force using <Tab>, not <Space>s
 autocmd FileType make setlocal softtabstop=8 shiftwidth=8 noexpandtab
@@ -90,36 +87,63 @@ autocmd FileType c,cpp,java setlocal cindent
 
 " ** }}}
 
-" ** Undo and backup file ** {{{
+" ** Undo / Backup / History ** {{{2
 
 set undofile            " Save undo history to file
 set undodir=~/.vim/undo " Specify where to save
 set nobackup            " Don't create backup files (foobar~)
 
+" reffer: http://vimwiki.net/?'viminfo'
+set history=100
+set viminfo='100,<100,s10,%
+
+" Jump to the last known cursos position when opening file
+" Refer: :help last-position-jump
+" 'zv' and 'zz' was added by ypresto
+autocmd BufReadPost *
+  \ if line("'\"") > 1 && line("'\"") <= line("$") |
+  \   exe "normal! g`\"" |
+  \ endif |
+  \ execute "normal" "zv" | " open fold under cursor
+  \ execute "normal" "zz"   " Move current line on center of window
+
 " ** }}}
 
-" *** }}}
+" ** UI / Editing / Search ** {{{2
 
-" *** View *** {{{
+" Editing
+set backspace=indent,eol,start " go to previous line with backspace
 
-set number            " Show number of line on left
-set incsearch         " Use 'incremental search'
-set hlsearch          " Highlight search result
-set laststatus=2      " Always show statusline
-set showcmd           " Show what keys input for command
-set wildmenu          " Enhanced command line completion
 set foldmethod=marker " Use '{{{' and '}}}' for marker 
+set foldlevelstart=0  " Start with all folds closed
+set noeb vb t_vb=     " no beep
+set scrolloff=1       " show N more next line when scrolling
 
-" Change status line
+" status line and line number
+set number            " Show number of line on left
+set showcmd           " Show what keys input for command
+set laststatus=2      " Always show statusline
 if skk_enabled
     set statusline=%<%f\ %h%m%r\ %{SkkGetModeStr()}%=%-14.(%l,%c%V%)\ %P
 else
     set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 endif
 
-" *** }}}
+" search
+set incsearch         " Use 'incremental search'
+set hlsearch          " Highlight search result
+set ignorecase        " Ignore case when searching
+set smartcase         " Do not ignorecase if keyword contains uppercase
 
-" *** Highlighting *** {{{
+" command line
+set wildmenu          " Enhanced command line completion
+set cmdheight=2       " Set height of command line
+
+set shortmess+=I      " Surpress intro message when starting vim
+
+" ** }}}
+
+" ** Highlighting ** {{{2
 
 set cursorline " Highlight current line
 " Highlight current line only on current window
@@ -132,10 +156,12 @@ highlight clear CursorLine
 highlight CursorLine ctermbg=black guibg=black
 highlight SignColumn ctermfg=white ctermbg=black cterm=none
 
+set colorcolumn=73,74,81,82 " Highlight border of 'long line'
+
 set nolist " Don't highlight garbage characters (see below)
 set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 
-" ** ZenkakuSpace ** {{{
+" * ZenkakuSpace * {{{3
 
 function! ZenkakuSpace()
   highlight ZenkakuSpace cterm=underline ctermbg=darkgray gui=underline guifg=darkgrey
@@ -151,11 +177,54 @@ if has('syntax')
   call ZenkakuSpace()
 endif
 
+" * }}}
+
+" ** }}}
+
+" ** Window / Buffer / Tab ** {{{2
+
+" Switch buffer without saving changes
+set hidden
+
+" Refer: http://d.hatena.ne.jp/kitak/20100830/1283180007
+set splitbelow
+set splitright
+
+" ** }}}
+
+" ** Mouse ** {{{2
+
+if has('mouse')
+
+    " Enable mouse for split, buffer, cursor, etc.
+    " use {shift|command}+drag to use original, terminal side mouse
+    set mouse=a
+
+    " Refer: http://www.machu.jp/diary/20070310.html#p01
+    if &term == 'screen'
+        set ttymouse=xterm2
+    endif
+
+endif
+
+" ** }}}
+
+" ** Misc ** {{{2
+" Don't use matched files for completion
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
 " ** }}}
 
 " *** }}}
 
-" *** Essential Keymapping *** {{{
+" *** Keymapping *** {{{1
+
+" Wait for slow input of key combination
+set timeout
+set timeoutlen=1000
+" Activate alt key power,
+" wait [ttimeoutlen]ms for following keys after <Esc> for Alt-* keys
+set ttimeout
+set ttimeoutlen=150
 
 noremap ZJ :w<CR> " Fast saving
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>
@@ -167,9 +236,9 @@ noremap <silent> k gk
 noremap <silent> gk k
 inoremap <silent> <C-[> <Esc>
 
-" Partial Emacs keybind in insert mode
-" Refer from :help tcsh-style
-" 'map!' maps both insert and command-line mode
+" ** Partial Emacs Keybind in Insert Mode ** {{{2
+" Refer: :help tcsh-style
+" Note: 'map!' maps both insert and command-line mode
 noremap! <C-f> <Right>
 noremap! <C-b> <Left>
 " <C-o> and <Home> is different on indented line
@@ -183,14 +252,16 @@ noremap! <Esc>b <S-Left>
 inoremap <Esc>d <C-o>de
 " Remap <C-d> de-indentation to Alt-t
 inoremap <Esc>t <C-d>
+" TODO: using at end of line causes backspace
+inoremap <C-k> <C-o>D
+" ** }}}
 
-function! UnmapAltKeys()
-    " almost for unite to avoid Alt keys does not fire normal <Esc>
-    " noremap <Esc> to avoid <Esc>* mappings fired
-    inoremap <buffer> <silent> <Plug>(esc) <Esc>
-    imap <buffer> <Esc>t <Plug>(esc)t
-    imap <buffer> <Esc>t <Plug>(esc)t
-endfunction
+" Maximizes current split, <C-w>= to restore
+nnoremap <C-w>a <C-w>\|<C-w>_
+
+" QuickFix Toggle
+nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
+nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 
 " ZenCoding
 let g:user_zen_leader_key = '<C-q>'
@@ -199,7 +270,8 @@ let g:user_zen_expandabbr_key = '<C-q><C-q>'
 " Gundo
 nnoremap <Leader>g :GundoToggle<CR>
 
-" ** neocomplcache ** {{{
+" ** neocomplcache ** {{{2
+
 inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
 inoremap <expr> <C-x><C-f>  neocomplcache#manual_filename_complete()
 inoremap <expr> <C-m>  &filetype == 'vim' ? "\<C-x>\<C-v>\<C-p>" : neocomplcache#manual_omni_complete()
@@ -211,9 +283,10 @@ inoremap <expr> <C-p> pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
 inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
 " 補完をキャンセル＋End
 inoremap <expr> <C-e>  pumvisible() ? neocomplcache#close_popup() : "<End>"
+
 " ** }}}
 
-" ** unite ** {{{
+" ** unite ** {{{2
 
 " デフォルト
 nnoremap <Leader>u: :Unite 
@@ -237,10 +310,24 @@ nmap <Leader>Um <Leader>U: mark<CR>
 " unite-outline
 nmap <Leader>uo <Leader>u: outline<CR>
 nmap <Leader>Uo <Leader>U: outline<CR>
+nmap <Leader>uz <Leader>u: outline:folding<CR>
+nmap <Leader>Uz <Leader>U: outline:folding<CR>
 " history/yankの有効化
 let g:unite_source_history_yank_enable = 1
 nmap <Leader>uy <Leader>u: history/yank<CR>
 nmap <Leader>Uy <Leader>U: history/yank<CR>
+
+nmap <Leader>up <Leader>u: -buffer-name=files file_rec<CR>
+nmap <Leader>Up <Leader>u: -buffer-name=files file_rec<CR>
+" TODO: you can use file_rec/async too, but maybe beta.
+
+nmap <Leader>ut <Leader>u: tab<CR>
+nmap <Leader>Ut <Leader>U: tab<CR>
+
+nmap <Leader>ug <Leader>u: giti<CR>
+nmap <Leader>Ug <Leader>U: giti<CR>
+nmap <Leader>uq <Leader>u: qf<CR>
+nmap <Leader>Uq <Leader>U: qf<CR>
 
 augroup UniteWindowKeyMaps
     autocmd!
@@ -253,9 +340,17 @@ augroup UniteWindowKeyMaps
     autocmd FileType unite call UnmapAltKeys()
 augroup END
 
+function! UnmapAltKeys()
+    " almost for unite to avoid Alt keys does not fire normal <Esc>
+    " noremap <Esc> to avoid <Esc>* mappings fired
+    inoremap <buffer> <silent> <Plug>(esc) <Esc>
+    imap <buffer> <Esc>t <Plug>(esc)t
+    imap <buffer> <Esc>t <Plug>(esc)t
+endfunction
+
 " ** }}}
 
-" ** IME ** {{{
+" ** IME ** {{{2
 if eskk_enabled
     inoremap <expr> <C-l> eskk#toggle()
 endif
@@ -266,60 +361,23 @@ endif
 
 " *** }}}
 
-" *** Custom Scripts *** {{{
+" *** Plugins *** {{{1
 
-" ** Braces ** {{{
-inoremap <expr><CR> <SID>BlockCompl()
-function! s:BlockCompl()
-    if col('.') == col('$')
-        let l = getline('.')
-        if l =~ '{$'
-            return "\<CR>}\<Up>\<End>\<CR>"
-        elseif l =~ '($'
-            return "\<CR>)\<Up>\<End>\<CR>"
-        elseif l =~ '[$'
-            return "\<CR>]\<Up>\<End>\<CR>"
-        else
-            return "\<CR>"
-        endif
-    elseif getline(".")[col(".") - 1] =~ '[})\]]$'
-        return "\<CR>\<C-o>O"
-    else
-        return "\<CR>"
-    endif
-endfunction
-" ** }}}
+" ** YOU SHOULD USE THESE AND BE IMproved! *** {{{2
 
-" *** }}}
-
-" *** Plugins *** {{{
-
-" TODO: To be used {{{
-NeoBundle 'thinca/vim-quickrun'
-NeoBundle 'TaskList.vim'
-" Bundle 'scrooloose/nerdtree'
-NeoBundle 'Align'
-" required by fuzzyfinder
-" Bundle 'L9'
-" Bundle 'FuzzyFinder'
-" Bundle 'kana/vim-smartchr'
-
-" Bundle 'Shougo/vimshell'
-" }}}
-
-" extended % key matching
-runtime macros/matchit.vim
+" C-[np] after paste, textobj [ai]'"()[]{} , and more, more!!
+NeoBundle 'YankRing.vim'
 
 " autocompletes parenthesis, braces and more
 NeoBundle 'Raimondi/delimitMate'
+" TODO
+imap <C-g>J <Plug>delimitMateS-Tab
+inoremap <silent> <C-g>j <C-r>=delimitMate#JumpAny('')<CR>
 
-" moving
-" Bundle 'Lokaltog/vim-easymotion'
-
-" convenient functions for surrounding characters [ds'], [ys'], etc.
+" surrounding with braces or quotes with s and S key
 NeoBundle 'tpope/vim-surround'
 
-" open some reference manual with K key
+" open reference manual with K key
 NeoBundle 'thinca/vim-ref'
 
 " git support
@@ -340,11 +398,21 @@ NeoBundle 'sjl/gundo.vim'
 let g:gundo_right = 1
 let g:gundo_close_on_revert = 1
 
-" ** neocomplcache ** {{{
+" SnipMate, TextMate like snippet with <Tab>
+NeoBundle 'garbas/vim-snipmate'
+NeoBundle 'honza/snipmate-snippets'
+" Dependencies
+NeoBundle 'MarcWeber/vim-addon-mw-utils'
+NeoBundle 'tomtom/tlib_vim'
+
+" ** }}}
+
+" ** neocomplcache ** {{{2
 
 NeoBundle 'Shougo/neocomplcache'
+" Below supports SnipMate!
 NeoBundle 'Shougo/neocomplcache-snippets-complete'
-NeoBundle 'honza/snipmate-snippets'
+" English spell completion with 'look' command
 NeoBundle 'ujihisa/neco-look'
 " let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_camel_case_completion = 1
@@ -353,17 +421,39 @@ let g:neocomplcache_dictionary_filetype_lists = {
     \ 'default'    : '',
     \ 'perl'       : $HOME . '/.vim/dict/perl.dict'
     \ }
+
+" too heavy when launching vim, make initializing delayed
+augroup InitNeCo
+    autocmd!
+    autocmd CursorMovedI * call DoInitNeco()
+    autocmd CursorHold * call DoInitNeco()
+augroup END
+function! DoInitNeco()
+    echo "Initializing NeCo..."
+    augroup InitNeCo
+        autocmd!
+    augroup END
+    :NeoComplCacheEnable
+    echo "Initializing NeCo... Completed."
+endfunction
+
 " ** }}}
 
-" ** unite ** {{{
+" ** unite ** {{{2
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'tacroe/unite-mark'
 NeoBundle 'h1mesuke/unite-outline'
+NeoBundle 'kmnk/vim-unite-giti.git'
+NeoBundle 'sgur/unite-qf'
 " 入力モードで開始する
 let g:unite_enable_start_insert=1
+" 候補絞込みを高速化する
+" CursorHold（.swpファイルの作成やイベント発火）までの時間が変化してしまうので注意
+let g:unite_update_time=50
+
 " ** }}}
 
-" ** textobj ** {{{
+" ** textobj ** {{{2
 
 " select range of text with only two or three keys
 " For example: [ai]w
@@ -376,7 +466,7 @@ NeoBundle 'kana/vim-textobj-user'
 " [ai]e
 " Bundle 'kana/vim-textobj-entire'
 " [ai]z
-" Bundle 'kana/vim-textobj-fold'
+NeoBundle 'kana/vim-textobj-fold'
 " [ai]f
 NeoBundle 'kana/vim-textobj-function'
 " [ai][iI]
@@ -403,33 +493,74 @@ omap aF <Plug>(textobj-between-a)
 vmap iF <Plug>(textobj-between-i)
 vmap aF <Plug>(textobj-between-a)
 
-" [ai],w / 'this_is_a_word' will be 4 words in word
+" [ai],w / 'this_is_a_word' will be 4 'words in word'
 " also ,w ,b ,e ,ge motion defined
 NeoBundle 'vimtaku/textobj-wiw'
 
-" for Perl
+" * Almost For Perl * {{{3
 " [ai]g / a: includes index/key/arrow, i: symbol only
 NeoBundle 'vimtaku/vim-textobj-sigil'
 " [ai][kv]
 NeoBundle 'vimtaku/vim-textobj-keyvalue'
 " ???
 NeoBundle 'vimtaku/vim-textobj-doublecolon'
+" * }}}
 
 " ** }}}
 
-" ** QuickFix ** {{{
-" edit quickfix lines
-" Bundle 'thinca/vim-qfreplace'
-" command! -nargs=+ QfArgs let b:quickrun_config = {'args': substitute(<f-args>, ',', ' ', 'g')}
+" ** Misc ** {{{2
+
+" Run current file by <Leader>r and get result in another buffer
+NeoBundle 'thinca/vim-quickrun'
+
+" List or Highlight all todo, fixme, xxx comments
+NeoBundle 'TaskList.vim'
+
+" Indent comments and expressions
+NeoBundle 'Align'
+
+" extended % key matching
+runtime macros/matchit.vim
+
+" moving more far easily
+NeoBundle 'Lokaltog/vim-easymotion'
+
+" Smooth <C-{f,b,u,d}> scrolls
+NeoBundle 'Smooth-Scroll'
+
+" Alternative for vimgrep, :Ack and :LAck
+NeoBundle 'mileszs/ack.vim'
+
+" :Rename file
+NeoBundle 'danro/rename.vim'
+
+" Buffer list in bottom of window
+NeoBundle 'buftabs'
+" (You can use status line with option
+"  or you can expand command line with 'set cmdheight')
+
+" Highlight indent by its levels, must have for pythonist
+NeoBundle 'nathanaelkane/vim-indent-guides'
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_guide_size = 1
+
+" Micro <C-i> and <C-o>
+NeoBundle 'thinca/vim-poslist'
+map <Esc>, <Plug>(poslist-next-pos)
+map <Esc>. <Plug>(poslist-prev-pos)
+imap <Esc>, <C-o><Plug>(poslist-next-pos)
+imap <Esc>. <C-o><Plug>(poslist-prev-pos)
+
+" Search word with * and # also on Visual Mode
+NeoBundle 'thinca/vim-visualstar'
+
 " ** }}}
 
-" C-[np] after paste, textobj [ai]'"()[]{} , and more, more!!
-NeoBundle 'YankRing.vim'
-
+" ** nerdcommenter ** {{{
 NeoBundle 'scrooloose/nerdcommenter'
 let NERDSpaceDelims = 1
-xmap <Leader>ct <Plug>NERDCommenterToggle
-nmap <Leader>ct <Plug>NERDCommenterToggle
+xmap <Leader>cj <Plug>NERDCommenterToggle
+nmap <Leader>cj <Plug>NERDCommenterToggle
 NeoBundle 'kien/rainbow_parentheses.vim'
 augroup RainbowParentheses
     autocmd!
@@ -437,8 +568,19 @@ augroup RainbowParentheses
     autocmd Syntax * call DelayedExecute('RainbowParenthesesLoadRound')
     autocmd Syntax * call DelayedExecute('call rainbow_parentheses#activate()')
 augroup END
+" ** }}}
 
-" ** IME ** {{{
+" ** TODO: To be used ** {{{2
+" Bundle 'scrooloose/nerdtree'
+" required by fuzzyfinder
+" Bundle 'L9'
+" Bundle 'FuzzyFinder'
+" Bundle 'kana/vim-smartchr'
+
+" Bundle 'Shougo/vimshell'
+" ** }}}
+
+" ** IME ** {{{2
 
 if mlh_enabled
 NeoBundle 'vimtaku/vim-mlh'
@@ -470,131 +612,16 @@ endif
 
 " ** }}}
 
-" *** }}}
+" ** Color Scheme ** {{{2
 
-" *** Filetype *** {{{
+" FIXME: below maybe required on tmux/screen
+" set t_Co=256
 
-" ** HTML / CSS / XML ** {{{
-NeoBundle 'mattn/zencoding-vim'
-let g:user_zen_settings = {
-\   'lang': "ja"
-\}
-let g:use_zen_complete_tag = 1
+" Too hard to setup not-degraded-mode...
+" (You should setup your term emulator first)
+" So please try it with degrade=1
 
-NeoBundle 'othree/html5.vim'
-NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'sukima/xmledit'
-" see http://nanasi.jp/articles/vim/xml-plugin.html
-" ** }}}
-
-" ** JavaScript ** {{{
-autocmd BufNewFile,BufRead *.json set filetype=javascript
-" ** }}}
-
-" ** Perl ** {{{
-let perl_fold=1
-let perl_fold_blocks=1
-NeoBundle 'yko/mojo.vim'
-augroup PerlKeys
-    autocmd!
-    autocmd FileType perl inoremap <C-l> $
-    autocmd FileType perl snoremap <C-l> $
-    autocmd FileType perl nmap <Esc>; A;<Esc><Plug>(poslist-prev-pos)
-    autocmd FileType perl imap <Esc>; <C-o><Esc>;
-augroup END
-function! SigilMaps()
-endfunction
-" ** }}}
-
-" ** PHP ** {{{
-" Bundle 'soh335/vim-symfony'
-" ** }}}
-
-" ** Python ** {{{
-NeoBundle 'tmhedberg/SimpylFold'
-" ** }}}
-
-" ** Others ** {{{
-autocmd BufNewFile,BufRead *.go :colorscheme go
-" too large to load always
-" Bundle 'AutomaticLaTexPlugin'
-" ** }}}
-" *** }}}
-
-" *** Bleeding Edge *** {{{
-" Bundle 'fuenor/qfixgrep'
-nmap <C-j> ]
-nmap <C-k> [
-" nnoremap <C-n> :lnext<CR>
-" nnoremap <C-p> :lprev<CR>
-" nnoremap <Leader>n :next<CR>
-" nnoremap <Leader>p :prev<CR>
-nnoremap <C-h> :tn<CR>
-nnoremap <C-l> :tp<CR>
-NeoBundle 'sgur/unite-qf'
-nmap <Leader>uq <Leader>u: qf<CR>
-nmap <Leader>Uq <Leader>U: qf<CR>
-NeoBundle 'jelera/vim-javascript-syntax'
-NeoBundle 'nono/jquery.vim'
-" reffer: http://vimwiki.net/?'viminfo'
-set history=100
-set viminfo='100,<100,s10,%
-
-" Bundle 't9md/vim-phrase'
-" TODO: using at end of line causes backspace
-inoremap <C-k> <C-o>D
-" Maximizes current split, <C-w>= to restore
-nnoremap <C-w>a <C-w>\|<C-w>_
-" set showtabline=2
-NeoBundle 'kmnk/vim-unite-giti.git'
-nmap <Leader>ug <Leader>u: giti<CR>
-nmap <Leader>Ug <Leader>U: giti<CR>
-" scroll
-set scrolloff=1
-
-" simple vim ref for .vimrc
-autocmd! FileType vim call MapVimHelp()
-function! MapVimHelp()
-    map K :help <C-r><C-w><CR>
-    " TODO: visual mode
-endfunction
-
-set ignorecase
-set smartcase
-set cmdheight=2
-
-" Bundle 'mbriggs/mark.vim'
-" Bundle 'mattn/benchvimrc-vim'
-let g:neocomplcache_ctags_arguments_list = {
-  \ 'perl' : '-R -h ".pm"'
-  \ }
-" Bundle 'astashov/vim-ruby-debugger'
-NeoBundle 'kien/ctrlp.vim'
-let g:ctrlp_map = '<Leader><C-p>'
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
-nmap <Leader>up :Unite -auto-resize -auto-preview -buffer-name=files file_rec<CR>
-nmap <Leader>Up :Unite -create -no-quit -toggle  -vertical -winwidth=30 -buffer-name=files file_rec<CR>
-" Bundle 'taku-o/vim-copypath'
-NeoBundle 'kana/vim-altr'
-nmap <Leader>f <Plug>(altr-forward)
-NeoBundle 'Smooth-Scroll'
-set noeb vb t_vb=
-NeoBundle 'mileszs/ack.vim'
-" Bundle 'jpalardy/vim-slime'
-augroup InitNeCo
-    autocmd!
-    autocmd CursorMovedI * call DoInitNeco()
-    autocmd CursorHold * call DoInitNeco()
-augroup END
-function! DoInitNeco()
-    echo "Initializing NeCo..."
-    augroup InitNeCo
-        autocmd!
-    augroup END
-    :NeoComplCacheEnable
-endfunction
 NeoBundle 'altercation/vim-colors-solarized'
-set t_Co=256
 set background=dark
 " let g:solarized_termcolors=256
 " let g:solarized_degrade=1
@@ -605,28 +632,109 @@ let g:solarized_underline=1
 let g:solarized_italic=1
 colorscheme solarized
 
-augroup TriggerUpdateTags
+" ** }}}
+
+" *** }}}
+
+" *** Filetypes *** {{{1
+
+" ** HTML / CSS / XML ** {{{2
+
+NeoBundle 'mattn/zencoding-vim'
+let g:user_zen_settings = {
+\   'lang': "ja"
+\}
+let g:use_zen_complete_tag = 1
+
+NeoBundle 'othree/html5.vim'
+NeoBundle 'hail2u/vim-css3-syntax'
+NeoBundle 'sukima/xmledit'
+" see http://nanasi.jp/articles/vim/xml-plugin.html
+
+" ** }}}
+
+" ** JavaScript ** {{{2
+
+autocmd BufNewFile,BufRead *.json set filetype=javascript
+NeoBundle 'jelera/vim-javascript-syntax'
+NeoBundle 'nono/jquery.vim'
+
+" ** }}}
+
+" ** Perl ** {{{2
+
+" Enable perl specific rich fold
+let perl_fold=1
+let perl_fold_blocks=1
+
+NeoBundle 'yko/mojo.vim'
+
+augroup PerlKeys
     autocmd!
-    autocmd CursorHold * call g:UpdateTags()
-    autocmd CursorHoldI * call g:UpdateTags()
+    autocmd FileType perl inoremap <C-l> $
+    autocmd FileType perl snoremap <C-l> $
+    autocmd FileType perl nmap <Esc>; A;<Esc><Plug>(poslist-prev-pos)
+    autocmd FileType perl imap <Esc>; <C-o><Esc>;
 augroup END
-function! g:UpdateTags()
-    if !exists(":NeoComplCacheCachingInclude") | return | endif
-    NeoComplCacheCachingInclude
-    for filename in neocomplcache#sources#include_complete#get_include_files(bufnr('%'))
-      execute "setlocal tags+=" . neocomplcache#cache#encode_name('include_tags', filename)
-    endfor
+function! SigilMaps()
 endfunction
 
-" http://d.hatena.ne.jp/kitak/20100830/1283180007
-set splitbelow
-set splitright
+" Perl hash aligning
+vnoremap <Leader>th :<c-u>AlignCtrl l-l<cr>gv:Align =><cr>
 
-set hidden
+" Open perl file by package name under the cursor
+NeoBundle 'nakatakeshi/jump2pm.vim'
+noremap <Leader>pv :call Jump2pm('vne')<CR>
+noremap <Leader>pf :call Jump2pm('e')<CR>
+noremap <Leader>ps :call Jump2pm('sp')<CR>
+noremap <Leader>pt :call Jump2pm('tabe')<CR>
 
-" *** Utility Function *** {{{
+" vim-ref for perldoc
+cnoreabbrev Pod Ref perldoc
+command! Upod :Unite ref/perldoc
 
-" ** DelayedExecute ** {{{
+" Refer: Also refer textobj section
+
+" ** }}}
+
+" ** PHP ** {{{2
+" I'm not using symfony recently
+" Bundle 'soh335/vim-symfony'
+" ** }}}
+
+" ** Python ** {{{2
+NeoBundle 'tmhedberg/SimpylFold'
+" ** }}}
+
+" ** VimScript ** {{{
+
+" vim-ref alternative for .vimrc and VimScripts
+autocmd! FileType vim call MapVimHelp()
+function! MapVimHelp()
+    map <buffer> K :help <C-r><C-w><CR>
+    " TODO: visual mode
+endfunction
+
+" ** }}}
+
+" *** }}}
+
+" *** Custom Commands *** {{{1
+
+" vimdiff between current buffer and last saved state
+" Refer: :help DiffOrig
+command! DiffOrig vert new | set bt=nofile | r ++edit # | 0d_
+                \ | diffthis | wincmd p | diffthis
+
+" Show path
+command! F :echo expand('%')
+
+" *** }}}
+
+" *** Utility Function *** {{{1
+
+" ** DelayedExecute ** {{{2
+
 " Promising the order of autocmd executions, e.g. set hl after main syntax
 function! DelayedExecute(command)
     if !exists('s:delayed_execute_queue')
@@ -651,9 +759,11 @@ endfunction
 
 " ** }}}
 
-" ** Fold Renewer ** {{{
-" inspired by: http://vim.wikia.com/wiki/Keep_folds_closed_while_inserting_text
-" work around for performance problem of expr/syntax foldmethods
+" ** FoldRenewer ** {{{2
+
+" Work around for performance problem of expr/syntax foldmethods
+" Inspired by: http://vim.wikia.com/wiki/Keep_folds_closed_while_inserting_text
+
 augroup FoldRenewer
     autocmd!
     " VimEnter: for delayed stashing
@@ -688,6 +798,7 @@ function! RenewFold(foldopen)
     augroup END
 endfunction
 
+" Preserve foldmethod and set it to 'manual'
 function! StashFold()
     if !exists('w:last_fdm') && (&foldmethod == 'expr' || &foldmethod == 'syntax')
         let w:last_fdm=&foldmethod
@@ -700,48 +811,36 @@ endfunction
 
 " ** }}}
 
-" *** }}}
- 
-if 0
-NeoBundle 'kana/vim-smartword.git'
-map w <Plug>(smartword-w)
-map b <Plug>(smartword-b)
-map e <Plug>(smartword-e)
-map ge <Plug>(smartword-ge)
-endif
+" ** CompleteBlockBrace ** {{{2
 
-" :rename
-NeoBundle 'danro/rename.vim'
+" Eclipse like block completion
+" Expand {} / () / [] block with <Enter>
 
-set foldlevelstart=0
-
-command! F :echo expand('%')
-
-set shortmess+=I
-set textwidth=0
-set colorcolumn=73,74,81,82
-if has('mouse')
-    " use {shift|command}+drag to use terminal side mouse
-    set mouse=a
-    " http://www.machu.jp/diary/20070310.html#p01
-    if &term == 'screen'
-        set ttymouse=xterm2
+inoremap <expr><CR> <SID>CompleteBlockBrace()
+function! s:CompleteBlockBrace()
+    if col('.') == col('$')
+        let l = getline('.')
+        if l =~ '{$'
+            return "\<CR>}\<Up>\<End>\<CR>"
+        elseif l =~ '($'
+            return "\<CR>)\<Up>\<End>\<CR>"
+        elseif l =~ '[$'
+            return "\<CR>]\<Up>\<End>\<CR>"
+        else
+            return "\<CR>"
+        endif
+    elseif getline(".")[col(".") - 1] =~ '[})\]]$'
+        return "\<CR>\<C-o>O"
+    else
+        return "\<CR>"
     endif
-endif
+endfunction
 
-" set modelines=0
+" ** }}}
 
-set timeout
-set timeoutlen=1000
-set ttimeout
-set ttimeoutlen=150
+" ** QuickFix Toggle ** {{{
 
-NeoBundle 'kablamo/VimDebug'
-
-" if has('mac') pbcopy
-
-" QuickFix Toggle {{{
-" refer: http://vim.wikia.com/wiki/Toggle_to_open_or_close_the_quickfix_window
+" Refer: http://vim.wikia.com/wiki/Toggle_to_open_or_close_the_quickfix_window
 
 function! GetBufferList()
   redir =>buflist
@@ -770,72 +869,97 @@ function! ToggleList(bufname, pfx)
   endif
 endfunction
 
-nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
-nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
+" ** }}}
 
-" }}}
+" *** }}}
+ 
+" *** Bleeding Edge *** {{{1
 
-command! DiffOrig vert new | set bt=nofile | r ++edit # | 0d_
-                \ | diffthis | wincmd p | diffthis
+" Beta: These are currently testing/starting-to-use!
 
-nmap <Leader>ut <Leader>u: tab<CR>
-nmap <Leader>Ut <Leader>U: tab<CR>
+" Bundle 'fuenor/qfixgrep'
+" nnoremap <C-n> :lnext<CR>
+" nnoremap <C-p> :lprev<CR>
+" nnoremap <Leader>n :next<CR>
+" nnoremap <Leader>p :prev<CR>
+nnoremap <C-h> :tn<CR>
+nnoremap <C-l> :tp<CR>
 
-NeoBundle 'buftabs'
+" Bundle 't9md/vim-phrase'
 
+" set showtabline=2
+
+" Bundle 'mbriggs/mark.vim'
 " TODO
-vnoremap <Leader>th :<c-u>AlignCtrl l-l<cr>gv:Align =><cr>
+let g:neocomplcache_ctags_arguments_list = {
+  \ 'perl' : '-R -h ".pm"'
+  \ }
+" Bundle 'astashov/vim-ruby-debugger'
+" NeoBundle 'kien/ctrlp.vim'
+" let g:ctrlp_map = '<Leader><C-p>'
+" Bundle 'taku-o/vim-copypath'
 
-let g:unite_update_time=50
-nmap <Leader>ud :Unite -auto-preview -buffer-name=files file_rec<CR>
-nmap <Leader>Ud :Unite -create -no-quit -toggle  -vertical -winwidth=30 -buffer-name=files file_rec<CR>
-map <Leader>ta <Plug>TaskList
+NeoBundle 'kana/vim-altr'
+nmap <Leader>f <Plug>(altr-forward)
 
+" Bundle 'jpalardy/vim-slime'
+
+if 0
+augroup TriggerUpdateTags
+    autocmd!
+    autocmd CursorHold * call g:UpdateTags()
+    autocmd CursorHoldI * call g:UpdateTags()
+augroup END
+function! g:UpdateTags()
+    if !exists(":NeoComplCacheCachingInclude") | return | endif
+    NeoComplCacheCachingInclude
+    for filename in neocomplcache#sources#include_complete#get_include_files(bufnr('%'))
+      execute "setlocal tags+=" . neocomplcache#cache#encode_name('include_tags', filename)
+    endfor
+endfunction
+endif
+
+if 0
+NeoBundle 'kana/vim-smartword.git'
+map w <Plug>(smartword-w)
+map b <Plug>(smartword-b)
+map e <Plug>(smartword-e)
+map ge <Plug>(smartword-ge)
+endif
+
+NeoBundle 'kablamo/VimDebug'
+
+" if has('mac') pbcopy
+
+
+map <Leader>tl <Plug>TaskList
 
 NeoBundle 'tpope/vim-repeat'
-NeoBundle 'nathanaelkane/vim-indent-guides'
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_guide_size = 1
-NeoBundle 'thinca/vim-poslist'
-map <Esc>, <Plug>(poslist-next-pos)
-map <Esc>. <Plug>(poslist-prev-pos)
-imap <Esc>, <C-o><Plug>(poslist-next-pos)
-imap <Esc>. <C-o><Plug>(poslist-prev-pos)
-NeoBundle 'garbas/vim-snipmate'
-NeoBundle 'MarcWeber/vim-addon-mw-utils'
-NeoBundle 'tomtom/tlib_vim'
-NeoBundle 'thinca/vim-visualstar'
-
-imap <C-g>J <Plug>delimitMateS-Tab
-inoremap <silent> <C-g>j <C-r>=delimitMate#JumpAny('')<CR>
-
-NeoBundle 'nakatakeshi/jump2pm.vim'
-noremap <Leader>pv :call Jump2pm('vne')<CR>
-noremap <Leader>pf :call Jump2pm('e')<CR>
-noremap <Leader>ps :call Jump2pm('sp')<CR>
-noremap <Leader>pt :call Jump2pm('tabe')<CR>
-
-cnoreabbrev Pod Ref perldoc
-command! Upod :Unite ref/perldoc
-
 NeoBundle 'tpope/vim-abolish'
+nmap <C-j> ]
+nmap <C-k> [
 NeoBundle 'tpope/vim-unimpaired'
 
 " Bundle 'basyura/TweetVim'
 
-" from vimrc_example.vim
-" jump to the last known cursos position when opening file
-" 'zv' was added by ypresto
-autocmd BufReadPost *
-  \ if line("'\"") > 1 && line("'\"") <= line("$") |
-  \   exe "normal! g`\"" |
-  \ endif |
-  \ execute "normal" "zv"
+NeoBundle 'fuzzyjump.vim'
 
 " *** }}}
 
+" *** Debug *** {{{1
 
-" *** Local Script *** {{{
+" Refer: http://vim.wikia.com/wiki/Identify_the_syntax_highlighting_group_used_at_the_cursor
+command! CurHl :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+    \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+    \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"
+
+" NeoBundle 'mattn/benchvimrc-vim'
+
+" *** }}}
+
+" *** Local Script *** {{{1
+" You can put on '~/.vimlocal/*' anything you don't want to publish.
+set rtp+=~/.vimlocal
 if filereadable(expand('~/.vimlocal/.vimrc'))
     source $HOME/.vimlocal/.vimrc
 endif
