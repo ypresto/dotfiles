@@ -26,6 +26,6 @@
 [difftool]
 	prompt = true
 [github]
-	user = yuya-presto
+	user = ypresto
 [push]
 	default = tracking
