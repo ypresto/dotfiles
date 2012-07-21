@@ -42,13 +42,13 @@ endif
 
 skkdict:
 	cd .vim/dict && \
-	wget http://openlab.jp/skk/dic/SKK-JISYO.L.gz && \
+	wget --timestamping http://openlab.jp/skk/dic/SKK-JISYO.L.gz && \
 	gzip -df SKK-JISYO.L.gz || \
 	echo "ring project servers often downs..."
 
 perldict:
 	cd .vim/dict && \
-	wget https://raw.github.com/Cside/dotfiles/master/.vim/dict/perl.dict
+	wget --timestamping https://raw.github.com/Cside/dotfiles/master/.vim/dict/perl.dict
 
 gitsubmodules:
 	git submodule sync
@@ -57,4 +57,4 @@ gitsubmodules:
 
 bashcompl:
 	cd bash-completion && \
-	wget https://raw.github.com/git/git/master/contrib/completion/git-completion.bash
+	wget --timestamping https://raw.github.com/git/git/master/contrib/completion/git-completion.bash
