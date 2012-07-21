@@ -18,6 +18,9 @@
 	dc = diff --cached
 	lo = log
 	dt = difftool
+	pr = pull --rebase
+	ms = merge --squash
+	re = rebase
 [diff]
 	tool = vimdiff
 [difftool]

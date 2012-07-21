@@ -131,8 +131,6 @@ alias :bl='v ~/.bashrc'
 #alias snip='open ~/.vim/bundle/snipMate/snippets'
 a() { 1=${1:--A}; git add $*; git status --short }
 m() { git commit -m "$*" }
-alias gpr='git pull --rebase'
-alias gms='git merge --squash'
 
 copy-line() { print -rn $BUFFER | pbcopy; zle -M "Copied: ${BUFFER}" }
 zle -N copy-line
