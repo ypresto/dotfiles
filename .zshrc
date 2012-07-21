@@ -227,11 +227,4 @@ autoload -U +X bashcompinit && bashcompinit
 source ~/dotfiles/bash-completion/git-completion.bash
 # hub completion
 source_homebrew etc/bash_completion.d/hub.bash_completion.sh
-if which hub > /dev/null; then
-    # We can complete without "setopt complete_aliases" with this!
-    git () {
-        `which hub` "$@"
-    }
-else
-    echo "hub command not found" >&2
-fi
+$(hub alias -s)
