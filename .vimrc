@@ -26,6 +26,7 @@ let eskk_enabled = 0
 " for neobundle
 filetype off
 filetype plugin indent off
+syntax off " seems to be faster to enable at the end
 
 " load installed plugins
 if has('vim_starting')
@@ -49,11 +50,8 @@ NeoBundle 'Shougo/vimproc', {
 
 " *** Editor Functionality *** {{{1
 
-" ** Encoding / Syntax ** {{{2
+" ** Encoding ** {{{2
 
-filetype plugin on
-filetype indent on
-syntax on " for os x
 set encoding=utf-8
 " FIXME: maybe below line has some bug
 set fileencodings=ucs-bom,utf-8,iso-2022-jp-3,iso-2022-jp,eucjp-ms,euc-jisx0213,euc-jp,sjis,cp932
@@ -121,7 +119,7 @@ set scrolloff=1       " show N more next line when scrolling
 
 " status line and line number
 set number            " Show number of line on left
-set showcmd           " Show what keys input for command
+set showcmd           " Show what keys input for command, but too slow on terminal
 set laststatus=2      " Always show statusline
 if skk_enabled
     set statusline=%<%f\ %h%m%r\ %{SkkGetModeStr()}%=%-14.(%l,%c%V%)\ %P
@@ -152,6 +150,7 @@ augroup cch
     autocmd WinLeave * set nocursorline
     autocmd WinEnter,BufRead * set cursorline
 augroup END
+" Change highlight color of current line
 highlight clear CursorLine
 highlight CursorLine ctermbg=black guibg=black
 highlight SignColumn ctermfg=white ctermbg=black cterm=none
@@ -218,13 +217,19 @@ set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
 
 " *** Keymapping *** {{{1
 
-" Wait for slow input of key combination
-set timeout
-set timeoutlen=1000
-" Activate alt key power,
-" wait [ttimeoutlen]ms for following keys after <Esc> for Alt-* keys
-set ttimeout
-set ttimeoutlen=150
+" below lines are problematic on MacVim with Alt+Key physically mapped to Esc+Key
+if !has('gui_running')
+    " Wait for slow input of key combination
+    set timeout
+    set timeoutlen=1000
+    " Activate alt key power,
+    " wait [ttimeoutlen]ms for following keys after <Esc> for Alt-* keys
+    set ttimeout
+    set ttimeoutlen=150
+else
+    set notimeout  " to avoid Esc+Key waiting bug
+    set nottimeout " blah, no effect on gui...
+endif
 
 noremap ZJ :w<CR> " Fast saving
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>
@@ -313,7 +318,7 @@ nmap <Leader>Uo <Leader>U: outline<CR>
 nmap <Leader>uz <Leader>u: outline:folding<CR>
 nmap <Leader>Uz <Leader>U: outline:folding<CR>
 " history/yankの有効化
-let g:unite_source_history_yank_enable = 1
+" let g:unite_source_history_yank_enable = 1
 nmap <Leader>uy <Leader>u: history/yank<CR>
 nmap <Leader>Uy <Leader>U: history/yank<CR>
 
@@ -526,7 +531,8 @@ runtime macros/matchit.vim
 NeoBundle 'Lokaltog/vim-easymotion'
 
 " Smooth <C-{f,b,u,d}> scrolls
-NeoBundle 'Smooth-Scroll'
+" NeoBundle 'Smooth-Scroll'
+" not work with macvim
 
 " Alternative for vimgrep, :Ack and :LAck
 NeoBundle 'mileszs/ack.vim'
@@ -885,8 +891,8 @@ endfunction
 " nnoremap <C-p> :lprev<CR>
 " nnoremap <Leader>n :next<CR>
 " nnoremap <Leader>p :prev<CR>
-nnoremap <C-h> :tn<CR>
-nnoremap <C-l> :tp<CR>
+" nnoremap <C-h> :tn<CR>
+" nnoremap <C-l> :tp<CR>
 
 " Bundle 't9md/vim-phrase'
 
@@ -930,7 +936,10 @@ map e <Plug>(smartword-e)
 map ge <Plug>(smartword-ge)
 endif
 
-NeoBundle 'kablamo/VimDebug'
+" require vim's perl interpreter support
+NeoBundle 'kablamo/VimDebug', {
+\   'rtp'   : 'vim',
+\}
 
 " if has('mac') pbcopy
 
@@ -949,18 +958,37 @@ NeoBundle 'fuzzyjump.vim'
 
 NeoBundle 'mikewest/vimroom'
 
+NeoBundle 'Lokaltog/vim-powerline'
+
+" set scrolljump=3
+
+NeoBundle 'rson/vim-conque'
+NeoBundle 'Shougo/vimshell'
+
 " *** }}}
 
 " *** Debug *** {{{1
 
 " Refer: http://vim.wikia.com/wiki/Identify_the_syntax_highlighting_group_used_at_the_cursor
-command! CurHl :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+command! CurHl :echo
+    \ "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
     \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
     \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"
 
 " NeoBundle 'mattn/benchvimrc-vim'
 
 " *** }}}
+
+" *** MacVim Specific *** {{{1
+if has('gui_macvim')
+    set transparency=10
+    set macmeta " Use alt as meta on MacVim like on terminal
+    set guifont="Menlo Regular:h12"
+endif
+if has('gui_running')
+    set guioptions+=c
+endif
+" }}}
 
 " *** Local Script *** {{{1
 " You can put on '~/.vimlocal/*' anything you don't want to publish.
@@ -969,3 +997,11 @@ if filereadable(expand('~/.vimlocal/.vimrc'))
     source $HOME/.vimlocal/.vimrc
 endif
 " *** }}}
+
+" *** Enable Filetype Plugins *** {{{1
+" for neobundle, these are disabled in start up section
+filetype on
+filetype plugin indent on " XXX maybe better to disable this, testing
+" for speedup
+syntax on " for os x
+" }}}
