@@ -202,6 +202,7 @@ zstyle ':completion:*' completer _oldlist _complete
 source ~/dotfiles/zaw/zaw.zsh
 zstyle ':filter-select' case-insensitive yes
 bindkey '^V' zaw-cdr
+bindkey '^O' zaw-git-files
 
 unsetopt list_beep
 unsetopt beep

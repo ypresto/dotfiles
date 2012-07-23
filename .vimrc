@@ -968,6 +968,10 @@ NeoBundle 'Lokaltog/vim-powerline'
 NeoBundle 'rson/vim-conque'
 NeoBundle 'Shougo/vimshell'
 
+" until unite being fast
+NeoBundle 'kien/ctrlp.vim'
+let g:ctrlp_map = '<Leader><C-p>'
+
 " *** }}}
 
 " *** Debug *** {{{1
