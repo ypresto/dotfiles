@@ -102,12 +102,13 @@ bindkey ";5C" forward-word
 bindkey ";5D" backward-word
 
 # ENV
-export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/dotfiles/bin:$PATH"
 export EDITOR=vim
 export CLICOLOR=YES
 
 alias g="git"
 alias v='vim "$@"'
+alias V='mvi "$@"'
 alias d='git diff'
 alias c='git diff --cached'
 alias s='git status --short'
@@ -120,6 +121,7 @@ alias :b='v ~/dotfiles/.bashrc_public'
 alias :B='v ~/.bashrc'
 alias :bb='. ~/.bashrc'
 alias :v='v ~/dotfiles/.vimrc'
+alias :V='V ~/dotfiles/.vimrc'
 alias :gc='v ~/dotfiles/.gitconfig'
 alias :d='cd ~/dotfiles'
 alias :h=' \
@@ -227,3 +229,22 @@ source ~/dotfiles/bash-completion/git-completion.bash
 # hub completion
 source_homebrew etc/bash_completion.d/hub.bash_completion.sh
 $(hub alias -s)
+
+
+# Refer: http://d.hatena.ne.jp/namutaka/20100118/1263830555
+# .zshrc
+# command "mvi"
+function mvi() {
+    if [ $# != 0 ]; then
+        mvim --remote-tab-silent $@ 2> /dev/null
+    else
+        srvs=`mvim --serverlist 2> /dev/null`
+        if [ "$srvs" != "" ]; then
+            mvim --remote-send ":tabnew<CR>"
+        else
+            mvim
+        fi
+    fi
+}
+
+alias mvimcd="mvim -c 'cd \`pwd\`'"
