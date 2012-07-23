@@ -1,6 +1,8 @@
 " **
 " * .vimrc for yuya_presto
 " *
+" * Please checkout 'Plugins' section for recommended plugins.
+" *
 
 set nocompatible
 let mapleader=" "
@@ -121,11 +123,12 @@ set scrolloff=1       " show N more next line when scrolling
 set number            " Show number of line on left
 set showcmd           " Show what keys input for command, but too slow on terminal
 set laststatus=2      " Always show statusline
-if skk_enabled
-    set statusline=%<%f\ %h%m%r\ %{SkkGetModeStr()}%=%-14.(%l,%c%V%)\ %P
-else
-    set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-endif
+" using powerline for status
+" if skk_enabled
+"     set statusline=%<%f\ %h%m%r\ %{SkkGetModeStr()}%=%-14.(%l,%c%V%)\ %P
+" else
+"     set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+" endif
 
 " search
 set incsearch         " Use 'incremental search'
@@ -1005,3 +1008,5 @@ filetype plugin indent on " XXX maybe better to disable this, testing
 " for speedup
 syntax on " for os x
 " }}}
+
+" vim:set foldmethod=marker:
