@@ -228,7 +228,7 @@ autoload -U +X bashcompinit && bashcompinit
 source ~/dotfiles/bash-completion/git-completion.bash
 # hub completion
 source_homebrew etc/bash_completion.d/hub.bash_completion.sh
-$(hub alias -s)
+eval $(hub alias -s)
 
 
 # Refer: http://d.hatena.ne.jp/namutaka/20100118/1263830555

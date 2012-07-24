@@ -675,9 +675,14 @@ NeoBundle 'nono/jquery.vim'
 
 " ** Perl ** {{{2
 
+" use new perl syntax and indent!
+NeoBundle 'petdance/vim-perl'
+
 " Enable perl specific rich fold
 let perl_fold=1
 let perl_fold_blocks=1
+" let perl_nofold_packages = 1
+" let perl_include_pod=1
 
 NeoBundle 'yko/mojo.vim'
 
@@ -776,12 +781,16 @@ endfunction
 " Work around for performance problem of expr/syntax foldmethods
 " Inspired by: http://vim.wikia.com/wiki/Keep_folds_closed_while_inserting_text
 
+" black list
+autocmd! FileType ref-perldoc setlocal foldmethod=manual
+
 augroup FoldRenewer
     autocmd!
     " VimEnter: for delayed stashing
     " WinEnter: because foldmethod is window-specific
     " CursorHold: for normal mode editing e.g. undo/redo
     autocmd VimEnter,WinEnter,CursorHold,CursorHoldI * call RenewFold(0)
+    " open fold under the cursor after re-generating folds
     autocmd InsertLeave * call RenewFold(1)
     " workaround for buffer change from outside of current window,
     " like gundo plugin and multi split of single file
@@ -790,6 +799,11 @@ augroup END
 
 " Let foldmethod create folds first, then preserve it.
 function! RenewFold(foldopen)
+    if &filetype == 'ref-perldoc'
+        " black list
+        setlocal foldmethod=manual
+        return
+    endif
     if exists('w:last_fdm')
         if &foldmethod == 'manual'
             let &l:foldmethod=w:last_fdm
