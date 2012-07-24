@@ -18,9 +18,10 @@ fi
 # less shows colored text
 alias less='less -R'
 
-# for detach screen/tmux/byobu with ssh-agent
-ssh_auth_sock_path=~/.ssh/ssh_auth_sock
-if [ $SSH_AUTH_SOCK != $ssh_auth_sock_path ]; then
-    ln -sf $SSH_AUTH_SOCK $ssh_auth_sock_path
-    export SSH_AUTH_SOCK=$ssh_auth_sock_path
-fi
+# deprecated by byobu-reconnect-session
+# # for detach screen/tmux/byobu with ssh-agent
+# ssh_auth_sock_path=~/.ssh/ssh_auth_sock
+# if [ $SSH_AUTH_SOCK != $ssh_auth_sock_path ]; then
+#     ln -sf $SSH_AUTH_SOCK $ssh_auth_sock_path
+#     export SSH_AUTH_SOCK=$ssh_auth_sock_path
+# fi
