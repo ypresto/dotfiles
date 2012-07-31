@@ -16,7 +16,7 @@
 	rsh = reset --hard
 	ds = diff --stat
 	dsc = diff --stat --cached
-	lo = log
+	lo = log --format=short --stat
 	dt = difftool
 	pr = pull --rebase
 	ms = merge --squash

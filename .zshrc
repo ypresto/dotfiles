@@ -248,3 +248,4 @@ function mvi() {
 }
 
 alias mvimcd="mvim -c 'cd \`pwd\`'"
+cl () { cd $1; ls }

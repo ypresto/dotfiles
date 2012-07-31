@@ -203,7 +203,7 @@ if has('mouse')
     set mouse=a
 
     " Refer: http://www.machu.jp/diary/20070310.html#p01
-    if &term == 'screen'
+    if &term == 'screen' || &term == 'screen-256color'
         set ttymouse=xterm2
     endif
 
