@@ -140,7 +140,7 @@ zle -N copy-line
 
 #zshプロンプトにモード表示####################################
 # PROMPT="%{$fg[red]%}[%{$reset_color%}%n%{$fg[red]%}]%#%{$reset_color%} " # username pattern
-PROMPT="%{$fg[red]%}[%{$reset_color%}$HOST%{$fg[red]%}]%#%{$reset_color%} " # hostname pattern
+PROMPT="%{$fg[red]%}[%{$reset_color%}${HOST%%.*}%{$fg[red]%}]%#%{$reset_color%} " # hostname pattern
 if false; then
 function zle-line-init zle-keymap-select {
   case $KEYMAP in
