@@ -685,6 +685,7 @@ let perl_fold_blocks=1
 " let perl_include_pod=1
 
 NeoBundle 'yko/mojo.vim'
+let mojo_highlight_data = 1
 
 augroup PerlKeys
     autocmd!

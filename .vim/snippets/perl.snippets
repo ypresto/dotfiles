@@ -20,3 +20,9 @@ snippet new
 		my $class = shift;
 		return bless {${1}}, $class;
 	}
+# sub and $self
+snippet method
+	sub ${1:method_name} {
+		my $self = shift;
+		${2:#body ...}
+	}
