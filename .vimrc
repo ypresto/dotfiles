@@ -280,17 +280,15 @@ nnoremap <Leader>g :GundoToggle<CR>
 
 " ** neocomplcache ** {{{2
 
-inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
 inoremap <expr> <C-x><C-f>  neocomplcache#manual_filename_complete()
-inoremap <expr> <C-m>  &filetype == 'vim' ? "\<C-x>\<C-v>\<C-p>" : neocomplcache#manual_omni_complete()
 " C-nでneocomplcache補完
 inoremap <expr> <C-n>  pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
 " C-pでkeyword補完
 inoremap <expr> <C-p> pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
 " 補完候補が表示されている場合は確定。そうでない場合は改行
-inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
+" inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
 " 補完をキャンセル＋End
-inoremap <expr> <C-e>  pumvisible() ? neocomplcache#close_popup() : "<End>"
+" inoremap <expr> <C-e>  pumvisible() ? neocomplcache#close_popup() : "\<End>"
 
 " ** }}}
 
@@ -378,9 +376,13 @@ NeoBundle 'YankRing.vim'
 
 " autocompletes parenthesis, braces and more
 NeoBundle 'Raimondi/delimitMate'
-" TODO
-imap <C-g>J <Plug>delimitMateS-Tab
-inoremap <silent> <C-g>j <C-r>=delimitMate#JumpAny('')<CR>
+imap <M-g> <Plug>delimitMateS-Tab
+" " instead of above, use below one
+" NeoBundle 'jiangmiao/auto-pairs'
+" let g:AutoPairsShortcutToggle = '<Plug>_disabled_AutoPairsShortcutToggle'
+" let g:AutoPairsShortcutFastWrap = '<Plug>_disabled_AutoPairsShortcutFastWrap'
+" let g:AutoPairsShortcutJump = '<Esc>g'
+" let g:AutoPairsShortcutBackInsert = '<Esc>p'
 
 " surrounding with braces or quotes with s and S key
 NeoBundle 'tpope/vim-surround'
@@ -691,25 +693,18 @@ augroup PerlKeys
     autocmd!
     autocmd FileType perl inoremap <C-l> $
     autocmd FileType perl snoremap <C-l> $
-    autocmd FileType perl nmap <Esc>; A;<Esc><Plug>(poslist-prev-pos)
-    autocmd FileType perl imap <Esc>; <C-o><Esc>;
 augroup END
-function! SigilMaps()
-endfunction
 
 " Perl hash aligning
 vnoremap <Leader>th :<c-u>AlignCtrl l-l<cr>gv:Align =><cr>
 
 " Open perl file by package name under the cursor
-NeoBundle 'nakatakeshi/jump2pm.vim'
-noremap <Leader>pv :call Jump2pm('vne')<CR>
-noremap <Leader>pf :call Jump2pm('e')<CR>
-noremap <Leader>ps :call Jump2pm('sp')<CR>
-noremap <Leader>pt :call Jump2pm('tabe')<CR>
-vnoremap <Leader>pv :call Jump2pmV('vne')<CR>
-vnoremap <Leader>pf :call Jump2pmV('e')<CR>
-vnoremap <Leader>ps :call Jump2pmV('sp')<CR>
-vnoremap <Leader>pt :call Jump2pmV('tabe')<CR>
+" NeoBundle 'nakatakeshi/jump2pm.vim'
+" noremap <Leader>pv :call Jump2pm('vne')<CR>
+" noremap <Leader>pf :call Jump2pm('e')<CR>
+" noremap <Leader>ps :call Jump2pm('sp')<CR>
+" noremap <Leader>pt :call Jump2pm('tabe')<CR>
+" sometime problematic, use gf of vim-perl instead
 
 " vim-ref for perldoc
 cnoreabbrev Pod Ref perldoc
@@ -990,6 +985,9 @@ NeoBundle 'Shougo/vimshell'
 " until unite being fast
 NeoBundle 'kien/ctrlp.vim'
 let g:ctrlp_map = '<Leader><C-p>'
+
+nmap <Esc>; A;<Esc><Plug>(poslist-prev-pos)
+imap <Esc>; <C-o><Esc>;
 
 " *** }}}
 
