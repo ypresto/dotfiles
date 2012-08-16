@@ -728,8 +728,11 @@ NeoBundle 'tmhedberg/SimpylFold'
 " vim-ref alternative for .vimrc and VimScripts
 autocmd! FileType vim call MapVimHelp()
 function! MapVimHelp()
-    map <buffer> K :help <C-r><C-w><CR>
-    " TODO: visual mode
+    nmap <buffer> K :help <C-r><C-w><CR>
+    vmap <buffer> K :<C-u>help <C-r>=GetVisualText()<CR><CR>
+endfunction
+function! GetVisualText()
+    return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]-1]
 endfunction
 
 " ** }}}
