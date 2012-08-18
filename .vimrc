@@ -376,7 +376,7 @@ NeoBundle 'YankRing.vim'
 
 " autocompletes parenthesis, braces and more
 NeoBundle 'Raimondi/delimitMate'
-imap <M-g> <Plug>delimitMateS-Tab
+imap <Esc>g <Plug>delimitMateS-Tab
 " " instead of above, use below one
 " NeoBundle 'jiangmiao/auto-pairs'
 " let g:AutoPairsShortcutToggle = '<Plug>_disabled_AutoPairsShortcutToggle'
