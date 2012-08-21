@@ -18,6 +18,11 @@ fi
 # less shows colored text
 alias less='less -R'
 
+# ENV
+export PATH="$HOME/dotfiles/node_modules/.bin:$PATH"
+export EDITOR=vim
+export CLICOLOR=YES
+
 # deprecated by byobu-reconnect-session
 # # for detach screen/tmux/byobu with ssh-agent
 # ssh_auth_sock_path=~/.ssh/ssh_auth_sock

@@ -30,7 +30,7 @@ update:
 	./mksymlinks
 	./ln_byobu_tmux_conf
 
-_up: skkdict perldict gitsubmodules bashcompl
+_up: skkdict perldict gitsubmodules bashcompl npm_modules
 	
 vimproc:
 # build automatically by NeoBundle when vimproc updated
@@ -63,3 +63,6 @@ gitsubmodules:
 bashcompl:
 	cd bash-completion && \
 	wget --timestamping https://raw.github.com/git/git/master/contrib/completion/git-completion.bash
+
+npm_modules:
+	npm install jslint

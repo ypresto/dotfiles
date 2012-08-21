@@ -103,11 +103,6 @@ fi
 bindkey ";5C" forward-word
 bindkey ";5D" backward-word
 
-# ENV
-export PATH="$HOME/dotfiles/bin:$PATH"
-export EDITOR=vim
-export CLICOLOR=YES
-
 alias g="git"
 alias v='vim "$@"'
 alias V='mvi "$@"'
