@@ -65,4 +65,4 @@ bashcompl:
 	wget --timestamping https://raw.github.com/git/git/master/contrib/completion/git-completion.bash
 
 npm_modules:
-	npm install jslint
+	npm install jshint
