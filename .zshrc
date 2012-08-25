@@ -39,6 +39,8 @@ setopt SHARE_HISTORY
 #colors
 
 
+autoload -U +X bashcompinit && bashcompinit
+
 source ~/.bashrc
 
 # *** config by r7kamura ***
@@ -222,8 +224,6 @@ source_homebrew () {
     echo "could not load $1" >&2
     return 1
 }
-
-autoload -U +X bashcompinit && bashcompinit
 
 # git completion
 source ~/dotfiles/bash-completion/git-completion.bash
