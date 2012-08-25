@@ -7,9 +7,13 @@ install:
 	./mksymlinks
 	cd .vim/bundle && \
 	rm -fr neobundle.vim && \
-	git clone git://github.com/Shougo/neobundle.vim.git
-	vim -c ":NeoBundleInstall Shougo/vimproc | :NeoBundleInstall Shougo/neocomplcache | :NeoBundleInstall Shougo/unite.vim"
-	clear
+	rm -fr vimproc && \
+	rm -fr neocomplcache && \
+	rm -fr unite.vim && \
+	git clone git://github.com/Shougo/neobundle.vim.git && \
+	git clone git://github.com/Shougo/vimproc.git && \
+	git clone git://github.com/Shougo/neocomplcache.git && \
+	git clone git://github.com/Shougo/unite.vim.git
 	make vimproc
 	vim -c ":Unite -here neobundle/install"
 	make _up
