@@ -77,7 +77,7 @@ set shiftround    " Round indent when < or > is used
 autocmd FileType make setlocal softtabstop=8 shiftwidth=8 noexpandtab
 " 2-space indent
 autocmd FileType
-    \ html,css,javascript,tex,ruby
+    \ html,javascript,tex,ruby
     \ set shiftwidth=2 softtabstop=2 nosmartindent
 autocmd FileType python     setlocal nosmartindent
 " Use smarter auto indent for C-languages
