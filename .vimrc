@@ -77,7 +77,7 @@ set shiftround    " Round indent when < or > is used
 autocmd FileType make setlocal softtabstop=8 shiftwidth=8 noexpandtab
 " 2-space indent
 autocmd FileType
-    \ html,javascript,tex,ruby
+    \ html,scss,javascript,ruby,tex
     \ set shiftwidth=2 softtabstop=2 nosmartindent
 autocmd FileType python     setlocal nosmartindent
 " Use smarter auto indent for C-languages
@@ -664,6 +664,8 @@ NeoBundle 'othree/html5.vim'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'sukima/xmledit'
 " see http://nanasi.jp/articles/vim/xml-plugin.html
+
+NeoBundle 'cakebaker/scss-syntax.vim'
 
 " ** }}}
 
