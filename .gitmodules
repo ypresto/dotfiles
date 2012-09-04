@@ -7,3 +7,9 @@
 [submodule "zaw"]
 	path = zaw
 	url = https://github.com/zsh-users/zaw.git
+[submodule "gnome-terminal-colors-solarized"]
+	path = gnome-terminal-colors-solarized
+	url = https://github.com/sigurdga/gnome-terminal-colors-solarized.git
+[submodule "guake-colors-solarized"]
+	path = guake-colors-solarized
+	url = https://github.com/coolwanglu/guake-colors-solarized.git
