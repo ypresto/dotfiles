@@ -12,7 +12,7 @@ let mapleader=" "
 autocmd!
 " reload when writing .vimrc
 autocmd BufWritePost $MYVIMRC,$HOME/dotfiles/.vimrc source $MYVIMRC |
-            \if has('gui_running') | source $MYGVIMRC
+            \if (has('gui_running') && filereadable($MYGVIMRC)) | source $MYGVIMRC
 autocmd BufWritePost $MYGVIMRC,$HOME/dotfiles/.gvimrc if has('gui_running') | source $MYGVIMRC
 " *** }}}
 
@@ -116,7 +116,7 @@ set backspace=indent,eol,start " go to previous line with backspace
 
 set foldmethod=marker " Use '{{{' and '}}}' for marker 
 set foldlevelstart=0  " Start with all folds closed
-set noeb vb t_vb=     " no beep
+set noeb novb t_vb=   " no beep
 set scrolloff=1       " show N more next line when scrolling
 
 " status line and line number
@@ -220,18 +220,18 @@ set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
 
 " *** Keymapping *** {{{1
 
-" below lines are problematic on MacVim with Alt+Key physically mapped to Esc+Key
-if !has('gui_running')
+if !has('gui_mac')
+    set notimeout  " to avoid Esc+Key waiting bug
+    set nottimeout " blah, no effect on gui...
+    " below lines are problematic on MacVim with Alt+Key physically mapped to Esc+Key
+else
     " Wait for slow input of key combination
     set timeout
     set timeoutlen=1000
-    " Activate alt key power,
+    " Activate alt key power on terminal,
     " wait [ttimeoutlen]ms for following keys after <Esc> for Alt-* keys
     set ttimeout
     set ttimeoutlen=150
-else
-    set notimeout  " to avoid Esc+Key waiting bug
-    set nottimeout " blah, no effect on gui...
 endif
 
 noremap ZJ :w<CR> " Fast saving
@@ -992,6 +992,8 @@ let g:ctrlp_map = '<Leader><C-p>'
 nmap <Esc>; A;<Esc><Plug>(poslist-prev-pos)
 imap <Esc>; <C-o><Esc>;
 
+NeoBundle 'thinca/vim-scouter'
+
 " *** }}}
 
 " *** Debug *** {{{1
@@ -1006,16 +1008,48 @@ command! CurHl :echo
 
 " *** }}}
 
-" *** MacVim Specific *** {{{1
+" *** GUI Specific *** {{{1
 if has('gui_macvim')
-    set transparency=10
     set macmeta " Use alt as meta on MacVim like on terminal
     set guifont="Menlo Regular:h12"
+    " set guifontwide=
+    set transparency=10
+elseif has('gui_gtk2')
+    set guioptions-=m " to avoid menu accelerator being bound
+    set guifont="DejaVu Sans Mono 10"
+    " set guifontwide=
 endif
 if has('gui_running')
-    set guioptions+=c
+    set guicursor=a:block,a:blinkon0,i:ver10
+    set guioptions+=c " no dialog
+    set guioptions-=T " no toolbar
 endif
-" }}}
+
+" ** Meta+Key to ESC and Key Mapping ** {{{2
+
+" Fix meta-keys to MAKE SURE to generate <Esc>a .. <Esc>z
+" This is almost for gvim which does not translate meta to esc
+" refer: http://vim.wikia.com/wiki/Fix_meta-keys_that_break_out_of_Insert_mode
+let nr=0x21 " ASCII Space
+while nr <= 0x7E
+    let c = nr2char(nr)
+    if c == '|' | let nr += 1 | continue | endif
+    exec "map <M-".tolower(c)."> <Esc>".tolower(c)
+    exec "map! <M-".tolower(c)."> <Esc>".tolower(c)
+    if (0x41 <= nr && nr <= 0x5A) || (0x61 <= nr && nr <= 0x7A)
+        " ascii; uppercases are required for at least on linux
+        exec "map <M-".toupper(c)."> <Esc>".toupper(c)
+        exec "map! <M-".toupper(c)."> <Esc>".toupper(c)
+    endif
+    let nr += 1
+endwhile
+" and space, keep from <M-<Space>> :)
+map <M-Space> <Esc><Space>
+map! <M-Space> <Esc><Space>
+
+" ** }}}
+
+" *** }}}
 
 " *** Local Script *** {{{1
 " You can put on '~/.vimlocal/*' anything you don't want to publish.

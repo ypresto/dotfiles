@@ -4,6 +4,11 @@
 # functions, options, key bindings, etc.
 #
 
+if [ "$TERM" = "xterm" ]; then
+    # No it isn't, it's gnome-terminal
+    export TERM=xterm-256color
+fi
+
 #bindkey -v
 bindkey -e
 
@@ -226,6 +231,11 @@ source ~/dotfiles/bash-completion/git-completion.bash
 source_homebrew etc/bash_completion.d/hub.bash_completion.sh
 eval "$(hub alias -s zsh)"
 
+# for ubuntu
+if which ack-grep >/dev/null 2>&1; then
+    alias ack='ack-grep'
+    # compdef ack-grep=ack
+fi
 
 # Refer: http://d.hatena.ne.jp/namutaka/20100118/1263830555
 # .zshrc
@@ -236,7 +246,7 @@ function mvi() {
     else
         srvs=`mvim --serverlist 2> /dev/null`
         if [ "$srvs" != "" ]; then
-            mvim --remote-send ":tabnew<CR>"
+            mvim --remote-send "<Esc>:tabnew<CR>"
         else
             mvim
         fi
@@ -245,3 +255,9 @@ function mvi() {
 
 alias mvimcd="mvim -c 'cd \`pwd\`'"
 cl () { cd $1; ls }
+
+# temp
+alias mvim=gvim
+alias gvi=mvi
+
+source $HOME/.zshrc_local

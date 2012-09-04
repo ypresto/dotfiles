@@ -15,8 +15,8 @@ if which gfind >/dev/null 2>&1; then
     alias find='gfind'
 fi
 
-# less shows colored text
-alias less='less -R'
+# color / ignore case
+alias less='less -Ri'
 
 # ENV
 export PATH="$HOME/dotfiles/node_modules/.bin:$PATH"
