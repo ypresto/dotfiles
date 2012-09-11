@@ -262,6 +262,8 @@ inoremap <Esc>d <C-o>de
 inoremap <Esc>t <C-d>
 " TODO: using at end of line causes backspace
 inoremap <C-k> <C-o>D
+" delimitMate requires below binding
+imap <C-h> <BS>
 " ** }}}
 
 " Maximizes current split, <C-w>= to restore
@@ -976,7 +978,8 @@ NeoBundle 'tpope/vim-unimpaired'
 
 " Bundle 'basyura/TweetVim'
 
-NeoBundle 'fuzzyjump.vim'
+" NeoBundle 'fuzzyjump.vim'
+" use H / M / L motion instead
 
 NeoBundle 'mikewest/vimroom'
 
@@ -995,6 +998,12 @@ nmap <Esc>; A;<Esc><Plug>(poslist-prev-pos)
 imap <Esc>; <C-o><Esc>;
 
 NeoBundle 'thinca/vim-scouter'
+
+NeoBundle 'kana/vim-operator-user'
+NeoBundle 'tyru/operator-camelize.vim'
+map <Leader>L <Plug>(operator-camelize-toggle)
+map <Leader>_L <Plug>(operator-upper-camelize)
+let g:operator_camelize_word_case = "lower"
 
 " *** }}}
 
