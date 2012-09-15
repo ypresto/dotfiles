@@ -145,7 +145,7 @@ set smartcase         " Do not ignorecase if keyword contains uppercase
 " command line
 " command line completion order
 set wildmode=longest,list,full
-set wildmenu          " Enhanced command line completion
+" set wildmenu          " Enhanced command line completion
 set cmdheight=2       " Set height of command line
 
 set shortmess+=I      " Surpress intro message when starting vim
@@ -938,7 +938,9 @@ let g:neocomplcache_ctags_arguments_list = {
 " Bundle 'astashov/vim-ruby-debugger'
 " NeoBundle 'kien/ctrlp.vim'
 " let g:ctrlp_map = '<Leader><C-p>'
-" Bundle 'taku-o/vim-copypath'
+
+NeoBundle 'taku-o/vim-copypath'
+let g:copypath_copy_to_unnamed_register = 1
 
 NeoBundle 'kana/vim-altr'
 nmap <Leader>f <Plug>(altr-forward)
@@ -1084,6 +1086,6 @@ filetype on
 filetype plugin indent on " XXX maybe better to disable this, testing
 " for speedup
 syntax on " for os x
-" }}}
+" *** }}}
 
 " vim:set foldmethod=marker:
