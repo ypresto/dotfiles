@@ -52,7 +52,13 @@ NeoBundle 'Shougo/vimproc', {
 
 " *** Editor Functionality *** {{{1
 
-" ** Encoding ** {{{2
+" ** Language / Encoding ** {{{2
+
+try
+    :language en
+catch
+    :language C
+endtry
 
 set encoding=utf-8
 " FIXME: maybe below line has some bug
@@ -137,6 +143,8 @@ set ignorecase        " Ignore case when searching
 set smartcase         " Do not ignorecase if keyword contains uppercase
 
 " command line
+" command line completion order
+set wildmode=longest,list,full
 set wildmenu          " Enhanced command line completion
 set cmdheight=2       " Set height of command line
 
@@ -730,7 +738,7 @@ NeoBundle 'tmhedberg/SimpylFold'
 " ** VimScript ** {{{
 
 " vim-ref alternative for .vimrc and VimScripts
-autocmd! FileType vim call MapVimHelp()
+autocmd! FileType vim,help call MapVimHelp()
 function! MapVimHelp()
     nmap <buffer> K :help <C-r><C-w><CR>
     vmap <buffer> K :<C-u>help <C-r>=GetVisualText()<CR><CR>
