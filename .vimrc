@@ -407,11 +407,12 @@ NeoBundle 'mattn/gist-vim'
 " read/write by sudo with `vim sudo:file.txt`
 NeoBundle 'sudo.vim'
 
-" shows syntax error on every save
-NeoBundle 'scrooloose/syntastic'
-let g:syntastic_echo_current_error=0 " too heavy, use below one
-" show quickfix text of current line on statusline
-NeoBundle 'dannyob/quickfixstatus'
+" " shows syntax error on every save
+" NeoBundle 'scrooloose/syntastic'
+" let g:syntastic_echo_current_error=0 " too heavy, use below one
+" " show quickfix text of current line on statusline
+" NeoBundle 'dannyob/quickfixstatus'
+" I'm trying 'activefix'
 
 " rich-formatted undo history
 NeoBundle 'sjl/gundo.vim'
@@ -465,11 +466,9 @@ NeoBundle 'tacroe/unite-mark'
 NeoBundle 'h1mesuke/unite-outline'
 NeoBundle 'kmnk/vim-unite-giti.git'
 NeoBundle 'sgur/unite-qf'
-" 入力モードで開始する
 let g:unite_enable_start_insert=1
-" 候補絞込みを高速化する
-" CursorHold（.swpファイルの作成やイベント発火）までの時間が変化してしまうので注意
-let g:unite_update_time=50
+let g:unite_split_rule="botright"
+let g:unite_winheight="10"
 
 " ** }}}
 
@@ -1014,6 +1013,12 @@ NeoBundle 'tyru/operator-camelize.vim'
 map <Leader>L <Plug>(operator-camelize-toggle)
 map <Leader>_L <Plug>(operator-upper-camelize)
 let g:operator_camelize_word_case = "lower"
+
+NeoBundle 'chikatoike/activefix.vim'
+
+let g:gist_open_browser_after_post = 1
+
+NeoBundle 'mbbill/fencview'
 
 " *** }}}
 
