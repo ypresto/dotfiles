@@ -261,3 +261,8 @@ alias mvim=gvim
 alias gvi=mvi
 
 source $HOME/.zshrc_local
+
+if [ "$BYOBU_BACKEND" = "tmux" ]; then
+    # work arround for automatic-rename local option is set by someone
+    tmux set-window-option -u automatic-rename
+fi
