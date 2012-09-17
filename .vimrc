@@ -115,7 +115,7 @@ autocmd BufReadPost *
 
 " ** }}}
 
-" ** UI / Editing / Search ** {{{2
+" ** Editing / Search ** {{{2
 
 " Editing
 set backspace=indent,eol,start " go to previous line with backspace
@@ -125,30 +125,33 @@ set foldlevelstart=0  " Start with all folds closed
 set noeb novb t_vb=   " no beep
 set scrolloff=1       " show N more next line when scrolling
 
+" Search
+set incsearch         " Use 'incremental search'
+set hlsearch          " Highlight search result
+set ignorecase        " Ignore case when searching
+set smartcase         " Do not ignorecase if keyword contains uppercase
+
+" ** }}}
+
+" ** Status Line / Command Line** {{{2
+
 " status line and line number
 set number            " Show number of line on left
 set showcmd           " Show what keys input for command, but too slow on terminal
 set laststatus=2      " Always show statusline
-" using powerline for status
+" using powerline, not setting statusline
 " if skk_enabled
 "     set statusline=%<%f\ %h%m%r\ %{SkkGetModeStr()}%=%-14.(%l,%c%V%)\ %P
 " else
 "     set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 " endif
 
-" search
-set incsearch         " Use 'incremental search'
-set hlsearch          " Highlight search result
-set ignorecase        " Ignore case when searching
-set smartcase         " Do not ignorecase if keyword contains uppercase
-
 " command line
-" command line completion order
-set wildmode=longest,list,full
-" set wildmenu          " Enhanced command line completion
-set cmdheight=2       " Set height of command line
-
-set shortmess+=I      " Surpress intro message when starting vim
+set cmdheight=2                " Set height of command line
+set wildmode=longest,list,full " command line completion order
+set nowildmenu                 " Enhanced completion: disabled
+" Don't use matched files for completion
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
 
 " ** }}}
 
@@ -220,8 +223,7 @@ endif
 " ** }}}
 
 " ** Misc ** {{{2
-" Don't use matched files for completion
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
+set shortmess+=I      " Surpress intro message when starting vim
 " ** }}}
 
 " *** }}}
