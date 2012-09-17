@@ -28,7 +28,6 @@ update:
 	clear
 	make _up
 	./mksymlinks
-	./ln_byobu_tmux_conf
 
 _up: skkdict perldict gitsubmodules bashcompl npm_modules
 	

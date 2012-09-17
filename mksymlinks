@@ -4,16 +4,38 @@ use strict;
 use warnings;
 
 use File::Spec;
+use File::Basename qw//;
 
-my $homedir = $ENV{'HOME'} || die "Environment variable HOME isn't set";
-foreach (grep { !/^\.{1,2}$/ && !/^.git$/ } glob(".*")) {
-    my $f = File::Spec->catfile($homedir, $_);
-    my $t = File::Spec->abs2rel(File::Spec->rel2abs($_), $homedir);
-    print "Creating '$f'";
-    if (-e $f) {
-        print ": already exists";
-    } else {
-        symlink($t, $f) || print ": cannot create"
+my $HOME = $ENV{'HOME'} || die "Environment variable HOME isn't set";
+
+my %TARGET_DIR_TO_FILES = (
+    $HOME          => [
+        grep { !/^\.{1,2}$/ && !/^.git$/ } glob(".*")
+    ],
+    "$HOME/.byobu" => ['.tmux.conf'],
+);
+
+for my $dir (keys %TARGET_DIR_TO_FILES) {
+    for my $orig_file (@{$TARGET_DIR_TO_FILES{$dir}}) {
+        my $fn = File::Basename::fileparse($orig_file);
+        my $f = File::Spec->catfile($dir, $fn);
+        my $t = File::Spec->abs2rel(File::Spec->rel2abs($orig_file), $dir);
+        print "Creating '$f'";
+        if (-l $f) {
+            print " [link exists]\n";
+            next;
+        }
+        if (! -w $f) {
+            print ": file is not writable\n";
+            next;
+        }
+        if (-e $f) {
+            print ": file already exists, overwrite? [y/N] ";
+            my $prompt = <STDIN>;
+            next unless $prompt =~ m/^y/i;
+            print "Overwriting '$f'\n";
+            unlink $f;
+        }
+        symlink($t, $f) || print ": cannot create\n";
     }
-    print "\n";
 }
