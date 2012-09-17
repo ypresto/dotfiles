@@ -93,7 +93,7 @@ autocmd FileType c,cpp,java setlocal cindent
 
 " ** }}}
 
-" ** Undo / Backup / History ** {{{2
+" ** Undo / Backup / History / Session ** {{{2
 
 set undofile            " Save undo history to file
 set undodir=~/.vim/undo " Specify where to save
@@ -112,6 +112,8 @@ autocmd BufReadPost *
   \ endif |
   \ execute "normal! zv" | " open fold under cursor
   \ execute "normal! zz"   " Move current line on center of window
+
+set sessionoptions-=options
 
 " ** }}}
 
@@ -321,7 +323,7 @@ nmap <Leader>ur :Unite -buffer-name=register register<CR>
 nmap <Leader>us <Leader>u:file_mru<CR>
 nmap <Leader>Us <Leader>U:file_mru -winwidth=80<CR>
 " 全部乗せ
-nmap <Leader>ua :UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
+nmap <Leader>ua :Unite buffer file_mru bookmark<CR>
 " unite-mark
 nmap <Leader>um <Leader>u: mark<CR>
 nmap <Leader>Um <Leader>U: mark<CR>
@@ -337,7 +339,6 @@ nmap <Leader>Uy <Leader>U: history/yank<CR>
 
 nmap <Leader>up <Leader>u: -buffer-name=files file_rec/async<CR>
 nmap <Leader>Up <Leader>u: -buffer-name=files file_rec/async<CR>
-" TODO: you can use file_rec/async too, but maybe beta.
 
 nmap <Leader>ut <Leader>u: tab<CR>
 nmap <Leader>Ut <Leader>U: tab<CR>
@@ -346,6 +347,9 @@ nmap <Leader>ug <Leader>u: giti<CR>
 nmap <Leader>Ug <Leader>U: giti<CR>
 nmap <Leader>uq <Leader>u: qf<CR>
 nmap <Leader>Uq <Leader>U: qf<CR>
+
+nmap <Leader>uS <Leader>u: session<CR>
+nmap <Leader>US <Leader>U: session<CR>
 
 augroup UniteWindowKeyMaps
     autocmd!
