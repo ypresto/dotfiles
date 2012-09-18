@@ -110,8 +110,8 @@ autocmd BufReadPost *
   \ if line("'\"") > 1 && line("'\"") <= line("$") |
   \   exe "normal! g`\"" |
   \ endif |
-  \ execute "normal" "zv" | " open fold under cursor
-  \ execute "normal" "zz"   " Move current line on center of window
+  \ execute "normal! zv" | " open fold under cursor
+  \ execute "normal! zz"   " Move current line on center of window
 
 " ** }}}
 
@@ -712,12 +712,12 @@ augroup END
 vnoremap <Leader>th :<c-u>AlignCtrl l-l<cr>gv:Align =><cr>
 
 " Open perl file by package name under the cursor
-" NeoBundle 'nakatakeshi/jump2pm.vim'
-" noremap <Leader>pv :call Jump2pm('vne')<CR>
-" noremap <Leader>pf :call Jump2pm('e')<CR>
-" noremap <Leader>ps :call Jump2pm('sp')<CR>
-" noremap <Leader>pt :call Jump2pm('tabe')<CR>
-" sometime problematic, use gf of vim-perl instead
+NeoBundle 'nakatakeshi/jump2pm.vim'
+noremap <Leader>pv :call Jump2pm('vne')<CR>
+noremap <Leader>pf :call Jump2pm('e')<CR>
+noremap <Leader>ps :call Jump2pm('sp')<CR>
+noremap <Leader>pt :call Jump2pm('tabe')<CR>
+" TODO: above sometime problematic
 
 " vim-ref for perldoc
 cnoreabbrev Pod Ref perldoc
