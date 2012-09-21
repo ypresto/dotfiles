@@ -1022,6 +1022,8 @@ let g:gist_open_browser_after_post = 1
 
 NeoBundle 'mbbill/fencview'
 
+command! Uall :bufdo :update
+
 " *** }}}
 
 " *** Debug *** {{{1

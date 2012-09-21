@@ -4,11 +4,6 @@
 # functions, options, key bindings, etc.
 #
 
-if [ -f "$HOME/.zshrc_config" ]; then
-    source "$HOME/.zshrc_config"
-fi
-CONFIG_PROMPT_COLOR=${CONFIG_PROMPT_COLOR-red}
-
 if [ "$TERM" = "xterm" ]; then
     # No it isn't, it's gnome-terminal
     export TERM=xterm-256color
@@ -60,6 +55,17 @@ autoload -U add-zsh-hook
 autoload -Uz vcs_info
 autoload -U compinit
 autoload history-search-end
+
+# util
+# http://www.logilab.org/blogentry/20255
+function ext_color () { echo -ne "\033[38;5;$1m"; }
+
+unset CONFIG_PROMPT_COLOR
+# host local config
+if [ -f "$HOME/.zshrc_config" ]; then
+    source "$HOME/.zshrc_config"
+fi
+CONFIG_PROMPT_COLOR=${CONFIG_PROMPT_COLOR-$fg[red]}
 
 # Prompt
 zstyle ':vcs_info:git:*' check-for-changes true
@@ -147,15 +153,15 @@ zle -N copy-line
 
 #zshプロンプトにモード表示####################################
 # PROMPT="%{$fg[red]%}[%{$reset_color%}%n%{$fg[red]%}]%#%{$reset_color%} " # username pattern
-PROMPT="%{$fg[$CONFIG_PROMPT_COLOR]%}[%{$reset_color%}${HOST%%.*}%{$fg[$CONFIG_PROMPT_COLOR]%}]%#%{$reset_color%} " # hostname pattern
+PROMPT="%{$CONFIG_PROMPT_COLOR%}[%{$reset_color%}${HOST%%.*}%{$CONFIG_PROMPT_COLOR%}]%#%{$reset_color%} " # hostname pattern
 if false; then
 function zle-line-init zle-keymap-select {
   case $KEYMAP in
     vicmd)
-    PROMPT="%{$fg[$CONFIG_PROMPT_COLOR]%}[%{$reset_color%}%n/%{$fg_bold[red]%}NOR%{$reset_color%}%{$fg[$CONFIG_PROMPT_COLOR]%}]%#%{$reset_color%} "
+    PROMPT="%{$CONFIG_PROMPT_COLOR%}[%{$reset_color%}%n/%{$fg_bold[red]%}NOR%{$reset_color%}%{$CONFIG_PROMPT_COLOR%}]%#%{$reset_color%} "
     ;;
     main|viins)
-    PROMPT="%{$fg[$CONFIG_PROMPT_COLOR]%}[%{$reset_color%}%n/%{$fg_bold[cyan]%}INS%{$reset_color%}%{$fg[$CONFIG_PROMPT_COLOR]%}]%#%{$reset_color%} "
+    PROMPT="%{$CONFIG_PROMPT_COLOR%}[%{$reset_color%}%n/%{$fg_bold[cyan]%}INS%{$reset_color%}%{$CONFIG_PROMPT_COLOR%}]%#%{$reset_color%} "
     ;;
   esac
   zle reset-prompt
