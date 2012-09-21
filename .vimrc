@@ -335,8 +335,8 @@ nmap <Leader>Uz <Leader>U: outline:folding<CR>
 nmap <Leader>uy <Leader>u: history/yank<CR>
 nmap <Leader>Uy <Leader>U: history/yank<CR>
 
-nmap <Leader>up <Leader>u: -buffer-name=files file_rec<CR>
-nmap <Leader>Up <Leader>u: -buffer-name=files file_rec<CR>
+nmap <Leader>up <Leader>u: -buffer-name=files file_rec/async<CR>
+nmap <Leader>Up <Leader>u: -buffer-name=files file_rec/async<CR>
 " TODO: you can use file_rec/async too, but maybe beta.
 
 nmap <Leader>ut <Leader>u: tab<CR>
@@ -409,12 +409,11 @@ NeoBundle 'mattn/gist-vim'
 " read/write by sudo with `vim sudo:file.txt`
 NeoBundle 'sudo.vim'
 
-" " shows syntax error on every save
-" NeoBundle 'scrooloose/syntastic'
-" let g:syntastic_echo_current_error=0 " too heavy, use below one
-" " show quickfix text of current line on statusline
-" NeoBundle 'dannyob/quickfixstatus'
-" I'm trying 'activefix'
+" shows syntax error on every save
+NeoBundle 'scrooloose/syntastic'
+let g:syntastic_echo_current_error=0 " too heavy, use below one
+" show quickfix text of current line on statusline
+NeoBundle 'dannyob/quickfixstatus'
 
 " rich-formatted undo history
 NeoBundle 'sjl/gundo.vim'
@@ -1004,6 +1003,7 @@ NeoBundle 'Shougo/vimshell'
 " until unite being fast
 NeoBundle 'kien/ctrlp.vim'
 let g:ctrlp_map = '<Leader><C-p>'
+let g:ctrlp_max_files = 0
 
 nmap <Esc>; A;<Esc><Plug>(poslist-prev-pos)
 imap <Esc>; <C-o><Esc>;
@@ -1016,7 +1016,7 @@ map <Leader>L <Plug>(operator-camelize-toggle)
 map <Leader>_L <Plug>(operator-upper-camelize)
 let g:operator_camelize_word_case = "lower"
 
-NeoBundle 'chikatoike/activefix.vim'
+" NeoBundle 'chikatoike/activefix.vim'
 
 let g:gist_open_browser_after_post = 1
 
