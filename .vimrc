@@ -36,7 +36,7 @@ if has('vim_starting')
     set rtp+=~/.vim/bundle/neobundle.vim/
     call neobundle#rc(expand('~/.vim/bundle/'))
     " For Perl, add paths for running or test
-    let $PERL5LIB='./lib:./t:./t/inc:'.expand('$PERL5LIB')
+    let $PERL5LIB='./lib:./t:./t/inc:'.$PERL5LIB
 endif
 NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc', {
@@ -412,6 +412,8 @@ NeoBundle 'sudo.vim'
 " shows syntax error on every save
 NeoBundle 'scrooloose/syntastic'
 let g:syntastic_echo_current_error=0 " too heavy, use below one
+let g:syntastic_error_symbol='E>'
+let g:syntastic_warning_symbol='W>'
 " show quickfix text of current line on statusline
 NeoBundle 'dannyob/quickfixstatus'
 
@@ -467,6 +469,7 @@ NeoBundle 'tacroe/unite-mark'
 NeoBundle 'h1mesuke/unite-outline'
 NeoBundle 'kmnk/vim-unite-giti.git'
 NeoBundle 'sgur/unite-qf'
+NeoBundle 'Shougo/unite-session'
 let g:unite_enable_start_insert=1
 let g:unite_split_rule="botright"
 let g:unite_winheight="10"
