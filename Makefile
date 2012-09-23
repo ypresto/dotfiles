@@ -69,5 +69,5 @@ npm_modules:
 	npm install jshint
 
 cleanlinks:
-	# below also works with BSD find
-	bash -c "danglings=`find -L ~ -maxdepth 5 -type l` && echo $$danglings && rm -i $$danglings"
+# below also works with BSD find
+	find -L ~ -maxdepth 5 -type l | xargs -o rm -i
