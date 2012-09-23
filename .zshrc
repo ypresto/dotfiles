@@ -51,6 +51,7 @@ source ~/.bashrc
 # *** config by r7kamura ***
 
 autoload -U colors
+colors
 autoload -U add-zsh-hook
 autoload -Uz vcs_info
 autoload -U compinit
@@ -79,7 +80,6 @@ function _update_vcs_info_msg() {
   [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
 }
 add-zsh-hook precmd _update_vcs_info_msg
-colors
 #PROMPT="%{${fg[yellow]}%}✘╹◡╹✘%{${reset_color}%} "
 PROMPT2="%{${fg[blue]}%}%_> %{${reset_color}%}"
 SPROMPT="%{${fg[red]}%}correct: %R -> %r [nyae]? %{${reset_color}%}"
