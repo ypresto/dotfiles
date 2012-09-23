@@ -116,10 +116,10 @@ function _update_vcs_info_msg() {
 }
 add-zsh-hook precmd _update_vcs_info_msg
 #PROMPT="%{${fg[yellow]}%}✘╹◡╹✘%{${reset_color}%} "
-PROMPT2="%{${fg[blue]}%}%_> %{${reset_color}%}"
-SPROMPT="%{${fg[red]}%}correct: %R -> %r [nyae]? %{${reset_color}%}"
-VCS_PROMPT="%1(v|%F{green} %1v%f|)"
-DIR_PROMPT="%{${fg[blue]}%}[%~]%{${reset_color}%}"
+PROMPT2="%{$reset_color%}%{${fg[blue]}%}%_> %{${reset_color}%}"
+SPROMPT="%{$reset_color%}%{${fg[red]}%}correct: %R -> %r [nyae]? %{${reset_color}%}"
+VCS_PROMPT="%{$reset_color%}%1(v|%F{green} %1v%f|)"
+DIR_PROMPT="%{$reset_color%}%{${fg[blue]}%}[%~]%{${reset_color}%}"
 RPROMPT="$VCS_PROMPT $DIR_PROMPT"
 
 setopt auto_cd
@@ -188,15 +188,15 @@ zle -N copy-line
 
 #zshプロンプトにモード表示####################################
 # PROMPT="%{$fg[red]%}[%{$reset_color%}%n%{$fg[red]%}]%#%{$reset_color%} " # username pattern
-PROMPT="%{$CONFIG_PROMPT_COLOR%}[%{$reset_color%}${HOST%%.*}%{$CONFIG_PROMPT_COLOR%}]%#%{$reset_color%} " # hostname pattern
+PROMPT="%{$reset_color%}%{$CONFIG_PROMPT_COLOR%}[%{$reset_color%}${HOST%%.*}%{$CONFIG_PROMPT_COLOR%}]%#%{$reset_color%} " # hostname pattern
 if false; then
 function zle-line-init zle-keymap-select {
   case $KEYMAP in
     vicmd)
-    PROMPT="%{$CONFIG_PROMPT_COLOR%}[%{$reset_color%}%n/%{$fg_bold[red]%}NOR%{$reset_color%}%{$CONFIG_PROMPT_COLOR%}]%#%{$reset_color%} "
+    PROMPT="%{$reset_color%}%{$CONFIG_PROMPT_COLOR%}[%{$reset_color%}%n/%{$fg_bold[red]%}NOR%{$reset_color%}%{$CONFIG_PROMPT_COLOR%}]%#%{$reset_color%} "
     ;;
     main|viins)
-    PROMPT="%{$CONFIG_PROMPT_COLOR%}[%{$reset_color%}%n/%{$fg_bold[cyan]%}INS%{$reset_color%}%{$CONFIG_PROMPT_COLOR%}]%#%{$reset_color%} "
+    PROMPT="%{$reset_color%}%{$CONFIG_PROMPT_COLOR%}[%{$reset_color%}%n/%{$fg_bold[cyan]%}INS%{$reset_color%}%{$CONFIG_PROMPT_COLOR%}]%#%{$reset_color%} "
     ;;
   esac
   zle reset-prompt
