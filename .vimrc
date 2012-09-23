@@ -61,7 +61,7 @@ catch
 endtry
 
 set encoding=utf-8
-" FIXME: maybe below line has some bug
+" FIXME maybe below line has some bug
 set fileencodings=ucs-bom,utf-8,iso-2022-jp-3,iso-2022-jp,eucjp-ms,euc-jisx0213,euc-jp,sjis,cp932
 
 " ** }}}
@@ -272,7 +272,7 @@ noremap! <Esc>b <S-Left>
 inoremap <Esc>d <C-o>de
 " Remap <C-d> de-indentation to Alt-t
 inoremap <Esc>t <C-d>
-" TODO: using at end of line causes backspace
+" TODO using at end of line causes backspace
 inoremap <C-k> <C-o>D
 " delimitMate requires below binding
 imap <C-h> <BS>
@@ -645,7 +645,7 @@ endif
 
 " ** Color Scheme ** {{{2
 
-" FIXME: below maybe required on tmux/screen
+" FIXME below maybe required on tmux/screen
 " set t_Co=256
 
 " Too hard to setup not-degraded-mode...
