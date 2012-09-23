@@ -69,6 +69,7 @@ fi
 
 # color / ignore case
 alias less='less -Ri'
+export PAGER='less -Ri'
 
 # ENV
 export PATH="$HOME/dotfiles/node_modules/.bin:$PATH"
@@ -306,9 +307,13 @@ cl () { cd $1; ls }
 alias mvim=gvim
 alias gvi=mvi
 
-source $HOME/.zshrc_local
+# completion colors
+# http://linuxshellaccount.blogspot.jp/2008/12/color-completion-using-zsh-modules-on.html
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 if [ "$BYOBU_BACKEND" = "tmux" ]; then
     # work arround for automatic-rename local option is set by someone
     tmux set-window-option -u automatic-rename
 fi
+
+source $HOME/.zshrc_local
