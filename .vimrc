@@ -124,7 +124,7 @@ set backspace=indent,eol,start " go to previous line with backspace
 
 set foldmethod=marker " Use '{{{' and '}}}' for marker 
 set foldlevelstart=0  " Start with all folds closed
-set noeb novb t_vb=   " no beep
+set noeb vb t_vb=     " no beep
 set scrolloff=1       " show N more next line when scrolling
 
 " Search
