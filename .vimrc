@@ -989,8 +989,8 @@ map <Leader>tl <Plug>TaskList
 
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-abolish'
-nmap <C-j> ]
-nmap <C-k> [
+nmap <Leader>j ]
+nmap <Leader>k [
 NeoBundle 'tpope/vim-unimpaired'
 
 " Bundle 'basyura/TweetVim'
