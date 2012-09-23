@@ -3,6 +3,8 @@ UNAME := $(shell uname)
 all:
 	echo "call 'make install' or 'make update'"
 
+.PHONY: install update _up vimproc skkdict perldict gitsubmodules bashcompl npm_modules cleanlinks
+
 install:
 	./mksymlinks
 	cd .vim/bundle && \
@@ -29,7 +31,7 @@ update:
 	make _up
 	./mksymlinks
 
-_up: skkdict perldict gitsubmodules bashcompl npm_modules
+_up: skkdict perldict gitsubmodules bashcompl npm_modules cleanlinks
 	
 vimproc:
 # build automatically by NeoBundle when vimproc updated
@@ -65,3 +67,7 @@ bashcompl:
 
 npm_modules:
 	npm install jshint
+
+cleanlinks:
+	# below also works with BSD find
+	bash -c "danglings=`find -L ~ -maxdepth 5 -type l` && echo $$danglings && rm -i $$danglings"
