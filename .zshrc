@@ -48,6 +48,41 @@ autoload -U +X bashcompinit && bashcompinit
 
 source ~/.bashrc
 
+# *** moved from .bashrc_public ***
+
+if which gls >/dev/null 2>&1; then
+    # os x with homebrew/coreutils
+    alias ls='gls --color=auto'
+    eval `gdircolors ~/dotfiles/dircolors-solarized/dircolors.ansi-dark`
+elif [ -d /Library ]; then
+    # os x without homebrew/coreutils
+    alias ls='ls -G'
+else
+    # maybe linux
+    alias ls='ls --color=auto'
+    eval `dircolors ~/dotfiles/dircolors-solarized/dircolors.ansi-dark`
+fi
+
+if which gfind >/dev/null 2>&1; then
+    alias find='gfind'
+fi
+
+# color / ignore case
+alias less='less -Ri'
+
+# ENV
+export PATH="$HOME/dotfiles/node_modules/.bin:$PATH"
+export EDITOR=vim
+export CLICOLOR=YES
+
+# deprecated by byobu-reconnect-session
+# # for detach screen/tmux/byobu with ssh-agent
+# ssh_auth_sock_path=~/.ssh/ssh_auth_sock
+# if [ $SSH_AUTH_SOCK != $ssh_auth_sock_path ]; then
+#     ln -sf $SSH_AUTH_SOCK $ssh_auth_sock_path
+#     export SSH_AUTH_SOCK=$ssh_auth_sock_path
+# fi
+
 # *** config by r7kamura ***
 
 autoload -U colors
