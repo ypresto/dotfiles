@@ -70,4 +70,4 @@ npm_modules:
 
 cleanlinks:
 # below also works with BSD find
-	find -L ~ -maxdepth 5 -type l | xargs -o rm -i
+	find -L ~ -maxdepth 5 -type l | xargs --no-run-if-empty rm -i
