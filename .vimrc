@@ -723,7 +723,10 @@ noremap <Leader>pv :call Jump2pm('vne')<CR>
 noremap <Leader>pf :call Jump2pm('e')<CR>
 noremap <Leader>ps :call Jump2pm('sp')<CR>
 noremap <Leader>pt :call Jump2pm('tabe')<CR>
-" TODO: above sometime problematic
+vnoremap <Leader>pv :call Jump2pmV('vne')<CR>
+vnoremap <Leader>pf :call Jump2pmV('e')<CR>
+vnoremap <Leader>ps :call Jump2pmV('sp')<CR>
+vnoremap <Leader>pt :call Jump2pmV('tabe')<CR>
 
 " vim-ref for perldoc
 cnoreabbrev Pod Ref perldoc
