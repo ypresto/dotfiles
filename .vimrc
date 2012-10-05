@@ -35,8 +35,6 @@ if has('vim_starting')
     set nocompatible
     set rtp+=~/.vim/bundle/neobundle.vim/
     call neobundle#rc(expand('~/.vim/bundle/'))
-    " For Perl, add paths for running or test
-    let $PERL5LIB='./lib:./t:./t/inc:'.$PERL5LIB
 endif
 NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc', {
@@ -370,6 +368,9 @@ function! UnmapAltKeys()
     imap <buffer> <Esc>t <Plug>(esc)t
 endfunction
 
+command! -nargs=? SQ UniteSessionSave <args> | :qall
+command! -nargs=? SL UniteSessionLoad <args>
+
 " ** }}}
 
 " ** IME ** {{{2
@@ -468,15 +469,18 @@ endfunction
 " ** }}}
 
 " ** unite ** {{{2
+
 NeoBundle 'Shougo/unite.vim'
+let g:unite_enable_start_insert=1
+let g:unite_split_rule="botright"
+let g:unite_winheight="10"
+
 NeoBundle 'tacroe/unite-mark'
 NeoBundle 'h1mesuke/unite-outline'
 NeoBundle 'kmnk/vim-unite-giti.git'
 NeoBundle 'sgur/unite-qf'
 NeoBundle 'Shougo/unite-session'
-let g:unite_enable_start_insert=1
-let g:unite_split_rule="botright"
-let g:unite_winheight="10"
+let g:unite_source_session_options = &sessionoptions
 
 " ** }}}
 

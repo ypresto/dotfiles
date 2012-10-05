@@ -316,4 +316,8 @@ if [ "$BYOBU_BACKEND" = "tmux" ]; then
     tmux set-window-option -u automatic-rename
 fi
 
+# bleeding edge
+alias git-new-workdir='sh /usr/share/doc/git-1.7.10.2/contrib/workdir/git-new-workdir'
+alias :vl='vim ~/.vimlocal/.vimrc'
+
 source $HOME/.zshrc_local
