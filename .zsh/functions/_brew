@@ -1,0 +1,6 @@
+#compdef brew
+
+for homebrew_dir in $HOME/homebrew /usr/local; do
+    target="${homebrew_dir}/Library/Contributions/brew_zsh_completion.zsh"
+    [ -f $target ] && source $target
+done

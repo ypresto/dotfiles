@@ -157,17 +157,18 @@ bindkey ";5D" backward-word
 
 alias g="git"
 alias v='vim "$@"'
-alias V='mvi "$@"'
+alias V='gvi "$@"'
 alias d='git diff'
+alias D='git diff --color-words'
 alias c='git diff --cached'
+alias C='git diff --cached --color-words'
 alias s='git status --short'
 alias t='tig'
 alias p='popd'
 alias :q='exit'
 alias :z='v ~/dotfiles/.zshrc'
 alias :zz='. ~/.zshrc'
-alias :b='v ~/dotfiles/.bashrc_public'
-alias :B='v ~/.bashrc'
+alias :b='v ~/.bashrc'
 alias :bb='. ~/.bashrc'
 alias :v='v ~/dotfiles/.vimrc'
 alias :V='V ~/dotfiles/.vimrc'
@@ -178,7 +179,6 @@ alias :h=' \
     [ -d /usr/local ] && cd /usr/local || \
     echo "no homebrew" >&2 && return 1'
 alias :g='cd ~/repo/github.com'
-alias :bl='v ~/.bashrc'
 #alias snip='open ~/.vim/bundle/snipMate/snippets'
 a() { 1=${1:--A}; git add $*; git status --short }
 m() { git commit -m "$*" }
@@ -287,25 +287,28 @@ fi
 # Refer: http://d.hatena.ne.jp/namutaka/20100118/1263830555
 # .zshrc
 # command "mvi"
-function mvi() {
+function gvi() {
     if [ $# != 0 ]; then
-        mvim --remote-tab-silent $@ 2> /dev/null
+        gvim --remote-tab-silent $@ 2> /dev/null
     else
-        srvs=`mvim --serverlist 2> /dev/null`
+        srvs=`gvim --serverlist 2> /dev/null`
         if [ "$srvs" != "" ]; then
-            mvim --remote-send "<Esc>:tabnew<CR>"
+            gvim --remote-send "<Esc>:tabnew<CR>"
         else
-            mvim
+            gvim
         fi
     fi
 }
 
-alias mvimcd="mvim -c 'cd \`pwd\`'"
-cl () { cd $1; ls }
+alias gvimcd="gvim -c 'cd \`pwd\`'"
 
-# temp
-alias mvim=gvim
-alias gvi=mvi
+if [ "`uname`" = "Darwin" ]; then
+    alias gvim=mvim
+    alias gvimdiff=mvimdiff
+fi
+
+cl () { cd $1; ls }
+mcd () { mkdir -p $1; cd $1 }
 
 # completion colors
 # http://linuxshellaccount.blogspot.jp/2008/12/color-completion-using-zsh-modules-on.html

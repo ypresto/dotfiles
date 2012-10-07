@@ -14,8 +14,11 @@
 	st = status
 	br = branch
 	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+	g = log --graph --decorate --stat
+	gw = log --graph --decorate --stat --color-words
 	rs = reset
 	rsh = reset --hard
+	dw = diff --color-words
 	ds = diff --stat
 	dsc = diff --stat --cached
 	lo = log --stat
