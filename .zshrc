@@ -72,7 +72,7 @@ alias less='less -Ri'
 export PAGER='less -Ri'
 
 # ENV
-export PATH="$HOME/dotfiles/node_modules/.bin:$PATH"
+export PATH="$HOME/dotfiles/bin:$HOME/dotfiles/node_modules/.bin:$PATH"
 export EDITOR=vim
 export CLICOLOR=YES
 
@@ -284,6 +284,13 @@ if which ack-grep >/dev/null 2>&1; then
     # compdef ack-grep=ack
 fi
 
+alias gvimcd="gvim -c 'cd \`pwd\`'"
+
+if [ "`uname`" = "Darwin" ]; then
+    alias gvim=mvim
+    alias gvimdiff=mvimdiff
+fi
+
 # Refer: http://d.hatena.ne.jp/namutaka/20100118/1263830555
 # .zshrc
 # command "mvi"
@@ -299,13 +306,6 @@ function gvi() {
         fi
     fi
 }
-
-alias gvimcd="gvim -c 'cd \`pwd\`'"
-
-if [ "`uname`" = "Darwin" ]; then
-    alias gvim=mvim
-    alias gvimdiff=mvimdiff
-fi
 
 cl () { cd $1; ls }
 mcd () { mkdir -p $1; cd $1 }

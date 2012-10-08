@@ -81,7 +81,7 @@ set shiftround    " Round indent when < or > is used
 autocmd FileType make setlocal softtabstop=8 shiftwidth=8 noexpandtab
 " 2-space indent
 autocmd FileType
-    \ html,scss,javascript,ruby,tex
+    \ html,scss,javascript,ruby,tex,xml
     \ set shiftwidth=2 softtabstop=2 nosmartindent
 autocmd FileType python     setlocal nosmartindent
 " Use smarter auto indent for C-languages
@@ -1038,6 +1038,10 @@ NeoBundle 'mbbill/fencview'
 
 command! Uall :bufdo :update
 
+NeoBundle 'Zoomwin'
+
+let g:ConqueTerm_ReadUnfocused = 1
+
 " *** }}}
 
 " *** Debug *** {{{1
@@ -1055,7 +1059,7 @@ command! CurHl :echo
 " *** GUI Specific *** {{{1
 if has('gui_macvim')
     set macmeta " Use alt as meta on MacVim like on terminal
-    set guifont="Menlo Regular:h12"
+    set guifont="DejaVu Sans Mono:h12"
     " set guifontwide=
     set transparency=10
 elseif has('gui_gtk2')
