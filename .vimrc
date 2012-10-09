@@ -1038,7 +1038,7 @@ NeoBundle 'mbbill/fencview'
 
 command! Uall :bufdo :update
 
-NeoBundle 'Zoomwin'
+NeoBundle 'ZoomWin'
 
 let g:ConqueTerm_ReadUnfocused = 1
 
