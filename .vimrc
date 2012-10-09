@@ -99,7 +99,7 @@ set nobackup            " Don't create backup files (foobar~)
 
 " reffer: http://vimwiki.net/?'viminfo'
 set history=100
-set viminfo='100,<100,s10,%
+set viminfo='100,<100,s10
 
 " Jump to the last known cursos position when opening file
 " Refer: :help last-position-jump
@@ -283,9 +283,9 @@ nnoremap <C-w>a <C-w>\|<C-w>_
 nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
 nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 
-" ZenCoding
-let g:user_zen_leader_key = '<C-q>'
-let g:user_zen_expandabbr_key = '<C-q><C-q>'
+" " ZenCoding
+" let g:user_zen_leader_key = '<C-q>'
+" let g:user_zen_expandabbr_key = '<C-q><C-q>'
 
 " Gundo
 nnoremap <Leader>g :GundoToggle<CR>
@@ -368,7 +368,11 @@ function! UnmapAltKeys()
     imap <buffer> <Esc>t <Plug>(esc)t
 endfunction
 
-command! -nargs=? SQ UniteSessionSave <args> | :qall
+" FIXME
+command! -nargs=? SQ call UniteSessionSaveAndQAll(<args>)
+function! UniteSessionSaveAndQAll(session)
+    execute "UniteSessionSave " + a:session
+endfunction
 command! -nargs=? SL UniteSessionLoad <args>
 
 " ** }}}
@@ -390,6 +394,8 @@ endif
 
 " C-[np] after paste, textobj [ai]'"()[]{} , and more, more!!
 NeoBundle 'YankRing.vim'
+let g:yankring_n_keys = 'Y D' " refuse x and X
+let g:yankring_o_keys = 'b B w W e E d y $ G ; iw iW aw aW' " refuse ,
 
 " autocompletes parenthesis, braces and more
 NeoBundle 'Raimondi/delimitMate'
@@ -525,8 +531,13 @@ omap aF <Plug>(textobj-between-a)
 vmap iF <Plug>(textobj-between-i)
 vmap aF <Plug>(textobj-between-a)
 
-" [ai],w / 'this_is_a_word' will be 4 'words in word'
-" also ,w ,b ,e ,ge motion defined
+" Perl very like /slash braces/
+omap i/ <Plug>(textobj-between-i)/
+omap a/ <Plug>(textobj-between-a)/
+vmap i/ <Plug>(textobj-between-i)/
+vmap a/ <Plug>(textobj-between-a)/
+
+" [ai]u / 'this_is_a_word' will be 4 'words in word'
 NeoBundle 'vimtaku/textobj-wiw'
 
 " * Almost For Perl * {{{3
@@ -581,7 +592,7 @@ let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_guide_size = 1
 
 " Micro <C-i> and <C-o>
-NeoBundle 'thinca/vim-poslist'
+" NeoBundle 'thinca/vim-poslist'
 map <Esc>, <Plug>(poslist-next-pos)
 map <Esc>. <Plug>(poslist-prev-pos)
 imap <Esc>, <C-o><Plug>(poslist-next-pos)
@@ -676,18 +687,19 @@ colorscheme solarized
 
 " ** HTML / CSS / XML ** {{{2
 
-NeoBundle 'mattn/zencoding-vim'
-let g:user_zen_settings = {
-\   'lang': "ja"
-\}
-let g:use_zen_complete_tag = 1
+" NeoBundle 'mattn/zencoding-vim'
+" let g:user_zen_settings = {
+" \   'lang': "ja"
+" \}
+" let g:use_zen_complete_tag = 1
 
 NeoBundle 'othree/html5.vim'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'sukima/xmledit'
 " see http://nanasi.jp/articles/vim/xml-plugin.html
 
-NeoBundle 'cakebaker/scss-syntax.vim'
+" haml and sass
+NeoBundle 'tpope/vim-haml'
 
 " ** }}}
 
@@ -872,6 +884,8 @@ endfunction
 " Eclipse like block completion
 " Expand {} / () / [] block with <Enter>
 
+if 0
+
 inoremap <expr><CR> <SID>CompleteBlockBrace()
 function! s:CompleteBlockBrace()
     if col('.') == col('$')
@@ -891,6 +905,8 @@ function! s:CompleteBlockBrace()
         return "\<CR>"
     endif
 endfunction
+
+endif
 
 " ** }}}
 
@@ -1060,17 +1076,17 @@ command! CurHl :echo
 " *** GUI Specific *** {{{1
 if has('gui_macvim')
     set macmeta " Use alt as meta on MacVim like on terminal
-    set guifont="DejaVu Sans Mono:h12"
+    set guifont=DejaVu\ Sans\ Mono:h12
     " set guifontwide=
     set transparency=10
 elseif has('gui_gtk2')
     set guioptions-=m " to avoid menu accelerator being bound
     set guifont="DejaVu Sans Mono 10"
     " set guifontwide=
+    set guioptions+=c " no dialog / buggy on mac
 endif
 if has('gui_running')
     set guicursor=a:block,a:blinkon0,i:ver10
-    set guioptions+=c " no dialog
     set guioptions-=T " no toolbar
 endif
 
