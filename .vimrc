@@ -406,6 +406,7 @@ NeoBundle 'tpope/vim-surround'
 
 " open reference manual with K key
 NeoBundle 'thinca/vim-ref'
+let g:ref_perldoc_auto_append_f = 1
 
 " git support
 NeoBundle 'tpope/vim-fugitive'
