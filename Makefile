@@ -59,7 +59,7 @@ perldict:
 gitsubmodules:
 	git submodule sync
 	git submodule update --init
-	git submodule foreach 'git checkout master; git pull'
+	git submodule foreach 'git checkout master; git pull; git submodule sync; git submodule update --init'
 
 bashcompl:
 	cd bash-completion && \

@@ -308,7 +308,7 @@ function gvi() {
 }
 
 cl () { cd $1; ls }
-mcd () { mkdir -p $1; cd $1 }
+mcdir () { mkdir -p $1; cd $1 }
 
 # completion colors
 # http://linuxshellaccount.blogspot.jp/2008/12/color-completion-using-zsh-modules-on.html

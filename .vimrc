@@ -1001,10 +1001,10 @@ map e <Plug>(smartword-e)
 map ge <Plug>(smartword-ge)
 endif
 
-" require vim's perl interpreter support
-NeoBundle 'kablamo/VimDebug', {
-\   'rtp'   : 'vim',
-\}
+" " require vim's perl interpreter support
+" NeoBundle 'kablamo/VimDebug', {
+" \   'rtp'   : 'vim',
+" \}
 
 " if has('mac') pbcopy
 
@@ -1055,9 +1055,21 @@ NeoBundle 'mbbill/fencview'
 
 command! Uall :bufdo :update
 
-NeoBundle 'ZoomWin'
+" NeoBundle 'ZoomWin'
 
 let g:ConqueTerm_ReadUnfocused = 1
+
+" NeoBundle 'majutsushi/tagbar'
+" nmap <Leader>tb :TagbarToggle<CR>
+" let g:tagbar_ctags_bin = '~/homebrew/bin/ctags'
+
+NeoBundle 'astashov/vim-ruby-debugger'
+NeoBundle 'AndrewRadev/splitjoin.vim'
+NeoBundle 'joonty/vdebug'
+
+autocmd VimEnter * let g:vdebug_options['command'] = '~/komodo-perl.sh %s'
+
+let g:ruby_debugger_progname = 'mvim'
 
 " *** }}}
 
