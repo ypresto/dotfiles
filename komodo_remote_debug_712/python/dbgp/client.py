@@ -65,7 +65,7 @@ if sys.hexversion < 0x02020000:
 else:
     major = sys.hexversion >> 24
     minor = (sys.hexversion & 0x00ff0000) >> 16
-    modname = "_%s._client%s%s" % (os.platform, major, minor)
+    modname = "_%s._client%s%s" % (sys.platform, major, minor)
     try:
         # Try importing our fast C module.
         import imp
