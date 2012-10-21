@@ -1075,7 +1075,12 @@ let g:ConqueTerm_ReadUnfocused = 1
 
 NeoBundle 'joonty/vdebug'
 
-autocmd VimEnter * let g:vdebug_options['command'] = '~/komodo-perl.sh %s'
+" autocmd VimEnter * let g:vdebug_options['exec_perl']   = $HOME.'/dotfiles/bin/komodo-perl.sh %s'
+" autocmd VimEnter * let g:vdebug_options['exec_python'] = $HOME.'/dotfiles/bin/komodo-python.sh %s'
+" autocmd VimEnter * let g:vdebug_options['exec_ruby']   = $HOME.'/dotfiles/bin/komodo-ruby.sh %s'
+autocmd VimEnter * let g:vdebug_options['command_perl']   = ':ConqueTermSplit '.$HOME.'/dotfiles/bin/komodo-perl.sh %s'
+autocmd VimEnter * let g:vdebug_options['command_python'] = ':ConqueTermSplit '.$HOME.'/dotfiles/bin/komodo-python.sh %s'
+autocmd VimEnter * let g:vdebug_options['command_ruby']   = ':ConqueTermSplit '.$HOME.'/dotfiles/bin/komodo-ruby.sh %s'
 
 let g:ruby_debugger_progname = 'mvim'
 
