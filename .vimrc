@@ -827,19 +827,40 @@ autocmd! FileType ref-perldoc setlocal foldmethod=manual
 
 augroup FoldRenewer
     autocmd!
+
     " VimEnter: for delayed stashing
     " WinEnter: because foldmethod is window-specific
-    " CursorHold: for normal mode editing e.g. undo/redo
-    autocmd VimEnter,WinEnter,CursorHold,CursorHoldI * call RenewFold(0)
+    autocmd VimEnter,WinEnter * call FoldRenewerInit()
+
     " open fold under the cursor after re-generating folds
-    autocmd InsertLeave * call RenewFold(1)
+    " Recalculate only on saving buffer to reduce freeze
+    autocmd BufWritePost * call RestoreFoldMethod() | call StashFoldMethod()
+
     " workaround for buffer change from outside of current window,
     " like gundo plugin and multi split of single file
-    autocmd WinLeave * call StashFold()
+    autocmd WinLeave * call StashFoldMethod()
 augroup END
 
-" Let foldmethod create folds first, then preserve it.
-function! RenewFold(foldopen)
+" Initialize on current window
+function! FoldRenewerInit()
+    if !exists('w:fold_renewer_init_done')
+        " Set original fdm after splitting window
+        if exists('b:orig_fdm')
+            let &l:foldmethod=b:orig_fdm
+        endif
+        let w:fold_renewer_init_done = 1
+        " Delay for permit other plugins to initialize
+        " FIXME: this autocmd should be WINDOW SPECIFIC
+        augroup DelayedStashFoldMethod
+            autocmd!
+            " CursorMoved: called at start of editting, after ready to edit
+            autocmd CursorMoved,CursorMovedI * call StashFoldMethod()
+        augroup END
+    endif
+endfunction
+
+" Let foldmethod calculate folds
+function! RestoreFoldMethod()
     if &filetype == 'ref-perldoc'
         " black list
         setlocal foldmethod=manual
@@ -848,30 +869,21 @@ function! RenewFold(foldopen)
     if exists('w:last_fdm')
         if &foldmethod == 'manual'
             let &l:foldmethod=w:last_fdm
-            if a:foldopen != 0
-                " open folds under the cursor
-                execute "normal" "zv"
-            endif
+            " open folds under the cursor
+            execute "normal" "zv"
         endif
         unlet w:last_fdm
     endif
-    if &foldmethod != 'expr' && &foldmethod != 'syntax'
-        return
-    endif
-    augroup DelayedStashFold
-        autocmd!
-        " CursorMoved: because called at start, after ready to edit
-        autocmd CursorMoved,CursorMovedI * call StashFold()
-    augroup END
 endfunction
 
 " Preserve foldmethod and set it to 'manual'
-function! StashFold()
+function! StashFoldMethod()
     if !exists('w:last_fdm') && (&foldmethod == 'expr' || &foldmethod == 'syntax')
+        let b:orig_fdm=&foldmethod
         let w:last_fdm=&foldmethod
         setlocal foldmethod=manual
     endif
-    augroup DelayedStashFold
+    augroup DelayedStashFoldMethod
         autocmd!
     augroup END
 endfunction
@@ -1014,7 +1026,7 @@ NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-unimpaired'
 
-" Bundle 'basyura/TweetVim'
+NeoBundle 'basyura/TweetVim'
 
 " NeoBundle 'fuzzyjump.vim'
 " use H / M / L motion instead
