@@ -120,7 +120,7 @@ set sessionoptions-=options
 " Editing
 set backspace=indent,eol,start " go to previous line with backspace
 
-set foldmethod=marker " Use '{{{' and '}}}' for marker 
+set foldmethod=marker " Use '{{{' and '}}}' for marker
 set foldlevelstart=0  " Start with all folds closed
 set noeb vb t_vb=     " no beep
 set scrolloff=1       " show N more next line when scrolling
@@ -508,7 +508,7 @@ NeoBundle 'kana/vim-textobj-fold'
 NeoBundle 'kana/vim-textobj-function'
 " [ai][iI]
 NeoBundle 'kana/vim-textobj-indent'
-" [ai][/?] 
+" [ai][/?]
 " Bundle 'kana/vim-textobj-lastpat'
 " [ai]y
 NeoBundle 'kana/vim-textobj-syntax'
@@ -943,7 +943,7 @@ endfunction
 " ** }}}
 
 " *** }}}
- 
+
 " *** Bleeding Edge *** {{{1
 
 " Beta: These are currently testing/starting-to-use!
