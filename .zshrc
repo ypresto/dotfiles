@@ -322,5 +322,8 @@ fi
 # bleeding edge
 alias git-new-workdir='sh /usr/share/doc/git-1.7.10.2/contrib/workdir/git-new-workdir'
 alias :vl='vim ~/.vimlocal/.vimrc'
+if [ "`uname`" = "Darwin" ]; then
+    alias fixfont="defaults -currentHost write -globalDomain AppleFontSmoothing -int 2"
+fi
 
 source $HOME/.zshrc_local
