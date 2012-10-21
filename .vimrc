@@ -446,8 +446,7 @@ NeoBundle 'tomtom/tlib_vim'
 " ** neocomplcache ** {{{2
 
 NeoBundle 'Shougo/neocomplcache'
-" Below supports SnipMate!
-NeoBundle 'Shougo/neocomplcache-snippets-complete'
+NeoBundle 'Shougo/neosnippet'
 " English spell completion with 'look' command
 NeoBundle 'ujihisa/neco-look'
 " let g:neocomplcache_enable_at_startup = 1
@@ -1013,8 +1012,6 @@ map <Leader>tl <Plug>TaskList
 
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-abolish'
-nmap <Leader>j ]
-nmap <Leader>k [
 NeoBundle 'tpope/vim-unimpaired'
 
 " Bundle 'basyura/TweetVim'
@@ -1025,6 +1022,7 @@ NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'mikewest/vimroom'
 
 NeoBundle 'Lokaltog/vim-powerline'
+let g:Powerline_symbols = 'unicode'
 
 " set scrolljump=3
 
@@ -1063,13 +1061,28 @@ let g:ConqueTerm_ReadUnfocused = 1
 " nmap <Leader>tb :TagbarToggle<CR>
 " let g:tagbar_ctags_bin = '~/homebrew/bin/ctags'
 
-NeoBundle 'astashov/vim-ruby-debugger'
-NeoBundle 'AndrewRadev/splitjoin.vim'
 NeoBundle 'joonty/vdebug'
 
 autocmd VimEnter * let g:vdebug_options['command'] = '~/komodo-perl.sh %s'
 
 let g:ruby_debugger_progname = 'mvim'
+
+NeoBundleLazy 'tell-k/vim-browsereload-mac'
+NeoBundleLazy 'lordm/vim-browser-reload-linux'
+if has('mac')
+    NeoBundleSource 'tell-k/vim-browsereload-mac'
+elseif has('linux')
+    NeoBundleSource 'lordm/vim-browser-reload-linux'
+endif
+
+NeoBundle 'reinh/vim-makegreen'
+nmap <Leader>mg <Plug>MakeGreen
+
+NeoBundle 'AndrewRadev/splitjoin.vim'
+nmap <Leader>J :SplitjoinJoin<cr>
+nmap <Leader>j :SplitjoinSplit<cr>
+
+NeoBundle 'sontek/rope-vim'
 
 " *** }}}
 
