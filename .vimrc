@@ -1173,6 +1173,9 @@ NeoBundle 'taka84u9/unite-git'
 
 NeoBundle 'thinca/vim-prettyprint'
 
+" speedup ctrlp
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files --exclude-standard']
+
 " *** }}}
 
 " *** Debug *** {{{1

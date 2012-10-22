@@ -22,6 +22,18 @@ snippet #!u
 	use warnings;
 
 	${1}
+# test file template
+snippet #!t
+	#!/usr/bin/env perl
+
+	use strict;
+	use warnings;
+
+	use Test::More;
+
+	${1}
+
+	done_testing;
 # sub new {...} / also refer 'cl' snippet
 snippet new
 	sub new {
