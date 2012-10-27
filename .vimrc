@@ -40,9 +40,9 @@ NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc', {
 \   'build' : {
 \       'windows' : 'echo "Sorry, cannot update vimproc binary file in Windows."',
-\       'cygwin' : 'make -f make_cygwin.mak',
-\       'mac' : 'make -f make_mac.mak',
-\       'unix' : 'make -f make_unix.mak',
+\       'cygwin'  : 'make -f make_cygwin.mak',
+\       'mac'     : 'make -f make_mac.mak',
+\       'unix'    : 'make -f make_unix.mak',
 \      },
 \   }
 
@@ -230,7 +230,7 @@ set shortmess+=I      " Surpress intro message when starting vim
 
 " *** Keymapping *** {{{1
 
-if !has('gui_mac')
+if has('gui_mac')
     set notimeout  " to avoid Esc+Key waiting bug
     set nottimeout " blah, no effect on gui...
     " below lines are problematic on MacVim with Alt+Key physically mapped to Esc+Key
@@ -398,8 +398,10 @@ let g:yankring_n_keys = 'Y D' " refuse x and X
 let g:yankring_o_keys = 'b B w W e E d y $ G ; iw iW aw aW' " refuse ,
 
 " autocompletes parenthesis, braces and more
-NeoBundle 'Raimondi/delimitMate'
-imap <Esc>g <Plug>delimitMateS-Tab
+NeoBundle 'kana/vim-smartinput'
+" this deprecates belows
+" NeoBundle 'Raimondi/delimitMate'
+" imap <Esc>g <Plug>delimitMateS-Tab
 " " instead of above, use below one
 " NeoBundle 'jiangmiao/auto-pairs'
 " let g:AutoPairsShortcutToggle = '<Plug>_disabled_AutoPairsShortcutToggle'
@@ -435,21 +437,39 @@ let g:gundo_right = 1
 let g:gundo_close_on_revert = 1
 
 " SnipMate, TextMate like snippet use with <Tab>
-NeoBundle 'garbas/vim-snipmate'
+NeoBundle 'garbas/vim-snipmate', { 'depends' : [
+\   'MarcWeber/vim-addon-mw-utils',
+\   'tomtom/tlib_vim',
+\]}
 NeoBundle 'honza/snipmate-snippets'
-" Dependencies
-NeoBundle 'MarcWeber/vim-addon-mw-utils'
-NeoBundle 'tomtom/tlib_vim'
+
+" Run current file by <Leader>r and get result in another buffer
+NeoBundle 'thinca/vim-quickrun'
+
+" Highlight indent by its levels, must have for pythonist
+NeoBundle 'nathanaelkane/vim-indent-guides'
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_guide_size = 1
+
+" Search word with * and # also on Visual Mode
+NeoBundle 'thinca/vim-visualstar'
+
+" Move among buffer, quickfix, loclist, ...so many... and encode/decode.
+" ]e to exchange line, ]n to go to next SCM conflict marker.
+NeoBundle 'tpope/vim-unimpaired'
+
+" Add repeat support to some plugins, like surround.vim
+NeoBundle 'tpope/vim-repeat'
 
 " ** }}}
 
 " ** neocomplcache ** {{{2
 
 NeoBundle 'Shougo/neocomplcache'
-NeoBundle 'Shougo/neosnippet'
+NeoBundleLazy 'Shougo/neosnippet'
 " English spell completion with 'look' command
-NeoBundle 'ujihisa/neco-look'
-" let g:neocomplcache_enable_at_startup = 1
+NeoBundleLazy 'ujihisa/neco-look'
+let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_underbar_completion = 1
 let g:neocomplcache_dictionary_filetype_lists = {
@@ -460,14 +480,17 @@ let g:neocomplcache_dictionary_filetype_lists = {
 " too heavy when launching vim, make initializing delayed
 augroup InitNeCo
     autocmd!
-    autocmd CursorMovedI * call DoInitNeco()
-    autocmd CursorHold * call DoInitNeco()
+    autocmd CursorMovedI,CursorHold * call DoInitNeco()
+    " Workaround for bug neocon would not be disabled in unite
+    autocmd FileType unite call DoInitNeco()
 augroup END
 function! DoInitNeco()
     echo "Initializing NeCo..."
     augroup InitNeCo
         autocmd!
     augroup END
+    NeoBundleSource neosnippet
+    NeoBundleSource neco-look
     :NeoComplCacheEnable
     echo "Initializing NeCo... Completed."
 endfunction
@@ -544,7 +567,7 @@ NeoBundle 'vimtaku/textobj-wiw'
 NeoBundle 'vimtaku/vim-textobj-sigil'
 " [ai][kv]
 NeoBundle 'vimtaku/vim-textobj-keyvalue'
-" ???
+" [ai]:
 NeoBundle 'vimtaku/vim-textobj-doublecolon'
 " * }}}
 
@@ -552,14 +575,19 @@ NeoBundle 'vimtaku/vim-textobj-doublecolon'
 
 " ** Misc ** {{{2
 
-" Run current file by <Leader>r and get result in another buffer
-NeoBundle 'thinca/vim-quickrun'
-
 " List or Highlight all todo, fixme, xxx comments
 NeoBundle 'TaskList.vim'
 
 " Indent comments and expressions
-NeoBundle 'Align'
+NeoBundle 'godlygeek/tabular'
+vnoremap <Leader>t=  :Tab/=<CR>
+vnoremap <Leader>th  :Tab/=><CR>
+vnoremap <Leader>t#  :Tab/#<CR>
+vnoremap <Leader>t\| :Tab/\|<CR>
+" JavaScript-style
+vnoremap <Leader>t:  :Tab/:<CR>
+" YAML-style
+vnoremap <Leader>t;  :Tab/:\zs<CR>
 
 " extended % key matching
 runtime macros/matchit.vim
@@ -568,8 +596,11 @@ runtime macros/matchit.vim
 NeoBundle 'Lokaltog/vim-easymotion'
 
 " Smooth <C-{f,b,u,d}> scrolls
-" NeoBundle 'Smooth-Scroll'
 " not work with macvim
+NeoBundleLazy 'Smooth-Scroll'
+if !has('gui_macvim')
+    NeoBundleSource Smooth-Scroll
+endif
 
 " Alternative for vimgrep, :Ack and :LAck
 NeoBundle 'mileszs/ack.vim'
@@ -581,32 +612,24 @@ NeoBundle 'danro/rename.vim'
 NeoBundle 'renamer.vim'
 
 " Buffer list in bottom of window
-NeoBundle 'buftabs'
+" NeoBundle 'buftabs'
 " (You can use status line with option
 "  or you can expand command line with 'set cmdheight')
 
-" Highlight indent by its levels, must have for pythonist
-NeoBundle 'nathanaelkane/vim-indent-guides'
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_guide_size = 1
-
 " Micro <C-i> and <C-o>
 " NeoBundle 'thinca/vim-poslist'
-map <Esc>, <Plug>(poslist-next-pos)
-map <Esc>. <Plug>(poslist-prev-pos)
-imap <Esc>, <C-o><Plug>(poslist-next-pos)
-imap <Esc>. <C-o><Plug>(poslist-prev-pos)
-
-" Search word with * and # also on Visual Mode
-NeoBundle 'thinca/vim-visualstar'
+" map <Esc>, <Plug>(poslist-next-pos)
+" map <Esc>. <Plug>(poslist-prev-pos)
+" imap <Esc>, <C-o><Plug>(poslist-next-pos)
+" imap <Esc>. <C-o><Plug>(poslist-prev-pos)
 
 " ** }}}
 
 " ** nerdcommenter ** {{{
-NeoBundle 'scrooloose/nerdcommenter'
-let NERDSpaceDelims = 1
-xmap <Leader>cj <Plug>NERDCommenterToggle
-nmap <Leader>cj <Plug>NERDCommenterToggle
+" NeoBundle 'scrooloose/nerdcommenter'
+" let NERDSpaceDelims = 1
+" xmap <Leader>cj <Plug>NERDCommenterToggle
+" nmap <Leader>cj <Plug>NERDCommenterToggle
 NeoBundle 'kien/rainbow_parentheses.vim'
 augroup RainbowParentheses
     autocmd!
@@ -628,10 +651,12 @@ augroup END
 
 " ** IME ** {{{2
 
+NeoBundleLazy 'vimtaku/vim-mlh', { 'depends' : [
+\   'mattn/webapi-vim',
+\]}
 if mlh_enabled
-NeoBundle 'vimtaku/vim-mlh'
+    NeoBundleSource vim-mlh
     autocmd VimEnter * :ToggleVimMlhKeymap
-NeoBundle 'mattn/webapi-vim'
 endif
 
 if eskk_enabled
@@ -660,15 +685,11 @@ endif
 
 " ** Color Scheme ** {{{2
 
-" FIXME below maybe required on tmux/screen
-" set t_Co=256
-
 " Too hard to setup not-degraded-mode...
 " (You should setup your term emulator first)
-" So please try it with degrade=1
+" So please try it first with degrade=1, then setup if you like it.
 
 NeoBundle 'altercation/vim-colors-solarized'
-set background=dark
 " let g:solarized_termcolors=256
 " let g:solarized_degrade=1
 let g:solarized_termcolors=16
@@ -677,6 +698,7 @@ let g:solarized_bold=1
 let g:solarized_underline=1
 let g:solarized_italic=1
 colorscheme solarized
+set background=dark
 
 " ** }}}
 
@@ -705,15 +727,28 @@ NeoBundle 'tpope/vim-haml'
 " ** JavaScript ** {{{2
 
 autocmd BufNewFile,BufRead *.json set filetype=javascript
-NeoBundle 'jelera/vim-javascript-syntax'
-NeoBundle 'nono/jquery.vim'
+NeoBundleLazy 'jelera/vim-javascript-syntax'
+NeoBundleLazy 'nono/jquery.vim'
+
+function! SourceJavaScript()
+    NeoBundleSource vim-javascript-syntax
+    NeoBundleSource jquery.vim
+    autocmd! SourceJavaScript
+endfunction
+augroup SourceJavaScript
+    autocmd!
+    autocmd FileType javascript call SourceJavaScript()
+augroup END
+
+" http://wozozo.hatenablog.com/entry/2012/02/08/121504
+map <Leader>FJ !python -m json.tool<CR>
 
 " ** }}}
 
 " ** Perl ** {{{2
 
 " use new perl syntax and indent!
-NeoBundle 'petdance/vim-perl'
+NeoBundleLazy 'petdance/vim-perl'
 
 " Enable perl specific rich fold
 let perl_fold=1
@@ -721,17 +756,24 @@ let perl_fold_blocks=1
 " let perl_nofold_packages = 1
 " let perl_include_pod=1
 
-NeoBundle 'yko/mojo.vim'
+NeoBundleLazy 'yko/mojo.vim'
 let mojo_highlight_data = 1
+
+function! SourcePerl()
+    NeoBundleSource vim-perl
+    NeoBundleSource mojo.vim
+    autocmd! SourcePerl
+endfunction
+augroup SourcePerl
+    autocmd!
+    autocmd FileType perl call SourcePerl()
+augroup END
 
 augroup PerlKeys
     autocmd!
-    autocmd FileType perl inoremap <C-l> $
-    autocmd FileType perl snoremap <C-l> $
+    autocmd FileType perl inoremap <buffer> <C-l> $
+    autocmd FileType perl snoremap <buffer> <C-l> $
 augroup END
-
-" Perl hash aligning
-vnoremap <Leader>th :<c-u>AlignCtrl l-l<cr>gv:Align =><cr>
 
 " Open perl file by package name under the cursor
 NeoBundle 'nakatakeshi/jump2pm.vim'
@@ -758,7 +800,17 @@ command! Upod :Unite ref/perldoc
 " ** }}}
 
 " ** Python ** {{{2
-NeoBundle 'tmhedberg/SimpylFold'
+NeoBundleLazy 'tmhedberg/SimpylFold'
+NeoBundleLazy 'davidhalter/jedi-vim'
+function! SourcePython()
+    NeoBundleSource SimpylFold
+    NeoBundleSource jedi-vim
+    autocmd! SourcePython
+endfunction
+augroup SourcePython
+    autocmd!
+    autocmd FileType python call SourcePython()
+augroup END
 " ** }}}
 
 " ** VimScript ** {{{
@@ -805,9 +857,7 @@ function! DelayedExecute(command)
     augroup END
 endfunction
 function! RunDelayedExecute()
-    augroup DelayedExecutor
-        autocmd!
-    augroup END
+    autocmd! DelayedExecutor
     for cmd in s:delayed_execute_queue
         execute cmd
         unlet cmd
@@ -821,9 +871,6 @@ endfunction
 
 " Work around for performance problem of expr/syntax foldmethods
 " Inspired by: http://vim.wikia.com/wiki/Keep_folds_closed_while_inserting_text
-
-" black list
-autocmd! FileType ref-perldoc setlocal foldmethod=manual
 
 augroup FoldRenewer
     autocmd!
@@ -883,41 +930,8 @@ function! StashFoldMethod()
         let w:last_fdm=&foldmethod
         setlocal foldmethod=manual
     endif
-    augroup DelayedStashFoldMethod
-        autocmd!
-    augroup END
+    autocmd! DelayedStashFoldMethod
 endfunction
-
-" ** }}}
-
-" ** CompleteBlockBrace ** {{{2
-
-" Eclipse like block completion
-" Expand {} / () / [] block with <Enter>
-
-if 0
-
-inoremap <expr><CR> <SID>CompleteBlockBrace()
-function! s:CompleteBlockBrace()
-    if col('.') == col('$')
-        let l = getline('.')
-        if l =~ '{$'
-            return "\<CR>}\<Up>\<End>\<CR>"
-        elseif l =~ '($'
-            return "\<CR>)\<Up>\<End>\<CR>"
-        elseif l =~ '[$'
-            return "\<CR>]\<Up>\<End>\<CR>"
-        else
-            return "\<CR>"
-        endif
-    elseif getline(".")[col(".") - 1] =~ '[})\]]$'
-        return "\<CR>\<C-o>O"
-    else
-        return "\<CR>"
-    endif
-endfunction
-
-endif
 
 " ** }}}
 
@@ -985,7 +999,8 @@ NeoBundle 'taku-o/vim-copypath'
 let g:copypath_copy_to_unnamed_register = 1
 
 NeoBundle 'kana/vim-altr'
-nmap <Leader>f <Plug>(altr-forward)
+nmap ]r <Plug>(altr-forward)
+nmap [r <Plug>(altr-back)
 
 " Bundle 'jpalardy/vim-slime'
 
@@ -1012,29 +1027,40 @@ map e <Plug>(smartword-e)
 map ge <Plug>(smartword-ge)
 endif
 
-" " require vim's perl interpreter support
-" NeoBundle 'kablamo/VimDebug', {
-" \   'rtp'   : 'vim',
-" \}
-
-" if has('mac') pbcopy
-
+if has('mac') && !has('gui')
+    nnoremap <silent> <Space>y :.w !pbcopy<CR><CR>
+    vnoremap <silent> <Space>y :w !pbcopy<CR><CR>
+    nnoremap <silent> <Space>p :r !pbpaste<CR>
+    vnoremap <silent> <Space>p :r !pbpaste<CR>
+endif
 
 map <Leader>tl <Plug>TaskList
 
-NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-abolish'
-NeoBundle 'tpope/vim-unimpaired'
 
-NeoBundle 'basyura/TweetVim'
+" TweetVim
+NeoBundleLazy 'basyura/TweetVim', { 'depends' : [
+\   'basyura/twibill.vim',
+\   'basyura/bitly.vim',
+\   'mattn/webapi-vim',
+\   'tyru/open-browser.vim',
+\]}
+command! TweetVimLoad call InitTweetVim()
+function! InitTweetVim()
+    NeoBundleSource TweetVim
+endfunction
 
 " NeoBundle 'fuzzyjump.vim'
 " use H / M / L motion instead
 
-NeoBundle 'mikewest/vimroom'
+" NeoBundle 'mikewest/vimroom'
 
 NeoBundle 'Lokaltog/vim-powerline'
-let g:Powerline_symbols = 'unicode'
+if has('gui_macvim')
+    let g:Powerline_symbols = 'fancy'
+else
+    let g:Powerline_symbols = 'unicode'
+endif
 
 " set scrolljump=3
 
@@ -1046,8 +1072,19 @@ NeoBundle 'kien/ctrlp.vim'
 let g:ctrlp_map = '<Leader><C-p>'
 let g:ctrlp_max_files = 0
 
-nmap <Esc>; A;<Esc><Plug>(poslist-prev-pos)
-imap <Esc>; <C-o><Esc>;
+" nmap <Esc>; A;<Esc><Plug>(poslist-prev-pos)
+" imap <Esc>; <C-o><Esc>;
+
+" http://stackoverflow.com/questions/7187477/vim-smart-insert-semicolon
+vmap <Leader>; :normal A;<Esc><CR>
+nmap <Esc>; :call Semicolonfun(';')<CR>
+imap <Esc>; <C-R>=Semicolonfun(';')<CR>
+vmap <Leader>, :normal A,<Esc><CR>
+nmap <Esc>, :call Semicolonfun(',')<CR>
+imap <Esc>, <C-R>=Semicolonfun(',')<CR>
+fun! Semicolonfun(char)
+  call setline(line('.'), substitute(getline('.'), '\s*$', char, ''))
+endfunction
 
 NeoBundle 'thinca/vim-scouter'
 
@@ -1087,19 +1124,35 @@ let g:ruby_debugger_progname = 'mvim'
 NeoBundleLazy 'tell-k/vim-browsereload-mac'
 NeoBundleLazy 'lordm/vim-browser-reload-linux'
 if has('mac')
-    NeoBundleSource 'tell-k/vim-browsereload-mac'
+    NeoBundleSource vim-browsereload-mac
 elseif has('linux')
-    NeoBundleSource 'lordm/vim-browser-reload-linux'
+    NeoBundleSource vim-browser-reload-linux
 endif
-
-NeoBundle 'reinh/vim-makegreen'
-nmap <Leader>mg <Plug>MakeGreen
 
 NeoBundle 'AndrewRadev/splitjoin.vim'
 nmap <Leader>J :SplitjoinJoin<cr>
 nmap <Leader>j :SplitjoinSplit<cr>
 
-NeoBundle 'sontek/rope-vim'
+NeoBundleLazy 'reinh/vim-makegreen'
+NeoBundleLazy 'sontek/rope-vim'
+augroup SourcePython
+    autocmd FileType python NeoBundleSource vim-makegreen
+    autocmd FileType python NeoBundleSource rope-vim | nmap <Leader>mg <Plug>MakeGreen
+augroup END
+
+NeoBundle 'mattn/qiita-vim'
+
+NeoBundle 'dbext.vim'
+" do end matchit (%)
+NeoBundle 'ruby-matchit'
+" NeoBundle 'vim-rsense'
+NeoBundle 'tpope/vim-endwise'
+" To avoid conflict with neocomplcache; refer :help neocomplcache-faq
+autocmd VimEnter * imap <silent> <CR> <C-r>=neocomplcache#smart_close_popup()<CR><Plug>my_cr_function_smartinput
+call smartinput#map_to_trigger('i', '<Plug>my_cr_function_smartinput', '<Enter>', '<CR>')
+NeoBundle 'taichouchou2/vim-rsense'
+
+NeoBundle 'tpope/vim-commentary'
 
 " *** }}}
 
@@ -1111,16 +1164,17 @@ command! CurHl :echo
     \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
     \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"
 
-" NeoBundle 'mattn/benchvimrc-vim'
+NeoBundleLazy 'mattn/benchvimrc-vim'
 
 " *** }}}
 
 " *** GUI Specific *** {{{1
 if has('gui_macvim')
     set macmeta " Use alt as meta on MacVim like on terminal
-    set guifont=DejaVu\ Sans\ Mono:h12
+    set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h12
     " set guifontwide=
     set transparency=10
+    set fuoptions=maxvert,maxhorz
 elseif has('gui_gtk2')
     set guioptions-=m " to avoid menu accelerator being bound
     set guifont="DejaVu Sans Mono 10"
@@ -1168,7 +1222,6 @@ endif
 
 " *** Enable Filetype Plugins *** {{{1
 " for neobundle, these are disabled in start up section
-filetype on
 filetype plugin indent on " XXX maybe better to disable this, testing
 " for speedup
 syntax on " for os x
