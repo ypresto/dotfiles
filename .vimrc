@@ -322,6 +322,9 @@ nmap <Leader>us <Leader>u:file_mru<CR>
 nmap <Leader>Us <Leader>U:file_mru -winwidth=80<CR>
 " 全部乗せ
 nmap <Leader>ua :Unite buffer file_mru bookmark<CR>
+" コマンド
+nmap <Leader>uc <Leader>u:command<CR>
+nmap <Leader>Uc <Leader>U:command -winwidth=80<CR>
 " unite-mark
 nmap <Leader>um <Leader>u: mark<CR>
 nmap <Leader>Um <Leader>U: mark<CR>
@@ -335,14 +338,18 @@ nmap <Leader>Uz <Leader>U: outline:folding<CR>
 nmap <Leader>uy <Leader>u: history/yank<CR>
 nmap <Leader>Uy <Leader>U: history/yank<CR>
 
-nmap <Leader>up <Leader>u: -buffer-name=files file_rec/async<CR>
-nmap <Leader>Up <Leader>u: -buffer-name=files file_rec/async<CR>
+nmap <Leader>up <Leader>u: git_cached git_untracked<CR>
+nmap <Leader>Up <Leader>U: git_cached git_untracked<CR>
+" nmap <Leader>up <Leader>u: -buffer-name=files file_rec/async<CR>
+" nmap <Leader>Up <Leader>u: -buffer-name=files file_rec/async<CR>
 
 nmap <Leader>ut <Leader>u: tab<CR>
 nmap <Leader>Ut <Leader>U: tab<CR>
 
-nmap <Leader>ug <Leader>u: giti<CR>
-nmap <Leader>Ug <Leader>U: giti<CR>
+nmap <Leader>ug <Leader>u: git_modified git_untracked<CR>
+nmap <Leader>Ug <Leader>U: git_modified git_untracked<CR>
+nmap <Leader>uG <Leader>u: giti<CR>
+nmap <Leader>UG <Leader>U: giti<CR>
 nmap <Leader>uq <Leader>u: qf<CR>
 nmap <Leader>Uq <Leader>U: qf<CR>
 
@@ -374,6 +381,9 @@ function! UniteSessionSaveAndQAll(session)
     execute "UniteSessionSave " + a:session
 endfunction
 command! -nargs=? SL UniteSessionLoad <args>
+
+nmap <Leader>udp <Leader>u: ref/perldoc<CR>
+nmap <Leader>udr <Leader>u: ref/refe<CR>
 
 " ** }}}
 
@@ -1110,7 +1120,8 @@ let g:ConqueTerm_ReadUnfocused = 1
 " nmap <Leader>tb :TagbarToggle<CR>
 " let g:tagbar_ctags_bin = '~/homebrew/bin/ctags'
 
-NeoBundle 'joonty/vdebug'
+NeoBundleLazy 'joonty/vdebug'
+NeoBundle 'ypresto/vdebug', { 'directory' : 'my_vdebug' }
 
 " autocmd VimEnter * let g:vdebug_options['exec_perl']   = $HOME.'/dotfiles/bin/komodo-perl.sh %s'
 " autocmd VimEnter * let g:vdebug_options['exec_python'] = $HOME.'/dotfiles/bin/komodo-python.sh %s'
@@ -1140,6 +1151,11 @@ augroup SourcePython
     autocmd FileType python NeoBundleSource rope-vim | nmap <Leader>mg <Plug>MakeGreen
 augroup END
 
+NeoBundleLazy 'ecomba/vim-ruby-refactoring'
+augroup SourceRuby
+    autocmd FileType ruby NeoBundleSource vim-ruby-refactoring
+augroup END
+
 NeoBundle 'mattn/qiita-vim'
 
 NeoBundle 'dbext.vim'
@@ -1153,6 +1169,9 @@ call smartinput#map_to_trigger('i', '<Plug>my_cr_function_smartinput', '<Enter>'
 NeoBundle 'taichouchou2/vim-rsense'
 
 NeoBundle 'tpope/vim-commentary'
+NeoBundle 'taka84u9/unite-git'
+
+NeoBundle 'thinca/vim-prettyprint'
 
 " *** }}}
 
