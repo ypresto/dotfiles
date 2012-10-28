@@ -325,5 +325,6 @@ alias :vl='vim ~/.vimlocal/.vimrc'
 if [ "`uname`" = "Darwin" ]; then
     alias fixfont="defaults -currentHost write -globalDomain AppleFontSmoothing -int 2"
 fi
+export PERL5LIB="./lib:./t/inc:$PERL5LIB"
 
 source $HOME/.zshrc_local
