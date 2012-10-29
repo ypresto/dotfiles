@@ -480,8 +480,10 @@ NeoBundleLazy 'Shougo/neosnippet'
 " English spell completion with 'look' command
 NeoBundleLazy 'ujihisa/neco-look'
 let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_enable_prefetch = 1
 let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_underbar_completion = 1
+let g:neocomplcache_enable_wildcard = 1
 let g:neocomplcache_dictionary_filetype_lists = {
     \ 'default'    : '',
     \ 'perl'       : $HOME . '/.vim/dict/perl.dict'
@@ -1174,6 +1176,7 @@ NeoBundle 'taka84u9/unite-git'
 NeoBundle 'thinca/vim-prettyprint'
 
 " speedup ctrlp
+" https://twitter.com/ltw_/status/248097120140271616
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files --exclude-standard']
 
 " *** }}}
