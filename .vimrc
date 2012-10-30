@@ -1088,14 +1088,14 @@ let g:ctrlp_max_files = 0
 " imap <Esc>; <C-o><Esc>;
 
 " http://stackoverflow.com/questions/7187477/vim-smart-insert-semicolon
-vmap <Leader>; :normal A;<Esc><CR>
+vmap <Esc>; :normal A;<Esc><CR>
 nmap <Esc>; :call Semicolonfun(';')<CR>
 imap <Esc>; <C-R>=Semicolonfun(';')<CR>
-vmap <Leader>, :normal A,<Esc><CR>
+vmap <Esc>, :normal A,<Esc><CR>
 nmap <Esc>, :call Semicolonfun(',')<CR>
 imap <Esc>, <C-R>=Semicolonfun(',')<CR>
-fun! Semicolonfun(char)
-  call setline(line('.'), substitute(getline('.'), '\s*$', char, ''))
+function! Semicolonfun(char)
+  call setline(line('.'), substitute(getline('.'), '\s*$', a:char, ''))
 endfunction
 
 NeoBundle 'thinca/vim-scouter'
