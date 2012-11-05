@@ -610,7 +610,7 @@ NeoBundle 'Lokaltog/vim-easymotion'
 " Smooth <C-{f,b,u,d}> scrolls
 " not work with macvim
 NeoBundleLazy 'Smooth-Scroll'
-if !has('gui_macvim')
+if !(has('gui_macvim') && has('gui_running'))
     NeoBundleSource Smooth-Scroll
 endif
 
@@ -760,7 +760,8 @@ map <Leader>FJ !python -m json.tool<CR>
 " ** Perl ** {{{2
 
 " use new perl syntax and indent!
-NeoBundleLazy 'petdance/vim-perl'
+NeoBundleLazy 'vim-perl/vim-perl'
+NeoBundleLazy 'c9s/perlomni.vim'
 
 " Enable perl specific rich fold
 let perl_fold=1
@@ -773,6 +774,7 @@ let mojo_highlight_data = 1
 
 function! SourcePerl()
     NeoBundleSource vim-perl
+    NeoBundleSource perlomni.vim
     NeoBundleSource mojo.vim
     autocmd! SourcePerl
 endfunction
@@ -1191,15 +1193,44 @@ command! CurHl :echo
 
 NeoBundleLazy 'mattn/benchvimrc-vim'
 
+" ** vimrc reading @ 2012/11/03 {{{
+    " https://github.com/cpfaff/vim-my-setup/blob/master/vimrc
+    set lazyredraw
+    set spelllang=en
+    nnoremap U <C-r>
+    " Move lines up and down (bubbling) left and right (indent)
+    nmap <Esc>K [e
+    nmap <Esc>J ]e,
+    vmap <Esc>K [egv
+    vmap <Esc>J ]egv
+    nnoremap <Esc>L >>
+    nnoremap <Esc>H <<
+    vnoremap <Esc>L >gv
+    vnoremap <Esc>H <gv
+
+   " Small helper
+    function! CmdLine(str)
+       exe "menu Foo.Bar :" . a:str
+       emenu Foo.Bar
+       unmenu Foo
+    endfunction
+   "
+
+" ** }}}
+
 " *** }}}
 
 " *** GUI Specific *** {{{1
+
+NeoBundleLazy 'thinca/vim-fontzoom'
+
 if has('gui_macvim')
     set macmeta " Use alt as meta on MacVim like on terminal
     set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h12
     " set guifontwide=
     set transparency=10
     set fuoptions=maxvert,maxhorz
+    NeoBundleSource 'thinca/vim-fontzoom'
 elseif has('gui_gtk2')
     set guioptions-=m " to avoid menu accelerator being bound
     set guifont="DejaVu Sans Mono 10"
