@@ -12,7 +12,8 @@ let mapleader=" "
 autocmd!
 " reload when writing .vimrc
 autocmd BufWritePost $MYVIMRC,$HOME/dotfiles/.vimrc source $MYVIMRC |
-            \if (has('gui_running') && filereadable($MYGVIMRC)) | source $MYGVIMRC
+            \ if (has('gui_running') && filereadable($MYGVIMRC)) | source $MYGVIMRC
+" TODO: should :colorscheme manually and fire ColorScheme autocmd
 autocmd BufWritePost $MYGVIMRC,$HOME/dotfiles/.gvimrc if has('gui_running') | source $MYGVIMRC
 " *** }}}
 
@@ -119,6 +120,7 @@ set sessionoptions-=options
 
 " Editing
 set backspace=indent,eol,start " go to previous line with backspace
+set textwidth=0                " don't insert break automatically
 
 set foldmethod=marker " Use '{{{' and '}}}' for marker
 set foldlevelstart=0  " Start with all folds closed
@@ -157,40 +159,32 @@ set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
 
 " ** Highlighting ** {{{2
 
-set cursorline " Highlight current line
-" Highlight current line only on current window
-augroup cch
-    autocmd! cch
-    autocmd WinLeave * set nocursorline
-    autocmd WinEnter,BufRead * set cursorline
-augroup END
-" Change highlight color of current line
-highlight clear CursorLine
-highlight CursorLine ctermbg=black guibg=black
-highlight SignColumn ctermfg=white ctermbg=black cterm=none
-
+set cursorline              " Highlight current line
 set colorcolumn=73,74,81,82 " Highlight border of 'long line'
-
-set nolist " Don't highlight garbage characters (see below)
+set list                    " highlight garbage characters (see below)
 set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 
-" * ZenkakuSpace * {{{3
+function! s:HighlightSetup()
+    " Change highlight color of current line
+    highlight clear CursorLine
+    highlight CursorLine ctermbg=black guibg=black
+    highlight SignColumn ctermfg=white ctermbg=black cterm=none
 
-function! ZenkakuSpace()
-  highlight ZenkakuSpace cterm=underline ctermbg=darkgray gui=underline guifg=darkgrey
+    highlight SpecialKey term=underline ctermbg=darkyellow gui=underline guibg=darkgray
+    highlight ZenkakuSpace cterm=underline ctermbg=darkgray gui=underline guifg=darkgrey
 endfunction
-if has('syntax')
-  augroup ZenkakuSpace
-    autocmd!
-    " ZenkakuSpaceをカラーファイルで設定するなら次の行は削除
-    autocmd ColorScheme       * call ZenkakuSpace()
-    " 全角スペースのハイライト指定
-    autocmd VimEnter,WinEnter * match ZenkakuSpace /　/
-  augroup END
-  call ZenkakuSpace()
-endif
 
-" * }}}
+augroup HighlightSetup
+    autocmd!
+
+    " Highlight current line only on current window
+    autocmd WinLeave * set nocursorline
+    autocmd WinEnter,BufRead * set cursorline
+
+    " activates custom highlight settings
+    autocmd ColorScheme * call s:HighlightSetup()
+    autocmd VimEnter,WinEnter * match ZenkakuSpace /　/
+augroup END
 
 " ** }}}
 
