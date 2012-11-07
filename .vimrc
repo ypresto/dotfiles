@@ -256,12 +256,19 @@ noremap! <C-b> <Left>
 " <C-o> and <Home> is different on indented line
 inoremap <C-a> <C-o>^
 cnoremap <C-a> <Home>
-" Cmdline has default map of <C-e> / See neocomplcache section for <C-e>
-inoremap <C-e> <End>
+snoremap <C-a> <Home>
+noremap! <C-e> <End>
+snoremap <C-e> <End>
 noremap! <C-d> <Del>
+snoremap <C-d> <Del>
 noremap! <Esc>f <S-Right>
+snoremap <Esc>f <S-Right>
 noremap! <Esc>b <S-Left>
+snoremap <Esc>b <S-Left>
 inoremap <Esc>d <C-o>de
+" Degraded map for commandline / select mode
+cnoremap <Esc>d <Del>
+snoremap <Esc>d <Del>
 " Remap <C-d> de-indentation to Alt-t
 inoremap <Esc>t <C-d>
 " TODO using at end of line causes backspace
