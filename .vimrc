@@ -1042,7 +1042,7 @@ map e <Plug>(smartword-e)
 map ge <Plug>(smartword-ge)
 endif
 
-if has('mac') && !has('gui')
+if has('mac') && !has('gui_running')
     nnoremap <silent> <Space>y :.w !pbcopy<CR><CR>
     vnoremap <silent> <Space>y :w !pbcopy<CR><CR>
     nnoremap <silent> <Space>p :r !pbpaste<CR>
@@ -1071,7 +1071,7 @@ endfunction
 " NeoBundle 'mikewest/vimroom'
 
 NeoBundle 'Lokaltog/vim-powerline'
-if has('gui_macvim')
+if has('gui_macvim') && has('gui_running')
     let g:Powerline_symbols = 'fancy'
 else
     let g:Powerline_symbols = 'unicode'
@@ -1131,9 +1131,23 @@ NeoBundle 'ypresto/vdebug', { 'directory' : 'my_vdebug' }
 " autocmd VimEnter * let g:vdebug_options['exec_perl']   = $HOME.'/dotfiles/bin/komodo-perl.sh %s'
 " autocmd VimEnter * let g:vdebug_options['exec_python'] = $HOME.'/dotfiles/bin/komodo-python.sh %s'
 " autocmd VimEnter * let g:vdebug_options['exec_ruby']   = $HOME.'/dotfiles/bin/komodo-ruby.sh %s'
-autocmd VimEnter * let g:vdebug_options['command_perl']   = ':ConqueTermSplit '.$HOME.'/dotfiles/bin/komodo-perl.sh %s'
-autocmd VimEnter * let g:vdebug_options['command_python'] = ':ConqueTermSplit '.$HOME.'/dotfiles/bin/komodo-python.sh %s'
-autocmd VimEnter * let g:vdebug_options['command_ruby']   = ':ConqueTermSplit '.$HOME.'/dotfiles/bin/komodo-ruby.sh %s'
+autocmd VimEnter * let g:vdebug_options['command_perl']   = ':call OpenDebugTerminal("'.$HOME.'/dotfiles/bin/komodo-perl.sh %s")'
+autocmd VimEnter * let g:vdebug_options['command_python'] = ':call OpenDebugTerminal("'.$HOME.'/dotfiles/bin/komodo-python.sh %s")'
+autocmd VimEnter * let g:vdebug_options['command_ruby']   = ':call OpenDebugTerminal("'.$HOME.'/dotfiles/bin/komodo-ruby.sh %s")'
+
+let s:debug_terminal = 0
+function! OpenDebugTerminal(cmd)
+    if !has('gui_running') && $TMUX
+        call VimuxRunCommand(a:cmd)
+    else
+        if !s:debug_terminal
+            let s:debug_terminal = conque_term#open(a:cmd)
+        else
+            call s:debug_terminal.writeln(a:cmd)
+        endif
+    endif
+endfunction
+let g:ConqueTerm_InsertOnEnter = 0
 
 let g:ruby_debugger_progname = 'mvim'
 
@@ -1165,7 +1179,7 @@ NeoBundle 'mattn/qiita-vim'
 
 NeoBundle 'dbext.vim'
 " do end matchit (%)
-NeoBundle 'ruby-matchit'
+NeoBundle 'semmons99/vim-ruby-matchit'
 " NeoBundle 'vim-rsense'
 NeoBundle 'tpope/vim-endwise'
 " To avoid conflict with neocomplcache; refer :help neocomplcache-faq
@@ -1181,6 +1195,10 @@ NeoBundle 'thinca/vim-prettyprint'
 " speedup ctrlp
 " https://twitter.com/ltw_/status/248097120140271616
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files --exclude-standard']
+
+NeoBundle 'benmills/vimux'
+
+let g:ConqueTerm_TERM = 'xterm-256color'
 
 " *** }}}
 
@@ -1225,20 +1243,20 @@ NeoBundleLazy 'mattn/benchvimrc-vim'
 
 NeoBundleLazy 'thinca/vim-fontzoom'
 
-if has('gui_macvim')
-    set macmeta " Use alt as meta on MacVim like on terminal
-    set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h12
-    " set guifontwide=
-    set transparency=10
-    set fuoptions=maxvert,maxhorz
-    NeoBundleSource 'thinca/vim-fontzoom'
-elseif has('gui_gtk2')
-    set guioptions-=m " to avoid menu accelerator being bound
-    set guifont="DejaVu Sans Mono 10"
-    " set guifontwide=
-    set guioptions+=c " no dialog / buggy on mac
-endif
 if has('gui_running')
+    if has('gui_macvim')
+        set macmeta " Use alt as meta on MacVim like on terminal
+        set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h12
+        " set guifontwide=
+        set transparency=10
+        set fuoptions=maxvert,maxhorz
+        NeoBundleSource 'thinca/vim-fontzoom'
+    elseif has('gui_gtk2')
+        set guioptions-=m " to avoid menu accelerator being bound
+        set guifont="DejaVu Sans Mono 10"
+        " set guifontwide=
+        set guioptions+=c " no dialog / buggy on mac
+    endif
     set guicursor=a:block,a:blinkon0,i:ver10
     set guioptions-=T " no toolbar
 endif
