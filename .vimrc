@@ -727,13 +727,36 @@ set background=dark
 " \}
 " let g:use_zen_complete_tag = 1
 
-NeoBundle 'othree/html5.vim'
-NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'sukima/xmledit'
+NeoBundleLazy 'othree/html5.vim'
+NeoBundleLazy 'hail2u/vim-css3-syntax'
+NeoBundleLazy 'skammer/vim-css-color'
+NeoBundleLazy 'sukima/xmledit'
 " see http://nanasi.jp/articles/vim/xml-plugin.html
 
-" haml and sass
-NeoBundle 'tpope/vim-haml'
+autocmd BufNew,BufReadPost *.tmpl set filetype=html
+function! SourceHTML()
+    NeoBundleSource html5.vim
+    NeoBundleSource vim-css3-syntax
+    NeoBundleSource vim-css-color
+    NeoBundleSource xmledit
+    autocmd! SourceHTML
+endfunction
+augroup SourceHTML
+    autocmd!
+    autocmd FileType html,css,xml call SourceHTML()
+augroup END
+
+" haml / sass / scss
+NeoBundleLazy 'tpope/vim-haml'
+
+function! SourceHaml()
+    NeoBundleSource vim-haml
+    autocmd! SourceHaml
+endfunction
+augroup SourceHTML
+    autocmd!
+    autocmd FileType haml,sass,scss call SourceHaml()
+augroup END
 
 " ** }}}
 
@@ -751,6 +774,7 @@ endfunction
 augroup SourceJavaScript
     autocmd!
     autocmd FileType javascript call SourceJavaScript()
+    autocmd BufNew,BufReadPost *.tmpl call SourceJavaScript()
 augroup END
 
 " http://wozozo.hatenablog.com/entry/2012/02/08/121504
