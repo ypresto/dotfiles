@@ -447,11 +447,11 @@ NeoBundle 'sjl/gundo.vim'
 let g:gundo_right = 1
 let g:gundo_close_on_revert = 1
 
-" SnipMate, TextMate like snippet use with <Tab>
-NeoBundle 'garbas/vim-snipmate', { 'depends' : [
-\   'MarcWeber/vim-addon-mw-utils',
-\   'tomtom/tlib_vim',
-\]}
+" " SnipMate, TextMate like snippet use with <Tab>
+" NeoBundle 'garbas/vim-snipmate', { 'depends' : [
+" \   'MarcWeber/vim-addon-mw-utils',
+" \   'tomtom/tlib_vim',
+" \]}
 NeoBundle 'honza/snipmate-snippets'
 
 " Run current file by <Leader>r and get result in another buffer
@@ -1184,8 +1184,12 @@ elseif has('linux')
 endif
 
 NeoBundle 'AndrewRadev/splitjoin.vim'
-nmap <Leader>J :SplitjoinJoin<cr>
-nmap <Leader>j :SplitjoinSplit<cr>
+nmap <Esc>i      :SplitjoinJoin<cr>
+imap <Esc>i <C-o>:SplitjoinJoin<cr>
+smap <Esc>i      :SplitjoinJoin<cr>
+nmap <Esc>p      :SplitjoinSplit<cr>
+imap <Esc>p <C-o>:SplitjoinSplit<cr>
+smap <Esc>p      :SplitjoinSplit<cr>
 
 NeoBundleLazy 'reinh/vim-makegreen'
 NeoBundleLazy 'sontek/rope-vim'
@@ -1223,6 +1227,18 @@ let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files --exclude-standard']
 NeoBundle 'benmills/vimux'
 
 let g:ConqueTerm_TERM = 'xterm-256color'
+
+nmap <expr><TAB> neosnippet#expandable() ?
+ \ "i<TAB>"
+ \: pumvisible() ? "\<C-n>" : "\<TAB>"
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable() ?
+ \ "\<Plug>(neosnippet_expand_or_jump)"
+ \: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable() ?
+ \ "\<Plug>(neosnippet_expand_or_jump)"
+ \: "\<TAB>"
+imap <Esc>s i_<Plug>(neosnippet_start_unite_snippet)
 
 " *** }}}
 
