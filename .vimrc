@@ -191,7 +191,7 @@ augroup END
 " ** Window / Buffer / Tab ** {{{2
 
 " Switch buffer without saving changes
-set hidden
+" set hidden
 
 " Refer: http://d.hatena.ne.jp/kitak/20100830/1283180007
 set splitbelow
@@ -425,6 +425,7 @@ NeoBundle 'tpope/vim-surround'
 
 " open reference manual with K key
 NeoBundle 'thinca/vim-ref'
+NeoBundle 'soh335/vim-ref-jquery'
 let g:ref_perldoc_auto_append_f = 1
 
 " git support
@@ -603,7 +604,7 @@ vnoremap <Leader>t:  :Tab/:<CR>
 vnoremap <Leader>t;  :Tab/:\zs<CR>
 
 " extended % key matching
-runtime macros/matchit.vim
+NeoBundle "tmhedberg/matchit.git"
 
 " moving more far easily
 NeoBundle 'Lokaltog/vim-easymotion'
@@ -753,7 +754,7 @@ function! SourceHaml()
     NeoBundleSource vim-haml
     autocmd! SourceHaml
 endfunction
-augroup SourceHTML
+augroup SourceHaml
     autocmd!
     autocmd FileType haml,sass,scss call SourceHaml()
 augroup END
@@ -786,13 +787,14 @@ map <Leader>FJ !python -m json.tool<CR>
 
 " use new perl syntax and indent!
 NeoBundleLazy 'vim-perl/vim-perl'
-NeoBundleLazy 'c9s/perlomni.vim'
-
 " Enable perl specific rich fold
 let perl_fold=1
 let perl_fold_blocks=1
 " let perl_nofold_packages = 1
 " let perl_include_pod=1
+
+NeoBundleLazy 'c9s/perlomni.vim'
+NeoBundleLazy 'mattn/perlvalidate-vim'
 
 NeoBundleLazy 'yko/mojo.vim'
 let mojo_highlight_data = 1
@@ -800,6 +802,7 @@ let mojo_highlight_data = 1
 function! SourcePerl()
     NeoBundleSource vim-perl
     NeoBundleSource perlomni.vim
+    NeoBundleSource perlvalidate-vim
     NeoBundleSource mojo.vim
     autocmd! SourcePerl
 endfunction
@@ -1198,8 +1201,10 @@ augroup SourcePython
     autocmd FileType python NeoBundleSource rope-vim | nmap <Leader>mg <Plug>MakeGreen
 augroup END
 
+NeoBundleLazy 'vim-ruby/vim-ruby'
 NeoBundleLazy 'ecomba/vim-ruby-refactoring'
 augroup SourceRuby
+    autocmd FileType ruby NeoBundleSource vim-ruby
     autocmd FileType ruby NeoBundleSource vim-ruby-refactoring
 augroup END
 
@@ -1240,18 +1245,6 @@ smap <expr><TAB> neosnippet#expandable() ?
  \: "\<TAB>"
 imap <Esc>s i_<Plug>(neosnippet_start_unite_snippet)
 
-" *** }}}
-
-" *** Debug *** {{{1
-
-" Refer: http://vim.wikia.com/wiki/Identify_the_syntax_highlighting_group_used_at_the_cursor
-command! CurHl :echo
-    \ "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
-    \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
-    \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"
-
-NeoBundleLazy 'mattn/benchvimrc-vim'
-
 " ** vimrc reading @ 2012/11/03 {{{
     " https://github.com/cpfaff/vim-my-setup/blob/master/vimrc
     set lazyredraw
@@ -1276,6 +1269,71 @@ NeoBundleLazy 'mattn/benchvimrc-vim'
    "
 
 " ** }}}
+
+" ** vimrc reading @ 2012/11/10 {{{
+
+" https://github.com/kazuph/dotfiles/blob/master/_vimrc
+
+set grepprg=ack\ -a
+
+NeoBundle 'bkad/CamelCaseMotion'
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+" autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+let g:neocomplcache_min_syntax_length = 2
+if !exists('g:neocomplcache_keyword_patterns')
+    let g:neocomplcache_keyword_patterns = {}
+endif
+let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+
+let g:yankring_manual_clipboard_check = 0
+let g:yankring_max_history = 30
+let g:yankring_max_display = 70
+" Yankの履歴参照
+nmap ,y ;YRShow<CR>
+
+" =と押して = となるようにする他
+NeoBundle "kana/vim-smartchr"
+inoremap <expr> = smartchr#loop(' = ', ' == ', '=', ' ')
+inoremap <expr> > smartchr#loop('>',  '>>', '>>>', ' = ', ' => ')
+inoremap <expr> , smartchr#one_of(', ', ',')
+
+set autoread
+set modelines=0
+set display=uhex
+
+nnoremap 0 ^
+nnoremap 9 $
+
+" visualmodeでインテントを＞＜の連打で変更できるようにする
+vnoremap < <gv
+vnoremap > >gv
+
+" OSのクリップボードを使用する
+" set clipboard+=unnamed
+
+nnoremap / /\v
+nnoremap ? ?\v
+
+" ** }}}
+
+" *** }}}
+
+" *** Debug *** {{{1
+
+" Refer: http://vim.wikia.com/wiki/Identify_the_syntax_highlighting_group_used_at_the_cursor
+command! CurHl :echo
+    \ "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+    \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+    \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"
+
+NeoBundleLazy 'mattn/benchvimrc-vim'
 
 " *** }}}
 
