@@ -314,8 +314,8 @@ nnoremap <Leader>U: :Unite -create -no-quit -toggle  -vertical -winwidth=30
 nmap <Leader>ub <Leader>u:buffer<CR>
 nmap <Leader>Ub <Leader>U:buffer<CR>
 " ファイル一覧
-nmap <Leader>uf :UniteWithBufferDir -buffer-name=files file<CR>
-nmap <Leader>Uf :UniteWithCurrentDir -create -no-quit -toggle  -vertical -winwidth=30 -buffer-name=files file<CR>
+nmap <Leader>uf :UniteWithBufferDir -buffer-name=files file file/new<CR>
+nmap <Leader>Uf :UniteWithCurrentDir -create -no-quit -toggle  -vertical -winwidth=30 -buffer-name=files file file/new<CR>
 " レジスタ一覧
 nmap <Leader>ur :Unite -buffer-name=register register<CR>
 " 最近使用したファイル一覧
@@ -410,7 +410,11 @@ let g:yankring_o_keys = 'b B w W e E d y $ G ; iw iW aw aW' " refuse ,
 
 " autocompletes parenthesis, braces and more
 NeoBundle 'kana/vim-smartinput'
-" this deprecates belows
+call smartinput#define_rule({ 'at': '[\_s*\%#\_s*]', 'char': '<Enter>', 'input': '<Enter><C-o>O' })
+call smartinput#define_rule({ 'at': '{\_s*\%#\_s*}', 'char': '<Enter>', 'input': '<Enter><C-o>O' })
+call smartinput#define_rule({ 'at': '(\_s*\%#\_s*)', 'char': '<Enter>', 'input': '<Enter><C-o>O' })
+
+" smartinput deprecates belows
 " NeoBundle 'Raimondi/delimitMate'
 " imap <Esc>g <Plug>delimitMateS-Tab
 " " instead of above, use below one
@@ -730,7 +734,8 @@ set background=dark
 
 NeoBundleLazy 'othree/html5.vim'
 NeoBundleLazy 'hail2u/vim-css3-syntax'
-NeoBundleLazy 'skammer/vim-css-color'
+" NeoBundleLazy 'skammer/vim-css-color' " conflicts with html syntax
+NeoBundleLazy 'mattn/zencoding-vim'
 NeoBundleLazy 'sukima/xmledit'
 " see http://nanasi.jp/articles/vim/xml-plugin.html
 
@@ -738,7 +743,8 @@ autocmd BufNew,BufReadPost *.tmpl set filetype=html
 function! SourceHTML()
     NeoBundleSource html5.vim
     NeoBundleSource vim-css3-syntax
-    NeoBundleSource vim-css-color
+    " NeoBundleSource vim-css-color
+    NeoBundleSource zencoding-vim
     NeoBundleSource xmledit
     autocmd! SourceHTML
 endfunction
@@ -765,10 +771,14 @@ augroup END
 
 autocmd BufNewFile,BufRead *.json set filetype=javascript
 NeoBundleLazy 'jelera/vim-javascript-syntax'
+NeoBundleLazy 'pangloss/vim-javascript' " indent
 NeoBundleLazy 'nono/jquery.vim'
 
 function! SourceJavaScript()
+    " source order of these plugins is important
     NeoBundleSource vim-javascript-syntax
+    NeoBundleSource vim-javascript
+
     NeoBundleSource jquery.vim
     autocmd! SourceJavaScript
 endfunction
@@ -1210,7 +1220,7 @@ augroup END
 
 NeoBundle 'mattn/qiita-vim'
 
-NeoBundle 'dbext.vim'
+NeoBundleLazy 'dbext.vim'
 " do end matchit (%)
 NeoBundle 'semmons99/vim-ruby-matchit'
 " NeoBundle 'vim-rsense'
@@ -1218,7 +1228,7 @@ NeoBundle 'tpope/vim-endwise'
 " To avoid conflict with neocomplcache; refer :help neocomplcache-faq
 autocmd VimEnter * imap <silent> <CR> <C-r>=neocomplcache#smart_close_popup()<CR><Plug>my_cr_function_smartinput
 call smartinput#map_to_trigger('i', '<Plug>my_cr_function_smartinput', '<Enter>', '<CR>')
-NeoBundle 'taichouchou2/vim-rsense'
+NeoBundleLazy 'taichouchou2/vim-rsense'
 
 NeoBundle 'tpope/vim-commentary'
 NeoBundle 'taka84u9/unite-git'
@@ -1300,9 +1310,10 @@ nmap ,y ;YRShow<CR>
 
 " =と押して = となるようにする他
 NeoBundle "kana/vim-smartchr"
-inoremap <expr> = smartchr#loop(' = ', ' == ', '=', ' ')
-inoremap <expr> > smartchr#loop('>',  '>>', '>>>', ' = ', ' => ')
-inoremap <expr> , smartchr#one_of(', ', ',')
+inoremap <expr> = smartchr#loop('=', ' = ', ' == ')
+inoremap <expr> > smartchr#loop('>',  ' => ', '>>')
+inoremap <expr> - smartchr#loop('-',  '->', '--')
+inoremap <expr> , smartchr#loop(',', ' => ')
 
 set autoread
 set modelines=0

@@ -326,5 +326,6 @@ if [ "`uname`" = "Darwin" ]; then
     alias fixfont="defaults -currentHost write -globalDomain AppleFontSmoothing -int 2"
 fi
 export PERL5LIB="./lib:./t/inc:$PERL5LIB"
+alias ws='python -m SimpleHTTPServer'
 
 source $HOME/.zshrc_local

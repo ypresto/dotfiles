@@ -37,7 +37,11 @@
         "start",
         "stop",
         "strictEqual",
-        "test"
+        "test",
+        // angular
+        "describe",
+        "it",
+        "expect"
     ],
 
 
