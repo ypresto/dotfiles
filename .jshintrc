@@ -21,6 +21,7 @@
         "Namespace",
         "$j",
         "sinon",
+        "grunt",
         "_",
         // https://github.com/jshint/jshint/issues/265
         "asyncTest",

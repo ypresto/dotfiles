@@ -162,7 +162,7 @@ set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
 set cursorline              " Highlight current line
 set colorcolumn=73,74,81,82 " Highlight border of 'long line'
 set list                    " highlight garbage characters (see below)
-set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
+set listchars=tab:»-,trail:~,extends:»,precedes:«,nbsp:%
 
 function! s:HighlightSetup()
     " Change highlight color of current line
@@ -170,8 +170,8 @@ function! s:HighlightSetup()
     highlight CursorLine ctermbg=black guibg=black
     highlight SignColumn ctermfg=white ctermbg=black cterm=none
 
-    highlight SpecialKey term=underline ctermbg=darkyellow gui=underline guibg=darkgray
-    highlight ZenkakuSpace cterm=underline ctermbg=darkgray gui=underline guifg=darkgrey
+    highlight SpecialKey   ctermbg=darkyellow guibg=darkyellow
+    highlight ZenkakuSpace ctermbg=darkgray   guibg=darkgray
 endfunction
 
 augroup HighlightSetup
@@ -183,7 +183,7 @@ augroup HighlightSetup
 
     " activates custom highlight settings
     autocmd ColorScheme * call s:HighlightSetup()
-    autocmd VimEnter,WinEnter * match ZenkakuSpace /　/
+    autocmd VimEnter,WinEnter * call matchadd('ZenkakuSpace', '　')
 augroup END
 
 " ** }}}
@@ -410,9 +410,9 @@ let g:yankring_o_keys = 'b B w W e E d y $ G ; iw iW aw aW' " refuse ,
 
 " autocompletes parenthesis, braces and more
 NeoBundle 'kana/vim-smartinput'
-call smartinput#define_rule({ 'at': '[\_s*\%#\_s*]', 'char': '<Enter>', 'input': '<Enter><C-o>O' })
-call smartinput#define_rule({ 'at': '{\_s*\%#\_s*}', 'char': '<Enter>', 'input': '<Enter><C-o>O' })
-call smartinput#define_rule({ 'at': '(\_s*\%#\_s*)', 'char': '<Enter>', 'input': '<Enter><C-o>O' })
+call smartinput#define_rule({ 'at': '\[\_s*\%#\_s*\]', 'char': '<Enter>', 'input': '<Enter><C-o>O' })
+call smartinput#define_rule({ 'at': '{\_s*\%#\_s*}'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
+call smartinput#define_rule({ 'at': '(\_s*\%#\_s*)'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
 
 " smartinput deprecates belows
 " NeoBundle 'Raimondi/delimitMate'
@@ -773,6 +773,7 @@ autocmd BufNewFile,BufRead *.json set filetype=javascript
 NeoBundleLazy 'jelera/vim-javascript-syntax'
 NeoBundleLazy 'pangloss/vim-javascript' " indent
 NeoBundleLazy 'nono/jquery.vim'
+NeoBundleLazy 'mklabs/grunt.vim'
 
 function! SourceJavaScript()
     " source order of these plugins is important
@@ -780,6 +781,7 @@ function! SourceJavaScript()
     NeoBundleSource vim-javascript
 
     NeoBundleSource jquery.vim
+    NeoBundleSource grunt.vim
     autocmd! SourceJavaScript
 endfunction
 augroup SourceJavaScript
@@ -1310,10 +1312,11 @@ nmap ,y ;YRShow<CR>
 
 " =と押して = となるようにする他
 NeoBundle "kana/vim-smartchr"
-inoremap <expr> = smartchr#loop('=', ' = ', ' == ')
-inoremap <expr> > smartchr#loop('>',  ' => ', '>>')
-inoremap <expr> - smartchr#loop('-',  '->', '--')
-inoremap <expr> , smartchr#loop(',', ' => ')
+" inoremap <expr> = smartchr#one_of(' = ', ' == ', ' === ', '=', '==')
+inoremap <expr> > smartchr#one_of('>', ' => ', '>>', '>>>')
+" inoremap <expr> < smartchr#one_of(' < ', '<', '<<')
+inoremap <expr> - smartchr#one_of('-',  '->', '--', '---')
+inoremap <expr> , smartchr#one_of(',', ' => ')
 
 set autoread
 set modelines=0
@@ -1329,8 +1332,9 @@ vnoremap > >gv
 " OSのクリップボードを使用する
 " set clipboard+=unnamed
 
-nnoremap / /\v
-nnoremap ? ?\v
+nnoremap / /\V
+nnoremap ? ?\V
+NeoBundle 'othree/eregex.vim'
 
 " ** }}}
 
