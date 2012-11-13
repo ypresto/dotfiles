@@ -3,7 +3,7 @@ UNAME := $(shell uname)
 all:
 	echo "call 'make install' or 'make update'"
 
-.PHONY: install update _up vimproc skkdict perldict gitsubmodules bashcompl npm_modules cleanlinks
+.PHONY: install update _up vimproc skkdict perldict gitsubmodules bashcompl node_modules cleanlinks
 
 install:
 	./mksymlinks
@@ -14,10 +14,8 @@ install:
 	rm -fr unite.vim && \
 	git clone git://github.com/Shougo/neobundle.vim.git && \
 	git clone git://github.com/Shougo/vimproc.git && \
-	git clone git://github.com/Shougo/neocomplcache.git && \
-	git clone git://github.com/Shougo/unite.vim.git
 	make vimproc
-	vim -c ":Unite -here neobundle/install"
+	vim -c ":NeoBundleInstall"
 	make _up
 	clear
 
@@ -31,8 +29,8 @@ update:
 	make _up
 	./mksymlinks
 
-_up: skkdict perldict gitsubmodules bashcompl npm_modules cleanlinks
-	
+_up: skkdict perldict gitsubmodules bashcompl node_modules cleanlinks
+
 vimproc:
 # build automatically by NeoBundle when vimproc updated
 ifeq ($(UNAME),Linux)
@@ -65,8 +63,8 @@ bashcompl:
 	cd bash-completion && \
 	wget --timestamping https://raw.github.com/git/git/master/contrib/completion/git-completion.bash
 
-npm_modules:
-	npm install jshint
+node_modules:
+	npm install
 
 cleanlinks:
 # below also works with BSD find
