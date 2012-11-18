@@ -3,7 +3,7 @@ UNAME := $(shell uname)
 all:
 	echo "call 'make install' or 'make update'"
 
-.PHONY: install update _up vimproc skkdict perldict gitsubmodules bashcompl node_modules cleanlinks
+.PHONY: install update _up vimproc skkdict perldict gitsubmodules bashcompl cleanlinks
 
 install:
 	./mksymlinks
@@ -16,6 +16,7 @@ install:
 	git clone git://github.com/Shougo/vimproc.git && \
 	make vimproc
 	vim -c ":NeoBundleInstall"
+	npm install
 	make _up
 	clear
 
@@ -23,13 +24,12 @@ update:
 	./mksymlinks
 	make vimproc
 	vim -c ":Unite -here neobundle/update"
-	clear
 	vim -c ":NeoBundleClean"
-	clear
+	npm update
 	make _up
 	./mksymlinks
 
-_up: skkdict perldict gitsubmodules bashcompl node_modules cleanlinks
+_up: skkdict perldict gitsubmodules bashcompl cleanlinks
 
 vimproc:
 # build automatically by NeoBundle when vimproc updated
@@ -62,9 +62,6 @@ gitsubmodules:
 bashcompl:
 	cd bash-completion && \
 	wget --timestamping https://raw.github.com/git/git/master/contrib/completion/git-completion.bash
-
-node_modules:
-	npm install
 
 cleanlinks:
 # below also works with BSD find

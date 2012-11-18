@@ -284,9 +284,14 @@ nnoremap <C-w>a <C-w>\|<C-w>_
 nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
 nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 
-" " ZenCoding
-" let g:user_zen_leader_key = '<C-q>'
-" let g:user_zen_expandabbr_key = '<C-q><C-q>'
+" ZenCoding
+let g:user_zen_leader_key = '<Esc>y'
+if has('gui_running')
+    " Workaround for gui meta
+    let g:user_zen_expandabbr_key = '<M-y><M-y>'
+else
+    let g:user_zen_expandabbr_key = '<Esc>y<Esc>y'
+endif
 
 " Gundo
 nnoremap <Leader>g :GundoToggle<CR>
@@ -351,8 +356,6 @@ nmap <Leader>ug <Leader>u: git_modified git_untracked<CR>
 nmap <Leader>Ug <Leader>U: git_modified git_untracked<CR>
 nmap <Leader>uG <Leader>u: giti<CR>
 nmap <Leader>UG <Leader>U: giti<CR>
-nmap <Leader>uq <Leader>u: qf<CR>
-nmap <Leader>Uq <Leader>U: qf<CR>
 
 nmap <Leader>uS <Leader>u: session<CR>
 nmap <Leader>US <Leader>U: session<CR>
@@ -441,9 +444,12 @@ NeoBundle 'sudo.vim'
 
 " shows syntax error on every save
 NeoBundle 'scrooloose/syntastic'
+let g:syntastic_mode_map = { 'mode': 'active',
+            \ 'active_filetypes' : [],
+            \ 'passive_filetypes': [] }
+let g:syntastic_error_symbol='E>' " ✗
+let g:syntastic_warning_symbol='W>' " ⚠
 let g:syntastic_echo_current_error=0 " too heavy, use below one
-let g:syntastic_error_symbol='E>'
-let g:syntastic_warning_symbol='W>'
 " show quickfix text of current line on statusline
 NeoBundle 'dannyob/quickfixstatus'
 
@@ -525,7 +531,6 @@ let g:unite_winheight="10"
 NeoBundle 'tacroe/unite-mark'
 NeoBundle 'h1mesuke/unite-outline'
 NeoBundle 'kmnk/vim-unite-giti.git'
-NeoBundle 'sgur/unite-qf'
 NeoBundle 'Shougo/unite-session'
 let g:unite_source_session_options = &sessionoptions
 
@@ -774,6 +779,7 @@ NeoBundleLazy 'jelera/vim-javascript-syntax'
 NeoBundleLazy 'pangloss/vim-javascript' " indent
 NeoBundleLazy 'nono/jquery.vim'
 NeoBundleLazy 'mklabs/grunt.vim'
+" NeoBundleLazy 'wookiehangover/jshint.vim'
 
 function! SourceJavaScript()
     " source order of these plugins is important
@@ -782,6 +788,7 @@ function! SourceJavaScript()
 
     NeoBundleSource jquery.vim
     NeoBundleSource grunt.vim
+    " NeoBundleSource jshint.vim
     autocmd! SourceJavaScript
 endfunction
 augroup SourceJavaScript
@@ -1337,6 +1344,26 @@ nnoremap ? ?\V
 NeoBundle 'othree/eregex.vim'
 
 " ** }}}
+
+" http://mattn.kaoriya.net/software/vim/20121105111112.htm
+NeoBundle 'mattn/multi-vim'
+
+NeoBundle 'rhysd/accelerated-jk'
+nmap j <Plug>(accelerated_jk_gj)
+nmap k <Plug>(accelerated_jk_gk)
+let g:accelerated_jk_anable_deceleration = 1
+" let g:accelerated_jk_acceleration_table = [10,7,5,4,3,2,2,2]
+let g:accelerated_jk_acceleration_table = [10,20,15,15]
+
+NeoBundle 'rhysd/vim-textobj-ruby' " [ai]r
+" g:textobj_ruby_more_mappings = 1 " ro rl rc rd rr
+
+NeoBundle 'sgur/unite-qf'
+NeoBundle 'osyo-manga/unite-quickfix'
+nmap <Leader>uq <Leader>u: qf<CR>
+nmap <Leader>Uq <Leader>U: qf<CR>
+nmap <Leader>uQ <Leader>u: quickfix<CR>
+nmap <Leader>UQ <Leader>U: quickfix<CR>
 
 " *** }}}
 
