@@ -406,10 +406,22 @@ endif
 
 " ** Recommended: YOU SHOULD USE THESE AND BE IMproved! *** {{{2
 
+NeoBundle 'maxbrunsfeld/vim-yankstack'
+nmap <C-p> <Plug>yankstack_substitute_older_paste
+nmap <C-n> <Plug>yankstack_substitute_newer_paste
+
+" deprecates below
+
 " C-[np] after paste, textobj [ai]'"()[]{} , and more, more!!
-NeoBundle 'YankRing.vim'
-let g:yankring_n_keys = 'Y D' " refuse x and X
-let g:yankring_o_keys = 'b B w W e E d y $ G ; iw iW aw aW' " refuse ,
+" NeoBundle 'YankRing.vim'
+" let g:yankring_n_keys = 'Y D' " refuse x and X
+" let g:yankring_o_keys = 'b B w W e E d y $ G ; iw iW aw aW' " refuse ,
+" let g:yankring_manual_clipboard_check = 0
+" let g:yankring_max_history = 30
+" let g:yankring_max_display = 70
+" " Yankの履歴参照
+" nmap ,y ;YRShow<CR>
+
 
 " autocompletes parenthesis, braces and more
 NeoBundle 'kana/vim-smartinput'
@@ -1053,8 +1065,6 @@ let g:neocomplcache_ctags_arguments_list = {
   \ 'perl' : '-R -h ".pm"'
   \ }
 " Bundle 'astashov/vim-ruby-debugger'
-" NeoBundle 'kien/ctrlp.vim'
-" let g:ctrlp_map = '<Leader><C-p>'
 
 NeoBundle 'taku-o/vim-copypath'
 let g:copypath_copy_to_unnamed_register = 1
@@ -1132,6 +1142,11 @@ NeoBundle 'Shougo/vimshell'
 NeoBundle 'kien/ctrlp.vim'
 let g:ctrlp_map = '<Leader><C-p>'
 let g:ctrlp_max_files = 0
+nmap <Leader><C-q> :CtrlPQuickfix<CR>
+nmap <Leader><C-m> :CtrlPMRU<CR>
+nmap <Leader><C-c> :CtrlPChangeAll<CR>
+nmap <Leader><C-l> :CtrlPLine<CR>
+nmap <Leader><C-t> :CtrlPTag<CR>
 
 " nmap <Esc>; A;<Esc><Plug>(poslist-prev-pos)
 " imap <Esc>; <C-o><Esc>;
@@ -1205,13 +1220,13 @@ elseif has('linux')
     NeoBundleSource vim-browser-reload-linux
 endif
 
-NeoBundle 'AndrewRadev/splitjoin.vim'
-nmap <Esc>i      :SplitjoinJoin<cr>
-imap <Esc>i <C-o>:SplitjoinJoin<cr>
-smap <Esc>i      :SplitjoinJoin<cr>
-nmap <Esc>p      :SplitjoinSplit<cr>
-imap <Esc>p <C-o>:SplitjoinSplit<cr>
-smap <Esc>p      :SplitjoinSplit<cr>
+" NeoBundle 'AndrewRadev/splitjoin.vim'
+" nmap <Esc>i      :SplitjoinJoin<cr>
+" imap <Esc>i <C-o>:SplitjoinJoin<cr>
+" smap <Esc>i      :SplitjoinJoin<cr>
+" nmap <Esc>p      :SplitjoinSplit<cr>
+" imap <Esc>p <C-o>:SplitjoinSplit<cr>
+" smap <Esc>p      :SplitjoinSplit<cr>
 
 NeoBundleLazy 'reinh/vim-makegreen'
 NeoBundleLazy 'sontek/rope-vim'
@@ -1310,12 +1325,6 @@ if !exists('g:neocomplcache_keyword_patterns')
     let g:neocomplcache_keyword_patterns = {}
 endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-
-let g:yankring_manual_clipboard_check = 0
-let g:yankring_max_history = 30
-let g:yankring_max_display = 70
-" Yankの履歴参照
-nmap ,y ;YRShow<CR>
 
 " =と押して = となるようにする他
 NeoBundle "kana/vim-smartchr"
