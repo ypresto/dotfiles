@@ -162,7 +162,7 @@ set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
 set cursorline              " Highlight current line
 set colorcolumn=73,74,81,82 " Highlight border of 'long line'
 set list                    " highlight garbage characters (see below)
-set listchars=tab:»-,trail:~,extends:»,precedes:«,nbsp:%
+set listchars=tab:»-,trail:\ ,extends:»,precedes:«,nbsp:%
 
 function! s:HighlightSetup()
     " Change highlight color of current line
@@ -1335,8 +1335,8 @@ inoremap <expr> - smartchr#one_of('-',  '->', '--', '---')
 inoremap <expr> , smartchr#one_of(',', ' => ')
 
 set autoread
-set modelines=0
-set display=uhex
+" set modelines=0
+" set display=uhex " shows unprintable chars as hex
 
 nnoremap 0 ^
 nnoremap 9 $
@@ -1353,6 +1353,10 @@ nnoremap ? ?\V
 NeoBundle 'othree/eregex.vim'
 
 " ** }}}
+
+" ** vimrc reading @ 2012/11/17 {{{
+
+" https://github.com/yomi322/config/blob/master/dot.vimrc
 
 " http://mattn.kaoriya.net/software/vim/20121105111112.htm
 NeoBundle 'mattn/multi-vim'
@@ -1373,6 +1377,24 @@ nmap <Leader>uq <Leader>u: qf<CR>
 nmap <Leader>Uq <Leader>U: qf<CR>
 nmap <Leader>uQ <Leader>u: quickfix<CR>
 nmap <Leader>UQ <Leader>U: quickfix<CR>
+
+" ** }}}
+
+" ** vimrc reading @ 2012/11/24 {{{
+
+" https://github.com/tsukkee/config/blob/master/vimrc
+
+nmap s  <Plug>Ysurround
+nmap S  <Plug>YSurround
+nmap ss <Plug>Yssurround
+nmap Ss <Plug>YSsurround
+nmap SS <Plug>YSsurround
+
+" set directory-=. " don't save tmp swap file in current directory
+
+nnoremap Y y$
+
+" ** }}}
 
 " *** }}}
 
@@ -1450,5 +1472,7 @@ filetype plugin indent on " XXX maybe better to disable this, testing
 " for speedup
 syntax on " for os x
 " *** }}}
+
+set secure
 
 " vim:set foldmethod=marker:
