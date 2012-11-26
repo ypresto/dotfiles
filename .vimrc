@@ -1267,16 +1267,16 @@ NeoBundle 'benmills/vimux'
 
 let g:ConqueTerm_TERM = 'xterm-256color'
 
-nmap <expr><TAB> neosnippet#expandable() ?
- \ "i<TAB>"
- \: pumvisible() ? "\<C-n>" : "\<TAB>"
+nmap <expr><TAB> neosnippet#jumpable() ?
+ \ "i<TAB>" : "\<TAB>"
 " SuperTab like snippets behavior.
 imap <expr><TAB> neosnippet#expandable() ?
  \ "\<Plug>(neosnippet_expand_or_jump)"
  \: pumvisible() ? "\<C-n>" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable() ?
- \ "\<Plug>(neosnippet_expand_or_jump)"
+ \ "\<Plug>i_(neosnippet_expand_or_jump)"
  \: "\<TAB>"
+nmap <Esc>s i_<Plug>(neosnippet_start_unite_snippet)
 imap <Esc>s i_<Plug>(neosnippet_start_unite_snippet)
 
 " ** vimrc reading @ 2012/11/03 {{{

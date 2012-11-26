@@ -15,12 +15,14 @@
 	br = branch
 	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	g = log --graph --decorate --stat
-	gw = log --graph --decorate --stat --color-words
+	go = log --graph --decorate --stat --format=oneline
+	gog = log --graph --decorate --format=oneline
 	rs = reset
 	rsh = reset --hard
 	dw = diff --color-words
 	ds = diff --stat
-	dsc = diff --stat --cached
+	cw = diff --color-words
+	cs = diff --stat --cached
 	lo = log --stat
 	dt = difftool
 	pr = pull --rebase
