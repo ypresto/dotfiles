@@ -35,8 +35,8 @@ syntax off " seems to be faster to enable at the end
 if has('vim_starting')
     set nocompatible
     set rtp+=~/.vim/bundle/neobundle.vim/
-    call neobundle#rc(expand('~/.vim/bundle/'))
 endif
+call neobundle#rc(expand('~/.vim/bundle/'))
 NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc', {
 \   'build' : {
@@ -478,7 +478,9 @@ let g:gundo_close_on_revert = 1
 NeoBundle 'honza/snipmate-snippets'
 
 " Run current file by <Leader>r and get result in another buffer
-NeoBundle 'thinca/vim-quickrun'
+NeoBundle 'thinca/vim-quickrun', { 'depends' : [
+\   'tyru/open-browser.vim',
+\] }
 
 " Highlight indent by its levels, must have for pythonist
 NeoBundle 'nathanaelkane/vim-indent-guides'
@@ -756,7 +758,7 @@ NeoBundleLazy 'mattn/zencoding-vim'
 NeoBundleLazy 'sukima/xmledit'
 " see http://nanasi.jp/articles/vim/xml-plugin.html
 
-autocmd BufNew,BufReadPost *.tmpl set filetype=html
+autocmd BufNew,BufReadPost *.tmpl setlocal filetype=html
 function! SourceHTML()
     NeoBundleSource html5.vim
     NeoBundleSource vim-css3-syntax
@@ -786,7 +788,7 @@ augroup END
 
 " ** JavaScript ** {{{2
 
-autocmd BufNewFile,BufRead *.json set filetype=javascript
+autocmd BufNewFile,BufRead *.json setlocal filetype=javascript
 NeoBundleLazy 'jelera/vim-javascript-syntax'
 NeoBundleLazy 'pangloss/vim-javascript' " indent
 NeoBundleLazy 'nono/jquery.vim'
@@ -1160,6 +1162,7 @@ nmap <Esc>, :call Semicolonfun(',')<CR>
 imap <Esc>, <C-R>=Semicolonfun(',')<CR>
 function! Semicolonfun(char)
   call setline(line('.'), substitute(getline('.'), '\s*$', a:char, ''))
+  return ''
 endfunction
 
 NeoBundle 'thinca/vim-scouter'
@@ -1279,6 +1282,19 @@ smap <expr><TAB> neosnippet#expandable() ?
 nmap <Esc>s i_<Plug>(neosnippet_start_unite_snippet)
 imap <Esc>s i_<Plug>(neosnippet_start_unite_snippet)
 
+let g:netrw_http_cmd = 'curl -L'
+let g:netrw_http_xcmd = '-o'
+
+let g:quickrun_config = {}
+let g:quickrun_config._ = {
+    \ 'runmode': 'async:vimproc'
+    \ }
+let g:quickrun_config.markdown = {
+    \ 'type': 'markdown/pandoc',
+    \ 'cmdopt': '-s',
+    \ 'outputter': 'browser'
+    \ }
+
 " ** vimrc reading @ 2012/11/03 {{{
     " https://github.com/cpfaff/vim-my-setup/blob/master/vimrc
     set lazyredraw
@@ -1396,6 +1412,22 @@ nnoremap Y y$
 
 " ** }}}
 
+" ** vimrc reading @ 2012/12/15 {{{
+
+set virtualedit=block
+set ambiwidth=double
+
+" thanks!: thinca
+inoremap <expr> <C-k> col('.') == col('$') ? "" : "\<C-o>D"
+
+if has('gui_running')
+    "# yankとclipboardを同期する
+    set clipboard+=unnamed
+    " not work corect
+    " set iminsert
+    set imdisable
+endif
+" ** }}}
 " *** }}}
 
 " *** Debug *** {{{1
