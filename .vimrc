@@ -879,7 +879,7 @@ NeoBundleLazy 'tmhedberg/SimpylFold'
 NeoBundleLazy 'davidhalter/jedi-vim'
 function! SourcePython()
     NeoBundleSource SimpylFold
-    NeoBundleSource jedi-vim
+    " NeoBundleSource jedi-vim
     autocmd! SourcePython
 endfunction
 augroup SourcePython
