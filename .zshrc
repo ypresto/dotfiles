@@ -309,7 +309,7 @@ function gvi() {
 }
 
 cl () { cd $1; ls }
-mcdir () { mkdir -p $1; cd $1 }
+mkcd () { mkdir -p $1; cd $1 }
 
 # completion colors
 # http://linuxshellaccount.blogspot.jp/2008/12/color-completion-using-zsh-modules-on.html
@@ -326,7 +326,7 @@ alias :vl='vim ~/.vimlocal/.vimrc'
 if [ "`uname`" = "Darwin" ]; then
     alias fixfont="defaults -currentHost write -globalDomain AppleFontSmoothing -int 2"
 fi
-export PERL5LIB="./lib:./t/inc:$PERL5LIB"
+# export PERL5LIB="./lib:./t/inc:$PERL5LIB"
 alias ws='python -m SimpleHTTPServer'
 
 source $HOME/.zshrc_local
