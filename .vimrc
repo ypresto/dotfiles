@@ -507,7 +507,7 @@ NeoBundleLazy 'Shougo/neosnippet'
 NeoBundleLazy 'ujihisa/neco-look'
 let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_prefetch = 1
-let g:neocomplcache_enable_camel_case_completion = 1
+let g:neocomplcache_enable_camel_case_completion = 0
 let g:neocomplcache_enable_underbar_completion = 1
 let g:neocomplcache_enable_wildcard = 1
 let g:neocomplcache_dictionary_filetype_lists = {
@@ -1294,6 +1294,36 @@ let g:quickrun_config.markdown = {
     \ 'cmdopt': '-s',
     \ 'outputter': 'browser'
     \ }
+
+NeoBundle 'kana/vim-operator-replace'
+
+
+" http://d.hatena.ne.jp/heavenshell/20110228/1298899167
+augroup QuickRunUnitTest
+  autocmd!
+  " autocmd BufWinEnter,BufNewFile *test.php setlocal filetype=php.unit
+  " autocmd BufWinEnter,BufNewFile test_*.py setlocal filetype=python.unit
+  autocmd BufWinEnter,BufNewFile *.t setlocal filetype=perl
+augroup END
+let g:quickrun_config = {}
+" let g:quickrun_config['php.unit'] = {'command': 'phpunitrunner'}
+" let g:quickrun_config['python.unit'] = {'command': 'nosetests', 'cmdopt': '-s -vv'}
+let g:quickrun_config['perl'] = {'command': 'prove'}
+
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion.
+if !exists('g:neocomplcache_omni_patterns')
+    let g:neocomplcache_omni_patterns = {}
+endif
+let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.perl = '[^. *\t]\.\w*\|\h\w*::'
+autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+autocmd FileType perl setlocal omnifunc=PerlComplete
 
 " ** vimrc reading @ 2012/11/03 {{{
     " https://github.com/cpfaff/vim-my-setup/blob/master/vimrc
