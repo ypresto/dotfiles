@@ -83,7 +83,7 @@ autocmd FileType make setlocal softtabstop=8 shiftwidth=8 noexpandtab
 " 2-space indent
 autocmd FileType
     \ html,scss,javascript,ruby,tex,xml
-    \ set shiftwidth=2 softtabstop=2 nosmartindent
+    \ setlocal shiftwidth=2 softtabstop=2 nosmartindent
 autocmd FileType python     setlocal nosmartindent
 " Use smarter auto indent for C-languages
 autocmd FileType c,cpp,java setlocal cindent
@@ -788,7 +788,7 @@ augroup END
 
 " ** JavaScript ** {{{2
 
-autocmd BufNewFile,BufRead *.json setlocal filetype=javascript
+autocmd BufNewFile,BufRead *.json setf javascript
 NeoBundleLazy 'jelera/vim-javascript-syntax'
 NeoBundleLazy 'pangloss/vim-javascript' " indent
 NeoBundleLazy 'nono/jquery.vim'
