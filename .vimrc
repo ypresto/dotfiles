@@ -758,7 +758,7 @@ NeoBundleLazy 'mattn/zencoding-vim'
 NeoBundleLazy 'sukima/xmledit'
 " see http://nanasi.jp/articles/vim/xml-plugin.html
 
-autocmd BufNew,BufReadPost *.tmpl setlocal filetype=html
+" FIXME autocmd BufNew,BufReadPost *.tmpl setlocal filetype=html
 function! SourceHTML()
     NeoBundleSource html5.vim
     NeoBundleSource vim-css3-syntax
@@ -1358,14 +1358,6 @@ set grepprg=ack\ -a
 
 NeoBundle 'bkad/CamelCaseMotion'
 
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-" autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
 let g:neocomplcache_min_syntax_length = 2
 if !exists('g:neocomplcache_keyword_patterns')
     let g:neocomplcache_keyword_patterns = {}
@@ -1445,7 +1437,7 @@ nnoremap Y y$
 " ** vimrc reading @ 2012/12/15 {{{
 
 set virtualedit=block
-set ambiwidth=double
+" set ambiwidth=double
 
 " thanks!: thinca
 inoremap <expr> <C-k> col('.') == col('$') ? "" : "\<C-o>D"
