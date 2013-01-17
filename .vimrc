@@ -826,7 +826,7 @@ let perl_fold_blocks=1
 " let perl_nofold_packages = 1
 " let perl_include_pod=1
 
-NeoBundleLazy 'c9s/perlomni.vim'
+" NeoBundleLazy 'c9s/perlomni.vim'
 NeoBundleLazy 'mattn/perlvalidate-vim'
 
 NeoBundleLazy 'yko/mojo.vim'
@@ -834,7 +834,7 @@ let mojo_highlight_data = 1
 
 function! SourcePerl()
     NeoBundleSource vim-perl
-    NeoBundleSource perlomni.vim
+    " NeoBundleSource perlomni.vim
     NeoBundleSource perlvalidate-vim
     NeoBundleSource mojo.vim
     autocmd! SourcePerl
@@ -1320,10 +1320,10 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 if !exists('g:neocomplcache_omni_patterns')
     let g:neocomplcache_omni_patterns = {}
 endif
-let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.perl = '[^. *\t]\.\w*\|\h\w*::'
-autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-autocmd FileType perl setlocal omnifunc=PerlComplete
+" let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+" let g:neocomplcache_omni_patterns.perl = '[^. *\t]\.\w*\|\h\w*::'
+" autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+" autocmd FileType perl setlocal omnifunc=PerlComplete
 
 " ** vimrc reading @ 2012/11/03 {{{
     " https://github.com/cpfaff/vim-my-setup/blob/master/vimrc
