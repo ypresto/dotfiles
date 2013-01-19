@@ -72,7 +72,7 @@ alias less='less -Ri'
 export PAGER='less -Ri'
 
 # ENV
-export PATH="$HOME/dotfiles/bin:$HOME/dotfiles/node_modules/.bin:$PATH"
+export PATH="$HOME/dotfiles/bin:$HOME/dotfiles/node_modules/.bin:$HOME/node_modules/.bin:$PATH"
 export EDITOR=vim
 export CLICOLOR=YES
 

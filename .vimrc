@@ -1325,6 +1325,15 @@ endif
 " autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 " autocmd FileType perl setlocal omnifunc=PerlComplete
 
+NeoBundle 'Shougo/unite-ssh'
+NeoBundle 't9md/vim-unite-ack'
+NeoBundle 'tsukkee/unite-help'
+NeoBundle 'MultipleSearch'
+NeoBundle 'airblade/vim-rooter'
+NeoBundleLazy 'tsukkee/lingr-vim'
+
+" HERE
+
 " ** vimrc reading @ 2012/11/03 {{{
     " https://github.com/cpfaff/vim-my-setup/blob/master/vimrc
     set lazyredraw
@@ -1450,6 +1459,7 @@ if has('gui_running')
     set imdisable
 endif
 " ** }}}
+
 " *** }}}
 
 " *** Debug *** {{{1
