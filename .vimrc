@@ -627,7 +627,7 @@ vnoremap <Leader>t:  :Tab/:<CR>
 vnoremap <Leader>t;  :Tab/:\zs<CR>
 
 " extended % key matching
-NeoBundle "tmhedberg/matchit.git"
+NeoBundle "tmhedberg/matchit"
 
 " moving more far easily
 NeoBundle 'Lokaltog/vim-easymotion'
@@ -890,15 +890,7 @@ augroup END
 
 " ** VimScript ** {{{
 
-" vim-ref alternative for .vimrc and VimScripts
-autocmd! FileType vim,help call MapVimHelp()
-function! MapVimHelp()
-    nmap <buffer> K :help <C-r><C-w><CR>
-    vmap <buffer> K :<C-u>help <C-r>=GetVisualText()<CR><CR>
-endfunction
-function! GetVisualText()
-    return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]-1]
-endfunction
+autocmd! FileType vim,help setlocal keywordprg=":help"
 
 " ** }}}
 
@@ -1332,6 +1324,10 @@ NeoBundle 'MultipleSearch'
 NeoBundle 'airblade/vim-rooter'
 NeoBundleLazy 'tsukkee/lingr-vim'
 
+" set foldopen=all
+" set foldclose=all
+nmap R <Plug>(operator-replace)
+
 " HERE
 
 " ** vimrc reading @ 2012/11/03 {{{
@@ -1458,6 +1454,33 @@ if has('gui_running')
     " set iminsert
     set imdisable
 endif
+
+" ** }}}
+
+" ** vimrc reading @ 2012/01/19 {{{
+
+" 自動整形の実行方法 (see also :help fo-table)
+set formatoptions&
+set formatoptions-=o
+set formatoptions+=ctrqlm
+
+" <C-a> や <C-x> で数値を増減させるときに8進数を無効にする
+set nrformats-=octal
+
+" コマンドライン補完の方法
+set wildmode=longest:full
+
+set helplang=ja
+
+set keywordprg=:help
+
+" 行をまたいでカーソル移動
+set whichwrap+=h,l
+
+NeoBundle 't9md/vim-quickhl'
+
+let g:neocomplcache_max_list = 200
+
 " ** }}}
 
 " *** }}}
