@@ -13,9 +13,10 @@ install:
 	rm -fr neocomplcache && \
 	rm -fr unite.vim && \
 	git clone git://github.com/Shougo/neobundle.vim.git && \
+	git clone git://github.com/Shougo/unite.vim.git && \
 	git clone git://github.com/Shougo/vimproc.git
 	make vimproc
-	vim -c ":NeoBundleInstall"
+	vim -c ":Unite -here neobundle/install"
 	npm install
 	make _up
 	clear
