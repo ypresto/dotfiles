@@ -150,8 +150,8 @@ set laststatus=2      " Always show statusline
 
 " command line
 set cmdheight=2                " Set height of command line
-set wildmode=longest,list,full " command line completion order
-set nowildmenu                 " Enhanced completion: disabled
+set wildmode=list:full " command line completion order
+set wildmenu                 " Enhanced completion: disabled
 " Don't use matched files for completion
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
 
@@ -1483,6 +1483,30 @@ let g:neocomplcache_max_list = 200
 
 " ** }}}
 
+" ** vimrc reading @ 2012/01/26 {{{
+
+set shiftround " round indent with < and >
+set infercase " Ignore case on insert completion.
+set fillchars="vert:\ ,fold:\ ,diff:\ "
+set grepprg="ack -a"
+set isfname-=%,$,@,= " filename characters for gf
+" set directory=~/.vim/swap
+
+" Set tags file.
+" Don't search tags file in current directory. And search upward.
+set tags& tags-=tags tags+=./tags;
+if v:version < 7.3 || (v:version == 7.3 && !has('patch336'))
+  " Vim's bug.
+  set notagbsearch
+endif
+
+set linebreak
+set showbreak=>\
+set breakat=\ \	;:,!?.>
+
+" ** }}}
+
+
 " *** }}}
 
 " *** Debug *** {{{1
@@ -1513,7 +1537,8 @@ if has('gui_running')
         set guioptions-=m " to avoid menu accelerator being bound
         set guifont="DejaVu Sans Mono 10"
         " set guifontwide=
-        set guioptions+=c " no dialog / buggy on mac
+        " FIXME: no prompt text like "swp exists" shown on macvim when use script like UniteSession
+        set guioptions+=c " no dialog
     endif
     set guicursor=a:block,a:blinkon0,i:ver10
     set guioptions-=T " no toolbar
