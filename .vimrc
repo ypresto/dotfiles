@@ -632,12 +632,13 @@ NeoBundle "tmhedberg/matchit"
 " moving more far easily
 NeoBundle 'Lokaltog/vim-easymotion'
 
-" Smooth <C-{f,b,u,d}> scrolls
-" not work with macvim
-NeoBundleLazy 'Smooth-Scroll'
-if !(has('gui_macvim') && has('gui_running'))
-    NeoBundleSource Smooth-Scroll
-endif
+" " Smooth <C-{f,b,u,d}> scrolls
+" " not work with macvim
+" NeoBundleLazy 'Smooth-Scroll'
+" if !(has('gui_macvim') && has('gui_running'))
+"     NeoBundleSource Smooth-Scroll
+" endif
+" conflicts with rhysd/accelerated-jk
 
 " Alternative for vimgrep, :Ack and :LAck
 NeoBundle 'mileszs/ack.vim'
