@@ -1328,6 +1328,10 @@ NeoBundleLazy 'tsukkee/lingr-vim'
 " set foldclose=all
 nmap R <Plug>(operator-replace)
 
+NeoBundle 'thinca/vim-unite-history'
+NeoBundle 't9md/vim-surround_custom_mapping'
+NeoBundle 'rhysd/clever-f.vim'
+
 " HERE
 
 " ** vimrc reading @ 2012/11/03 {{{
