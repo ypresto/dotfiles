@@ -69,7 +69,8 @@ fi
 
 # color / ignore case
 alias less='less -Ri'
-export PAGER='less -Ri'
+# export PAGER='less -Ri'
+export PAGER='lv -c'
 
 # ENV
 export PATH="$HOME/dotfiles/bin:$HOME/dotfiles/node_modules/.bin:$HOME/node_modules/.bin:$PATH"
