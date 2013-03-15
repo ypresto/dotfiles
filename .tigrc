@@ -1,4 +1,4 @@
 bind generic g move-first-line
 bind generic G move-last-line
 bind status  A !git commit --amend
-bind main    R !git revert %(commit)
+bind main    ! !git revert %(commit)
