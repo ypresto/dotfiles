@@ -1477,8 +1477,6 @@ set wildmode=longest:full
 
 set helplang=ja
 
-set keywordprg=:help
-
 " 行をまたいでカーソル移動
 set whichwrap+=h,l
 
