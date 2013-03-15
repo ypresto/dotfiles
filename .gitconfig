@@ -6,6 +6,7 @@
 	editor = vim
 [merge]
 	tool = vimdiff
+	renamelimit = 3000
 [color]
 	ui = auto
 [alias]
@@ -36,8 +37,5 @@
 	user = ypresto
 [push]
 	default = tracking
-[tig "bind"]
-  generic = g move-first-line
-  generic = G move-last-line
 [rerere]
   enabled = true
