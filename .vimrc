@@ -505,11 +505,18 @@ NeoBundle 'Shougo/neocomplcache'
 NeoBundleLazy 'Shougo/neosnippet'
 " English spell completion with 'look' command
 NeoBundleLazy 'ujihisa/neco-look'
-let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_enable_at_startup = 0
 let g:neocomplcache_enable_prefetch = 1
 let g:neocomplcache_enable_camel_case_completion = 0
-let g:neocomplcache_enable_underbar_completion = 1
-let g:neocomplcache_enable_wildcard = 1
+let g:neocomplcache_enable_underbar_completion = 0
+let g:neocomplcache_enable_wildcard = 0
+let g:neocomplcache_enable_fuzzy_completion = 1
+let g:neocomplcache_fuzzy_completion_start_length = 3
+let g:neocomplcache_enable_auto_delimiter = 1
+let g:neocomplcache_max_list = 100
+let g:neocomplcache_source_disable = {
+    \ 'tags_complete' : 1,
+    \}
 let g:neocomplcache_dictionary_filetype_lists = {
     \ 'default'    : '',
     \ 'perl'       : $HOME . '/.vim/dict/perl.dict'
@@ -1305,9 +1312,9 @@ let g:quickrun_config['perl'] = {'command': 'prove'}
 
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+" autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+" autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+" autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 " Enable heavy omni completion.
 if !exists('g:neocomplcache_omni_patterns')
@@ -1332,6 +1339,13 @@ nmap R <Plug>(operator-replace)
 NeoBundle 'thinca/vim-unite-history'
 NeoBundle 't9md/vim-surround_custom_mapping'
 NeoBundle 'rhysd/clever-f.vim'
+
+" http://hail2u.net/blog/software/only-one-line-life-changing-vimrc-setting.html
+autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
+autocmd FileType diff setlocal includeexpr=substitute(v:fname,'^[ab]\\/','','')
+
+" http://stackoverflow.com/questions/7672783/how-can-i-do-something-like-gf-but-in-a-new-vertical-split
+noremap <Leader>f :vertical wincmd f<CR>
 
 " HERE
 
@@ -1368,7 +1382,7 @@ set grepprg=ack\ -a
 
 NeoBundle 'bkad/CamelCaseMotion'
 
-let g:neocomplcache_min_syntax_length = 2
+let g:neocomplcache_min_syntax_length = 3
 if !exists('g:neocomplcache_keyword_patterns')
     let g:neocomplcache_keyword_patterns = {}
 endif
@@ -1481,8 +1495,6 @@ set helplang=ja
 set whichwrap+=h,l
 
 NeoBundle 't9md/vim-quickhl'
-
-let g:neocomplcache_max_list = 200
 
 " ** }}}
 
