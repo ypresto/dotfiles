@@ -1189,7 +1189,7 @@ let g:ConqueTerm_ReadUnfocused = 1
 " nmap <Leader>tb :TagbarToggle<CR>
 " let g:tagbar_ctags_bin = '~/homebrew/bin/ctags'
 
-NeoBundleLazy 'joonty/vdebug'
+" NeoBundleLazy 'joonty/vdebug'
 NeoBundle 'ypresto/vdebug', { 'directory' : 'my_vdebug' }
 
 " autocmd VimEnter * let g:vdebug_options['exec_perl']   = $HOME.'/dotfiles/bin/komodo-perl.sh %s'
