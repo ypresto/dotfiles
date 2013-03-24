@@ -294,7 +294,7 @@ else
 endif
 
 " Gundo
-nnoremap <Leader>g :GundoToggle<CR>
+nnoremap <Leader>G :GundoToggle<CR>
 
 " ** neocomplcache ** {{{2
 
@@ -359,6 +359,9 @@ nmap <Leader>UG <Leader>U: giti<CR>
 
 nmap <Leader>uS <Leader>u: session<CR>
 nmap <Leader>US <Leader>U: session<CR>
+
+nmap <Leader>uu <Leader>u:source<CR>
+nmap <Leader>Uu <Leader>U:soruce<CR>
 
 augroup UniteWindowKeyMaps
     autocmd!
@@ -1410,8 +1413,8 @@ vnoremap > >gv
 " OSのクリップボードを使用する
 " set clipboard+=unnamed
 
-nnoremap / /\V
-nnoremap ? ?\V
+" nnoremap / /\V
+" nnoremap ? ?\V
 NeoBundle 'othree/eregex.vim'
 
 " ** }}}
@@ -1520,6 +1523,74 @@ set showbreak=>\
 set breakat=\ \	;:,!?.>
 
 " ** }}}
+
+
+" ** vimrc reading @ 2012/03/23 {{{
+
+" @see http://vim-users.jp/2011/02/hack202/
+" 保存時に対象ディレクトリが存在しなければ作成する(作成有無は確認できる)
+augroup AutoMkdir
+  autocmd!
+  autocmd BufWritePre * call s:auto_mkdir(expand('<afile>:p:h'), v:cmdbang)
+  function! s:auto_mkdir(dir, force)
+    if !isdirectory(a:dir) && (a:force ||
+          \    input(printf('"%s" does not exist. Create? [y/N]', a:dir)) =~? '^y\%[es]$')
+      call mkdir(a:dir, 'p')
+    endif
+  endfunction
+augroup END
+
+
+" command mode
+cnoremap <C-a> <Home>
+cnoremap <C-b> <Left>
+cnoremap <C-d> <Del>
+cnoremap <C-e> <End>
+cnoremap <C-f> <Right>
+cnoremap <C-n> <Down>
+cnoremap <C-p> <Up>
+cnoremap <C-k> <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
+cnoremap <C-y> <C-r>*
+
+" タブページの位置を移動
+nnoremap <silent> <S-Left>    :<C-u>execute 'tabmove' tabpagenr() - 2<CR>
+nnoremap <silent> <S-Right>   :<C-u>execute 'tabmove' tabpagenr()<CR>
+
+" http://nanabit.net/blog/2007/11/01/vim-fullscreen/
+
+set winaltkeys=no
+
+" mail
+NeoBundleLazy 'yuratomo/gmail.vim'
+let g:gmail_user_name = 'yuya.presto@gmail.com'
+
+" let g:quickrun_config._ = {'runner' : 'vimproc'}
+
+NeoBundle 'itchyny/thumbnail.vim'
+
+" @see http://d.hatena.ne.jp/itchyny/20130319/1363690268
+augroup NeoBundleChecker
+    autocmd VimEnter * NeoBundleCheck
+augroup END
+
+" fugitive
+nnoremap <Space>ge  :<C-u>Gedit<CR>
+nnoremap <Space>gs  :<C-u>Gstatus<CR>
+nnoremap <Space>gd  :<C-u>Gdiff<CR>
+nnoremap <Space>gw  :<C-u>Gwrite<CR>
+
+" gitv
+NeoBundle 'gregsexton/gitv'
+augroup Gitv
+  autocmd!
+  autocmd FileType git :setlocal foldlevel=99
+augroup END
+nnoremap <Space>gv  :<C-u>Gitv<CR>
+nnoremap <Space>gV  :<C-u>Gitv!<CR>
+
+" ** }}}
+
+" vimrc reading HERE
 
 
 " *** }}}
