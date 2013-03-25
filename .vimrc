@@ -1415,7 +1415,9 @@ vnoremap > >gv
 
 " nnoremap / /\V
 " nnoremap ? ?\V
-NeoBundle 'othree/eregex.vim'
+
+" can't use incremental search
+" NeoBundle 'othree/eregex.vim'
 
 " ** }}}
 
