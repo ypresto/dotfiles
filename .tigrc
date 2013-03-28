@@ -2,7 +2,7 @@ bind generic g move-first-line
 bind generic G move-last-line
 
 bind status  A !git commit --amend
-bind status  * ?!git clean -df
+bind status  * !?git clean -df
 bind main    B !git rebase -i %(commit)
 bind main    > !git push
 bind main    < !git pull
