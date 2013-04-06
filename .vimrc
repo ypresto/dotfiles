@@ -1592,6 +1592,93 @@ nnoremap <Space>gV  :<C-u>Gitv!<CR>
 
 " ** }}}
 
+" ** vimrc reading @ 2012/04/06 {{{
+
+set fileencodings=iso-2022-jp-3,iso-2022-jp,euc-jisx0213,euc-jp,utf-8,ucs-bom,euc-jp,eucjp-ms,cp932
+set encoding=utf-8
+set fileformats=unix,dos,mac
+
+autocmd BufReadPost *
+\   if &modifiable && !search('[^\x00-\x7F]', 'cnw')
+\ |   setlocal fileencoding=
+\ | endif
+
+" ペアとなる括弧の定義
+set matchpairs+=<:>
+
+set nojoinspaces
+
+" 改行時のコメントと、自動改行を無効化
+set formatoptions-=t
+set formatoptions-=c
+set formatoptions-=r
+set formatoptions-=o
+" TODO: check m flag meaning
+set formatoptions+=m
+set formatoptions+=M
+
+" 前回終了したカーソル行に移動
+" autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
+
+if 0
+
+" 必要なときのみ、カーソル行をハイライト
+" http://d.hatena.ne.jp/thinca/20090530/1243615055
+augroup vimrc-auto-cursorline
+    autocmd!
+    autocmd CursorMoved,CursorMovedI * call Auto_cursorline('CursorMoved')
+    autocmd CursorHold,CursorHoldI * call Auto_cursorline('CursorHold')
+    autocmd WinEnter * call Auto_cursorline('WinEnter')
+    autocmd WinLeave * call Auto_cursorline('WinLeave')
+
+    let g:cursorline_lock = 0
+    function! Auto_cursorline(event)
+        if a:event ==# 'WinEnter'
+            setlocal cursorline
+            setlocal cursorcolumn
+            let g:cursorline_lock = 2
+        elseif a:event ==# 'WinLeave'
+            setlocal nocursorline
+            setlocal nocursorcolumn
+        elseif a:event ==# 'CursorMoved'
+            if g:cursorline_lock
+                if 1 < g:cursorline_lock
+                    let g:cursorline_lock = 1
+                else
+                    setlocal nocursorline
+                    setlocal nocursorcolumn
+                    let g:cursorline_lock = 0
+                endif
+            endif
+        elseif a:event ==# 'CursorHold'
+            setlocal cursorline
+            setlocal cursorcolumn
+            let g:cursorline_lock = 1
+        endif
+    endfunction
+augroup END
+
+endif
+
+
+" setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class
+" IndentGuidesEnable
+
+
+" grepソース
+" let g:unite_source_grep_default_opts = '-Hn --include="*.vim" --include="*.txt" --include="*.php" --include="*.xml" --include="*.mkd" --include="*.hs" --include="*.js" --include="*.log" --include="*.sql" --include="*.coffee"'
+let g:unite_source_grep_command = "ag"
+let g:unite_source_grep_recursive_opt = ""
+let g:unite_source_grep_default_opts = "--nogroup --nocolor"
+
+let g:unite_source_grep_max_candidates = 100
+" let g:unite_source_session_enable_auto_save = 1     " セッション保存
+
+nnoremap <silent> <Leader>u<space> :<C-u>UniteResume<CR>
+
+" ** }}}
+
+
 " vimrc reading HERE
 
 
