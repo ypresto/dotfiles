@@ -901,7 +901,7 @@ augroup END
 
 " ** VimScript ** {{{
 
-autocmd! FileType vim,help setlocal keywordprg=":help"
+autocmd FileType vim,help set keywordprg=":help"
 
 " ** }}}
 
