@@ -25,7 +25,7 @@
 	ds = diff --stat
 	cw = diff --color-words
 	cs = diff --stat --cached
-	lo = log --stat
+	lo = log --stat --decorate
 	dt = difftool
 	pr = pull --rebase
 	ms = merge --squash
