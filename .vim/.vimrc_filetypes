@@ -1,0 +1,151 @@
+" ** HTML / CSS / XML ** {{{
+
+" NeoBundle 'mattn/zencoding-vim'
+" let g:user_zen_settings = {
+" \   'lang': "ja"
+" \}
+" let g:use_zen_complete_tag = 1
+
+NeoBundleLazy 'othree/html5.vim'
+NeoBundleLazy 'hail2u/vim-css3-syntax'
+" NeoBundleLazy 'skammer/vim-css-color' " conflicts with html syntax
+NeoBundleLazy 'mattn/zencoding-vim'
+NeoBundleLazy 'sukima/xmledit'
+" see http://nanasi.jp/articles/vim/xml-plugin.html
+
+" FIXME autocmd BufNew,BufReadPost *.tmpl setlocal filetype=html
+function! SourceHTML()
+    NeoBundleSource html5.vim
+    NeoBundleSource vim-css3-syntax
+    " NeoBundleSource vim-css-color
+    NeoBundleSource zencoding-vim
+    NeoBundleSource xmledit
+    autocmd! SourceHTML
+endfunction
+augroup SourceHTML
+    autocmd!
+    autocmd FileType html,css,xml call SourceHTML()
+augroup END
+
+" haml / sass / scss
+NeoBundleLazy 'tpope/vim-haml'
+
+function! SourceHaml()
+    NeoBundleSource vim-haml
+    autocmd! SourceHaml
+endfunction
+augroup SourceHaml
+    autocmd!
+    autocmd FileType haml,sass,scss call SourceHaml()
+augroup END
+
+" ** }}}
+
+" ** JavaScript ** {{{
+
+autocmd BufNewFile,BufRead *.json setf javascript
+NeoBundleLazy 'jelera/vim-javascript-syntax'
+NeoBundleLazy 'pangloss/vim-javascript' " indent
+NeoBundleLazy 'nono/jquery.vim'
+NeoBundleLazy 'mklabs/grunt.vim'
+" NeoBundleLazy 'wookiehangover/jshint.vim'
+
+function! SourceJavaScript()
+    " source order of these plugins is important
+    NeoBundleSource vim-javascript-syntax
+    NeoBundleSource vim-javascript
+
+    NeoBundleSource jquery.vim
+    NeoBundleSource grunt.vim
+    " NeoBundleSource jshint.vim
+    autocmd! SourceJavaScript
+endfunction
+augroup SourceJavaScript
+    autocmd!
+    autocmd FileType javascript call SourceJavaScript()
+    autocmd BufNew,BufReadPost *.tmpl call SourceJavaScript()
+augroup END
+
+" http://wozozo.hatenablog.com/entry/2012/02/08/121504
+map <Leader>FJ !python -m json.tool<CR>
+
+" ** }}}
+
+" ** Perl ** {{{
+
+" use new perl syntax and indent!
+NeoBundleLazy 'vim-perl/vim-perl'
+" Enable perl specific rich fold
+let perl_fold=1
+let perl_fold_blocks=1
+" let perl_nofold_packages = 1
+" let perl_include_pod=1
+
+" NeoBundleLazy 'c9s/perlomni.vim'
+NeoBundleLazy 'mattn/perlvalidate-vim'
+
+NeoBundleLazy 'yko/mojo.vim'
+let mojo_highlight_data = 1
+
+function! SourcePerl()
+    NeoBundleSource vim-perl
+    " NeoBundleSource perlomni.vim
+    NeoBundleSource perlvalidate-vim
+    NeoBundleSource mojo.vim
+    autocmd! SourcePerl
+endfunction
+augroup SourcePerl
+    autocmd!
+    autocmd FileType perl call SourcePerl()
+augroup END
+
+augroup PerlKeys
+    autocmd!
+    autocmd FileType perl inoremap <buffer> <C-l> $
+    autocmd FileType perl snoremap <buffer> <C-l> $
+augroup END
+
+" Open perl file by package name under the cursor
+NeoBundle 'nakatakeshi/jump2pm.vim'
+noremap <Leader>pv :call Jump2pm('vne')<CR>
+noremap <Leader>pf :call Jump2pm('e')<CR>
+noremap <Leader>ps :call Jump2pm('sp')<CR>
+noremap <Leader>pt :call Jump2pm('tabe')<CR>
+vnoremap <Leader>pv :call Jump2pmV('vne')<CR>
+vnoremap <Leader>pf :call Jump2pmV('e')<CR>
+vnoremap <Leader>ps :call Jump2pmV('sp')<CR>
+vnoremap <Leader>pt :call Jump2pmV('tabe')<CR>
+
+" vim-ref for perldoc
+cnoreabbrev Pod Ref perldoc
+command! Upod :Unite ref/perldoc
+
+" Refer: Also refer textobj section
+
+" ** }}}
+
+" ** PHP ** {{{
+" I'm not using symfony recently
+" Bundle 'soh335/vim-symfony'
+" ** }}}
+
+" ** Python ** {{{
+NeoBundleLazy 'tmhedberg/SimpylFold'
+NeoBundleLazy 'davidhalter/jedi-vim'
+function! SourcePython()
+    NeoBundleSource SimpylFold
+    " NeoBundleSource jedi-vim
+    autocmd! SourcePython
+endfunction
+augroup SourcePython
+    autocmd!
+    autocmd FileType python call SourcePython()
+augroup END
+" ** }}}
+
+" ** VimScript ** {{{
+
+autocmd FileType vim,help set keywordprg=":help"
+
+" ** }}}
+

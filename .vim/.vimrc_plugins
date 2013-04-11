@@ -1,0 +1,369 @@
+" ** Recommended: YOU SHOULD USE THESE AND BE IMproved! *** {{{
+
+NeoBundle 'maxbrunsfeld/vim-yankstack'
+nmap <C-p> <Plug>yankstack_substitute_older_paste
+nmap <C-n> <Plug>yankstack_substitute_newer_paste
+
+" deprecates below
+
+" C-[np] after paste, textobj [ai]'"()[]{} , and more, more!!
+" NeoBundle 'YankRing.vim'
+" let g:yankring_n_keys = 'Y D' " refuse x and X
+" let g:yankring_o_keys = 'b B w W e E d y $ G ; iw iW aw aW' " refuse ,
+" let g:yankring_manual_clipboard_check = 0
+" let g:yankring_max_history = 30
+" let g:yankring_max_display = 70
+" " Yankの履歴参照
+" nmap ,y ;YRShow<CR>
+
+
+" autocompletes parenthesis, braces and more
+NeoBundle 'kana/vim-smartinput'
+call smartinput#define_rule({ 'at': '\[\_s*\%#\_s*\]', 'char': '<Enter>', 'input': '<Enter><C-o>O' })
+call smartinput#define_rule({ 'at': '{\_s*\%#\_s*}'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
+call smartinput#define_rule({ 'at': '(\_s*\%#\_s*)'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
+
+" smartinput deprecates belows
+" NeoBundle 'Raimondi/delimitMate'
+" imap <Esc>g <Plug>delimitMateS-Tab
+" " instead of above, use below one
+" NeoBundle 'jiangmiao/auto-pairs'
+" let g:AutoPairsShortcutToggle = '<Plug>_disabled_AutoPairsShortcutToggle'
+" let g:AutoPairsShortcutFastWrap = '<Plug>_disabled_AutoPairsShortcutFastWrap'
+" let g:AutoPairsShortcutJump = '<Esc>g'
+" let g:AutoPairsShortcutBackInsert = '<Esc>p'
+
+" surrounding with braces or quotes with s and S key
+NeoBundle 'tpope/vim-surround'
+
+" open reference manual with K key
+NeoBundle 'thinca/vim-ref'
+NeoBundle 'soh335/vim-ref-jquery'
+let g:ref_perldoc_auto_append_f = 1
+
+" git support
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'mattn/gist-vim'
+
+" read/write by sudo with `vim sudo:file.txt`
+NeoBundle 'sudo.vim'
+
+" shows syntax error on every save
+NeoBundle 'scrooloose/syntastic'
+let g:syntastic_mode_map = { 'mode': 'active',
+            \ 'active_filetypes' : [],
+            \ 'passive_filetypes': [] }
+let g:syntastic_error_symbol='E>' " ✗
+let g:syntastic_warning_symbol='W>' " ⚠
+let g:syntastic_echo_current_error=0 " too heavy, use below one
+" show quickfix text of current line on statusline
+NeoBundle 'dannyob/quickfixstatus'
+
+" rich-formatted undo history
+NeoBundle 'sjl/gundo.vim'
+let g:gundo_right = 1
+let g:gundo_close_on_revert = 1
+
+" " SnipMate, TextMate like snippet use with <Tab>
+" NeoBundle 'garbas/vim-snipmate', { 'depends' : [
+" \   'MarcWeber/vim-addon-mw-utils',
+" \   'tomtom/tlib_vim',
+" \]}
+" NeoBundle 'honza/snipmate-snippets'
+
+" Run current file by <Leader>r and get result in another buffer
+NeoBundle 'thinca/vim-quickrun', { 'depends' : [
+\   'tyru/open-browser.vim',
+\] }
+
+" Highlight indent by its levels, must have for pythonist
+NeoBundle 'nathanaelkane/vim-indent-guides'
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_guide_size = 1
+
+" Search word with * and # also on Visual Mode
+NeoBundle 'thinca/vim-visualstar'
+
+" Move among buffer, quickfix, loclist, ...so many... and encode/decode.
+" ]e to exchange line, ]n to go to next SCM conflict marker.
+NeoBundle 'tpope/vim-unimpaired'
+
+" Add repeat support to some plugins, like surround.vim
+NeoBundle 'tpope/vim-repeat'
+
+" Speedup j and k key
+NeoBundle 'rhysd/accelerated-jk'
+nmap j <Plug>(accelerated_jk_gj)
+nmap k <Plug>(accelerated_jk_gk)
+let g:accelerated_jk_anable_deceleration = 1
+" let g:accelerated_jk_acceleration_table = [10,7,5,4,3,2,2,2]
+let g:accelerated_jk_acceleration_table = [10,20,15,15]
+
+" Instant and Cool modeline
+NeoBundle 'Lokaltog/vim-powerline'
+if has('gui_macvim') && has('gui_running')
+    let g:Powerline_symbols = 'fancy'
+else
+    let g:Powerline_symbols = 'unicode'
+endif
+
+" Fast file selector
+NeoBundle 'kien/ctrlp.vim'
+let g:ctrlp_map = '<Leader><C-p>'
+let g:ctrlp_max_files = 0
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files --exclude-standard'] " speedup
+nmap <Leader><C-q> :CtrlPQuickfix<CR>
+nmap <Leader><C-m> :CtrlPMRU<CR>
+nmap <Leader><C-c> :CtrlPChangeAll<CR>
+nmap <Leader><C-l> :CtrlPLine<CR>
+nmap <Leader><C-t> :CtrlPTag<CR>
+
+" ** }}}
+
+" ** neocomplcache ** {{{
+
+NeoBundle 'Shougo/neocomplcache'
+NeoBundleLazy 'Shougo/neosnippet'
+" English spell completion with 'look' command
+NeoBundleLazy 'ujihisa/neco-look'
+let g:neocomplcache_enable_at_startup = 0
+let g:neocomplcache_enable_prefetch = 1
+let g:neocomplcache_enable_camel_case_completion = 0
+let g:neocomplcache_enable_underbar_completion = 0
+let g:neocomplcache_enable_wildcard = 0
+let g:neocomplcache_enable_fuzzy_completion = 1
+let g:neocomplcache_fuzzy_completion_start_length = 3
+let g:neocomplcache_enable_auto_delimiter = 1
+let g:neocomplcache_max_list = 100
+let g:neocomplcache_source_disable = {
+    \ 'tags_complete' : 1,
+    \}
+let g:neocomplcache_dictionary_filetype_lists = {
+    \ 'default'    : '',
+    \ 'perl'       : $HOME . '/.vim/dict/perl.dict'
+    \ }
+
+" too heavy when launching vim, make initializing delayed
+augroup InitNeCo
+    autocmd!
+    autocmd CursorMovedI,CursorHold * call DoInitNeco()
+    " Workaround for bug neocon would not be disabled in unite
+    autocmd FileType unite call DoInitNeco()
+augroup END
+function! DoInitNeco()
+    echo "Initializing NeCo..."
+    augroup InitNeCo
+        autocmd!
+    augroup END
+    NeoBundleSource neosnippet
+    NeoBundleSource neco-look
+    :NeoComplCacheEnable
+    echo "Initializing NeCo... Completed."
+endfunction
+
+" ** }}}
+
+" ** unite ** {{{
+
+NeoBundle 'Shougo/unite.vim'
+let g:unite_enable_start_insert=1
+let g:unite_split_rule="botright"
+let g:unite_winheight="10"
+
+NeoBundle 'tacroe/unite-mark'
+NeoBundle 'h1mesuke/unite-outline'
+NeoBundle 'kmnk/vim-unite-giti.git'
+NeoBundle 'Shougo/unite-session'
+let g:unite_source_session_options = &sessionoptions
+
+" ** }}}
+
+" ** textobj ** {{{
+
+" select range of text with only two or three keys
+" For example: [ai]w
+
+" framework for all belows
+NeoBundle 'kana/vim-textobj-user'
+
+" too many, refer help
+" Bundle 'kana/vim-textobj-diff'
+" [ai]e
+" Bundle 'kana/vim-textobj-entire'
+" [ai]z
+NeoBundle 'kana/vim-textobj-fold'
+" [ai]f
+NeoBundle 'kana/vim-textobj-function'
+" [ai][iI]
+NeoBundle 'kana/vim-textobj-indent'
+" [ai][/?]
+" Bundle 'kana/vim-textobj-lastpat'
+" [ai]y
+NeoBundle 'kana/vim-textobj-syntax'
+" [ai]l
+NeoBundle 'kana/vim-textobj-line'
+
+" [ai]c : textobj-comment
+" [ai]f : Add perl and javascript support to textobj-function
+" [ai]b : textobj-between, refer below
+" http://d.hatena.ne.jp/thinca/20100614/1276448745
+NeoBundle 'thinca/vim-textobj-plugins'
+" damn, [ai]f mappings are overwrapping...
+omap if <Plug>(textobj-function-i)
+omap af <Plug>(textobj-function-a)
+vmap if <Plug>(textobj-function-i)
+vmap af <Plug>(textobj-function-a)
+omap iF <Plug>(textobj-between-i)
+omap aF <Plug>(textobj-between-a)
+vmap iF <Plug>(textobj-between-i)
+vmap aF <Plug>(textobj-between-a)
+
+" Perl very like /slash braces/
+omap i/ <Plug>(textobj-between-i)/
+omap a/ <Plug>(textobj-between-a)/
+vmap i/ <Plug>(textobj-between-i)/
+vmap a/ <Plug>(textobj-between-a)/
+
+" [ai]u / 'this_is_a_word' will be 4 'words in word'
+NeoBundle 'vimtaku/textobj-wiw'
+
+" * Almost For Perl * {{{3
+" [ai]g / a: includes index/key/arrow, i: symbol only
+NeoBundle 'vimtaku/vim-textobj-sigil'
+" [ai][kv]
+NeoBundle 'vimtaku/vim-textobj-keyvalue'
+" [ai]:
+NeoBundle 'vimtaku/vim-textobj-doublecolon'
+" * }}}
+
+" ** }}}
+
+" ** Misc ** {{{
+
+" List or Highlight all todo, fixme, xxx comments
+NeoBundle 'TaskList.vim'
+
+" Indent comments and expressions
+NeoBundle 'godlygeek/tabular'
+vnoremap <Leader>t=  :Tab/=<CR>
+vnoremap <Leader>th  :Tab/=><CR>
+vnoremap <Leader>t#  :Tab/#<CR>
+vnoremap <Leader>t\| :Tab/\|<CR>
+" JavaScript-style
+vnoremap <Leader>t:  :Tab/:<CR>
+" YAML-style
+vnoremap <Leader>t;  :Tab/:\zs<CR>
+
+" extended % key matching
+NeoBundle "tmhedberg/matchit"
+
+" moving more far easily
+NeoBundle 'Lokaltog/vim-easymotion'
+
+" " Smooth <C-{f,b,u,d}> scrolls
+" " not work with macvim
+" NeoBundleLazy 'Smooth-Scroll'
+" if !(has('gui_macvim') && has('gui_running'))
+"     NeoBundleSource Smooth-Scroll
+" endif
+" conflicts with rhysd/accelerated-jk
+
+" Alternative for vimgrep, :Ack and :LAck
+NeoBundle 'mileszs/ack.vim'
+
+" :Rename current file on disk
+NeoBundle 'danro/rename.vim'
+
+" Bulk renamer
+NeoBundle 'renamer.vim'
+
+" Buffer list in bottom of window
+" NeoBundle 'buftabs'
+" (You can use status line with option
+"  or you can expand command line with 'set cmdheight')
+
+" Micro <C-i> and <C-o>
+" NeoBundle 'thinca/vim-poslist'
+" map <Esc>, <Plug>(poslist-next-pos)
+" map <Esc>. <Plug>(poslist-prev-pos)
+" imap <Esc>, <C-o><Plug>(poslist-next-pos)
+" imap <Esc>. <C-o><Plug>(poslist-prev-pos)
+
+" ** }}}
+
+" ** nerdcommenter ** {{{
+" NeoBundle 'scrooloose/nerdcommenter'
+" let NERDSpaceDelims = 1
+" xmap <Leader>cj <Plug>NERDCommenterToggle
+" nmap <Leader>cj <Plug>NERDCommenterToggle
+NeoBundle 'kien/rainbow_parentheses.vim'
+augroup RainbowParentheses
+    autocmd!
+    autocmd VimEnter * :RainbowParenthesesToggle
+    autocmd Syntax * call DelayedExecute('RainbowParenthesesLoadRound')
+    autocmd Syntax * call DelayedExecute('call rainbow_parentheses#activate()')
+augroup END
+" ** }}}
+
+" ** TODO: To be used ** {{{
+" Bundle 'scrooloose/nerdtree'
+" required by fuzzyfinder
+" Bundle 'L9'
+" Bundle 'FuzzyFinder'
+" Bundle 'kana/vim-smartchr'
+
+" Bundle 'Shougo/vimshell'
+" ** }}}
+
+" ** IME ** {{{
+
+NeoBundleLazy 'vimtaku/vim-mlh', { 'depends' : [
+\   'mattn/webapi-vim',
+\]}
+if mlh_enabled
+    NeoBundleSource vim-mlh
+    autocmd VimEnter * :ToggleVimMlhKeymap
+endif
+
+if eskk_enabled
+NeoBundle 'tyru/eskk.vim'
+    let g:eskk#no_default_mappings = 1
+    let g:eskk#large_dictionary = { 'path': "~/.vim/dict/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp', }
+    let g:eskk#enable_completion = 1
+endif
+
+if skk_enabled
+NeoBundle 'anyakichi/skk.vim'
+    " original: Bundle 'tyru/skk.vim'
+    let g:skk_jisyo = '~/.skk-jisyo'
+    let g:skk_large_jisyo = '~/.vim/dict/SKK-JISYO.L'
+    let g:skk_auto_save_jisyo = 1
+    let g:skk_keep_state = 1
+    let g:skk_egg_like_newline = 1
+    let g:skk_show_annotation = 1
+    let g:skk_use_face = 1
+    let g:skk_use_numeric_conversion = 1
+    let g:skk_sticky_key = ";"
+    let g:skk_kutouten_type = "en"
+endif
+
+" ** }}}
+
+" ** Color Scheme ** {{{
+
+" Too hard to setup not-degraded-mode...
+" (You should setup your term emulator first)
+" So please try it first with degrade=1, then setup if you like it.
+
+NeoBundle 'altercation/vim-colors-solarized'
+" let g:solarized_termcolors=256
+" let g:solarized_degrade=1
+let g:solarized_termcolors=16
+let g:solarized_termtrans=1
+let g:solarized_bold=1
+let g:solarized_underline=1
+let g:solarized_italic=1
+colorscheme solarized
+set background=dark
+
+" ** }}}

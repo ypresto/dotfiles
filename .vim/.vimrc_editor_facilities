@@ -1,0 +1,168 @@
+" ** Language / Encoding ** {{{
+
+try
+    :language en
+catch
+    :language C
+endtry
+
+set encoding=utf-8
+" FIXME maybe below line has some bug
+set fileencodings=ucs-bom,utf-8,iso-2022-jp-3,iso-2022-jp,eucjp-ms,euc-jisx0213,euc-jp,sjis,cp932
+
+" ** }}}
+
+" ** Indent / Tab ** {{{
+
+set tabstop=8     " <Tab>s are shown with this num of <Space>s
+set softtabstop=4 " Use this num of spaces as <Tab> on insert and delete
+set shiftwidth=4  " Use this num of spaces for auto indent
+set expandtab     " Always use <Tab> for indent and insert
+set smarttab      " Use shiftwidth on beginning of line when <Tab> key
+set autoindent    " Use same indent level on next line
+set smartindent   " Auto indent for C-like code with '{...}' blocks
+set shiftround    " Round indent when < or > is used
+
+" * Filetype specific indent * {{{
+
+" Force using <Tab>, not <Space>s
+autocmd FileType make setlocal softtabstop=8 shiftwidth=8 noexpandtab
+" 2-space indent
+autocmd FileType
+    \ html,scss,javascript,ruby,tex,xml
+    \ setlocal shiftwidth=2 softtabstop=2 nosmartindent
+autocmd FileType python     setlocal nosmartindent
+" Use smarter auto indent for C-languages
+autocmd FileType c,cpp,java setlocal cindent
+
+" * }}}
+
+" ** }}}
+
+" ** Undo / Backup / History / Session ** {{{
+
+set undofile            " Save undo history to file
+set undodir=~/.vim/undo " Specify where to save
+set nobackup            " Don't create backup files (foobar~)
+
+" reffer: http://vimwiki.net/?'viminfo'
+set history=100
+set viminfo='100,<100,s10
+
+" Jump to the last known cursos position when opening file
+" Refer: :help last-position-jump
+" 'zv' and 'zz' was added by ypresto
+autocmd BufReadPost *
+  \ if line("'\"") > 1 && line("'\"") <= line("$") |
+  \   exe "normal! g`\"" |
+  \ endif |
+  \ execute "normal! zv" | " open fold under cursor
+  \ execute "normal! zz"   " Move current line on center of window
+
+set sessionoptions-=options
+
+" ** }}}
+
+" ** Editing / Search ** {{{
+
+" Editing
+set backspace=indent,eol,start " go to previous line with backspace
+set textwidth=0                " don't insert break automatically
+
+set foldmethod=marker " Use '{{{' and '}}}' for marker
+set foldlevelstart=0  " Start with all folds closed
+set noeb vb t_vb=     " no beep
+set scrolloff=1       " show N more next line when scrolling
+
+" Search
+set incsearch         " Use 'incremental search'
+set hlsearch          " Highlight search result
+set ignorecase        " Ignore case when searching
+set smartcase         " Do not ignorecase if keyword contains uppercase
+
+" ** }}}
+
+" ** Status Line / Command Line** {{{
+
+" status line and line number
+set number            " Show number of line on left
+set showcmd           " Show what keys input for command, but too slow on terminal
+set laststatus=2      " Always show statusline
+" using powerline, not setting statusline
+" if skk_enabled
+"     set statusline=%<%f\ %h%m%r\ %{SkkGetModeStr()}%=%-14.(%l,%c%V%)\ %P
+" else
+"     set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+" endif
+
+" command line
+set cmdheight=2                " Set height of command line
+set wildmode=list:full " command line completion order
+set wildmenu                 " Enhanced completion: disabled
+" Don't use matched files for completion
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
+
+" ** }}}
+
+" ** Highlighting ** {{{
+
+set cursorline              " Highlight current line
+set colorcolumn=73,74,81,82 " Highlight border of 'long line'
+set list                    " highlight garbage characters (see below)
+set listchars=tab:»-,trail:\ ,extends:»,precedes:«,nbsp:%
+
+function! s:HighlightSetup()
+    " Change highlight color of current line
+    highlight clear CursorLine
+    highlight CursorLine ctermbg=black guibg=black
+    highlight SignColumn ctermfg=white ctermbg=black cterm=none
+
+    highlight SpecialKey   ctermbg=darkyellow guibg=darkyellow
+    highlight ZenkakuSpace ctermbg=darkgray   guibg=darkgray
+endfunction
+
+augroup HighlightSetup
+    autocmd!
+
+    " Highlight current line only on current window
+    autocmd WinLeave * set nocursorline
+    autocmd WinEnter,BufRead * set cursorline
+
+    " activates custom highlight settings
+    autocmd ColorScheme * call s:HighlightSetup()
+    autocmd VimEnter,WinEnter * call matchadd('ZenkakuSpace', '　')
+augroup END
+
+" ** }}}
+
+" ** Window / Buffer / Tab ** {{{
+
+" Switch buffer without saving changes
+" set hidden
+
+" Refer: http://d.hatena.ne.jp/kitak/20100830/1283180007
+set splitbelow
+set splitright
+
+" ** }}}
+
+" ** Mouse ** {{{
+
+if has('mouse')
+
+    " Enable mouse for split, buffer, cursor, etc.
+    " use {shift|command}+drag to use original, terminal side mouse
+    set mouse=a
+
+    " Refer: http://www.machu.jp/diary/20070310.html#p01
+    if &term == 'screen' || &term == 'screen-256color'
+        set ttymouse=xterm2
+    endif
+
+endif
+
+" ** }}}
+
+" ** Misc ** {{{
+set shortmess+=I      " Surpress intro message when starting vim
+" ** }}}

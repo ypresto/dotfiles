@@ -1,0 +1,192 @@
+if has('gui_mac')
+    set notimeout  " to avoid Esc+Key waiting bug
+    set nottimeout " blah, no effect on gui...
+    " below lines are problematic on MacVim with Alt+Key physically mapped to Esc+Key
+else
+    " Wait for slow input of key combination
+    set timeout
+    set timeoutlen=1000
+    " Activate alt key power on terminal,
+    " wait [ttimeoutlen]ms for following keys after <Esc> for Alt-* keys
+    set ttimeout
+    set ttimeoutlen=150
+endif
+
+noremap ZJ :w<CR> " Fast saving
+nnoremap <silent> <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>
+
+" swap g[jk] (move displayed line) and [jk] (move original line)
+noremap <silent> j gj
+noremap <silent> gj j
+noremap <silent> k gk
+noremap <silent> gk k
+inoremap <silent> <C-[> <Esc>
+
+" ** Partial Emacs Keybind in Insert Mode ** {{{
+" Refer: :help tcsh-style
+" Note: 'map!' maps both insert and command-line mode
+noremap! <C-f> <Right>
+noremap! <C-b> <Left>
+" <C-o> and <Home> is different on indented line
+inoremap <C-a> <C-o>^
+cnoremap <C-a> <Home>
+snoremap <C-a> <Home>
+noremap! <C-e> <End>
+snoremap <C-e> <End>
+noremap! <C-d> <Del>
+snoremap <C-d> <Del>
+noremap! <Esc>f <S-Right>
+snoremap <Esc>f <S-Right>
+noremap! <Esc>b <S-Left>
+snoremap <Esc>b <S-Left>
+inoremap <Esc>d <C-o>de
+" Degraded map for commandline / select mode
+cnoremap <Esc>d <Del>
+snoremap <Esc>d <Del>
+" Remap <C-d> de-indentation to Alt-t
+inoremap <Esc>t <C-d>
+" TODO using at end of line causes backspace
+inoremap <C-k> <C-o>D
+" delimitMate requires below binding
+imap <C-h> <BS>
+" ** }}}
+
+" Move lines up and down (bubbling) left and right (indent)
+nmap <Esc>K [e
+nmap <Esc>J ]e,
+vmap <Esc>K [egv
+vmap <Esc>J ]egv
+nnoremap <Esc>L >>
+nnoremap <Esc>H <<
+vnoremap <Esc>L >gv
+vnoremap <Esc>H <gv
+" visualmodeでインテントを＞＜の連打で変更できるようにする
+vnoremap < <gv
+vnoremap > >gv
+
+
+" Maximizes current split, <C-w>= to restore
+nnoremap <C-w>a <C-w>\|<C-w>_
+
+" QuickFix Toggle
+nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
+nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
+
+" ZenCoding
+let g:user_zen_leader_key = '<Esc>y'
+if has('gui_running')
+    " Workaround for gui meta
+    let g:user_zen_expandabbr_key = '<M-y><M-y>'
+else
+    let g:user_zen_expandabbr_key = '<Esc>y<Esc>y'
+endif
+
+" Gundo
+nnoremap <Leader>G :GundoToggle<CR>
+
+" ** neocomplcache ** {{{
+
+inoremap <expr> <C-x><C-f>  neocomplcache#manual_filename_complete()
+" C-nでneocomplcache補完
+inoremap <expr> <C-n>  pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
+" C-pでkeyword補完
+inoremap <expr> <C-p> pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
+" 補完候補が表示されている場合は確定。そうでない場合は改行
+" inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
+" 補完をキャンセル＋End
+" inoremap <expr> <C-e>  pumvisible() ? neocomplcache#close_popup() : "\<End>"
+
+" ** }}}
+
+" ** unite ** {{{
+
+" デフォルト
+nnoremap <Leader>u: :Unite 
+nnoremap <Leader>U: :Unite -create -no-quit -toggle  -vertical -winwidth=30 
+" バッファ一覧
+nmap <Leader>ub <Leader>u:buffer<CR>
+nmap <Leader>Ub <Leader>U:buffer<CR>
+" ファイル一覧
+nmap <Leader>uf :UniteWithBufferDir -buffer-name=files file file/new<CR>
+nmap <Leader>Uf :UniteWithCurrentDir -create -no-quit -toggle  -vertical -winwidth=30 -buffer-name=files file file/new<CR>
+" レジスタ一覧
+nmap <Leader>ur :Unite -buffer-name=register register<CR>
+" 最近使用したファイル一覧
+nmap <Leader>us <Leader>u:file_mru<CR>
+nmap <Leader>Us <Leader>U:file_mru -winwidth=80<CR>
+" 全部乗せ
+nmap <Leader>ua :Unite buffer file_mru bookmark<CR>
+" コマンド
+nmap <Leader>uc <Leader>u:command<CR>
+nmap <Leader>Uc <Leader>U:command -winwidth=80<CR>
+" unite-mark
+nmap <Leader>um <Leader>u: mark<CR>
+nmap <Leader>Um <Leader>U: mark<CR>
+" unite-outline
+nmap <Leader>uo <Leader>u: outline<CR>
+nmap <Leader>Uo <Leader>U: outline<CR>
+nmap <Leader>uz <Leader>u: outline:folding<CR>
+nmap <Leader>Uz <Leader>U: outline:folding<CR>
+" history/yankの有効化
+" let g:unite_source_history_yank_enable = 1
+nmap <Leader>uy <Leader>u: history/yank<CR>
+nmap <Leader>Uy <Leader>U: history/yank<CR>
+
+nmap <Leader>up <Leader>u: git_cached git_untracked<CR>
+nmap <Leader>Up <Leader>U: git_cached git_untracked<CR>
+" nmap <Leader>up <Leader>u: -buffer-name=files file_rec/async<CR>
+" nmap <Leader>Up <Leader>u: -buffer-name=files file_rec/async<CR>
+
+nmap <Leader>ut <Leader>u: tab<CR>
+nmap <Leader>Ut <Leader>U: tab<CR>
+
+nmap <Leader>ug <Leader>u: git_modified git_untracked<CR>
+nmap <Leader>Ug <Leader>U: git_modified git_untracked<CR>
+nmap <Leader>uG <Leader>u: giti<CR>
+nmap <Leader>UG <Leader>U: giti<CR>
+
+nmap <Leader>uS <Leader>u: session<CR>
+nmap <Leader>US <Leader>U: session<CR>
+
+nmap <Leader>uu <Leader>u:source<CR>
+nmap <Leader>Uu <Leader>U:soruce<CR>
+
+augroup UniteWindowKeyMaps
+    autocmd!
+    autocmd FileType unite nnoremap <silent><buffer><expr> <C-j> unite#do_action('split')
+    autocmd FileType unite inoremap <silent><buffer><expr> <C-j> unite#do_action('split')
+    autocmd FileType unite nnoremap <silent><buffer><expr> <C-l> unite#do_action('vsplit')
+    autocmd FileType unite inoremap <silent><buffer><expr> <C-l> unite#do_action('vsplit')
+    autocmd FileType unite nmap <silent> <buffer> <ESC><ESC> q
+    autocmd FileType unite imap <silent> <buffer> <ESC><ESC> <ESC>q
+    autocmd FileType unite call UnmapAltKeys()
+augroup END
+
+function! UnmapAltKeys()
+    " almost for unite to avoid Alt keys does not fire normal <Esc>
+    " noremap <Esc> to avoid <Esc>* mappings fired
+    inoremap <buffer> <silent> <Plug>(esc) <Esc>
+    imap <buffer> <Esc>t <Plug>(esc)t
+    imap <buffer> <Esc>t <Plug>(esc)t
+endfunction
+
+" FIXME
+command! -nargs=? SQ call UniteSessionSaveAndQAll(<args>)
+function! UniteSessionSaveAndQAll(session)
+    execute "UniteSessionSave " + a:session
+endfunction
+command! -nargs=? SL UniteSessionLoad <args>
+
+nmap <Leader>udp <Leader>u: ref/perldoc<CR>
+nmap <Leader>udr <Leader>u: ref/refe<CR>
+
+" ** }}}
+
+" ** IME ** {{{
+if eskk_enabled
+    inoremap <expr> <C-l> eskk#toggle()
+endif
+if skk_enabled
+    let g:skk_control_j_key = '<C-l>'
+endif
+" ** }}}
