@@ -25,11 +25,12 @@
 	ds = diff --stat
 	cw = diff --color-words
 	cs = diff --stat --cached
+	l = log --stat --decorate
 	lo = log --stat --decorate
-	dt = difftool
 	pr = pull --rebase
-	ms = merge --squash
 	re = rebase
+	ru = remote update
+	mt = mergetool
 [diff]
 	tool = vimdiff
 [difftool]
