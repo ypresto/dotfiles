@@ -12,7 +12,8 @@
 	ui = auto
 [alias]
 	co = checkout
-	ci = commit
+	cm = commit
+	cma = commit --amend
 	st = status
 	br = branch
 	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
