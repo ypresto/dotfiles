@@ -277,6 +277,20 @@ inoremap <C-k> <C-o>D
 imap <C-h> <BS>
 " ** }}}
 
+" Move lines up and down (bubbling) left and right (indent)
+nmap <Esc>K [e
+nmap <Esc>J ]e,
+vmap <Esc>K [egv
+vmap <Esc>J ]egv
+nnoremap <Esc>L >>
+nnoremap <Esc>H <<
+vnoremap <Esc>L >gv
+vnoremap <Esc>H <gv
+" visualmodeでインテントを＞＜の連打で変更できるようにする
+vnoremap < <gv
+vnoremap > >gv
+
+
 " Maximizes current split, <C-w>= to restore
 nnoremap <C-w>a <C-w>\|<C-w>_
 
@@ -478,7 +492,7 @@ let g:gundo_close_on_revert = 1
 " \   'MarcWeber/vim-addon-mw-utils',
 " \   'tomtom/tlib_vim',
 " \]}
-NeoBundle 'honza/snipmate-snippets'
+" NeoBundle 'honza/snipmate-snippets'
 
 " Run current file by <Leader>r and get result in another buffer
 NeoBundle 'thinca/vim-quickrun', { 'depends' : [
@@ -499,6 +513,33 @@ NeoBundle 'tpope/vim-unimpaired'
 
 " Add repeat support to some plugins, like surround.vim
 NeoBundle 'tpope/vim-repeat'
+
+" Speedup j and k key
+NeoBundle 'rhysd/accelerated-jk'
+nmap j <Plug>(accelerated_jk_gj)
+nmap k <Plug>(accelerated_jk_gk)
+let g:accelerated_jk_anable_deceleration = 1
+" let g:accelerated_jk_acceleration_table = [10,7,5,4,3,2,2,2]
+let g:accelerated_jk_acceleration_table = [10,20,15,15]
+
+" Instant and Cool modeline
+NeoBundle 'Lokaltog/vim-powerline'
+if has('gui_macvim') && has('gui_running')
+    let g:Powerline_symbols = 'fancy'
+else
+    let g:Powerline_symbols = 'unicode'
+endif
+
+" Fast file selector
+NeoBundle 'kien/ctrlp.vim'
+let g:ctrlp_map = '<Leader><C-p>'
+let g:ctrlp_max_files = 0
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files --exclude-standard'] " speedup
+nmap <Leader><C-q> :CtrlPQuickfix<CR>
+nmap <Leader><C-m> :CtrlPMRU<CR>
+nmap <Leader><C-c> :CtrlPChangeAll<CR>
+nmap <Leader><C-l> :CtrlPLine<CR>
+nmap <Leader><C-t> :CtrlPTag<CR>
 
 " ** }}}
 
@@ -1066,9 +1107,9 @@ endfunction
 
 " Bundle 'mbriggs/mark.vim'
 " TODO
-let g:neocomplcache_ctags_arguments_list = {
-  \ 'perl' : '-R -h ".pm"'
-  \ }
+" let g:neocomplcache_ctags_arguments_list = {
+"   \ 'perl' : '-R -h ".pm"'
+"   \ }
 " Bundle 'astashov/vim-ruby-debugger'
 
 NeoBundle 'taku-o/vim-copypath'
@@ -1093,14 +1134,6 @@ function! g:UpdateTags()
       execute "setlocal tags+=" . neocomplcache#cache#encode_name('include_tags', filename)
     endfor
 endfunction
-endif
-
-if 0
-NeoBundle 'kana/vim-smartword.git'
-map w <Plug>(smartword-w)
-map b <Plug>(smartword-b)
-map e <Plug>(smartword-e)
-map ge <Plug>(smartword-ge)
 endif
 
 if has('mac') && !has('gui_running')
@@ -1131,27 +1164,9 @@ endfunction
 
 " NeoBundle 'mikewest/vimroom'
 
-NeoBundle 'Lokaltog/vim-powerline'
-if has('gui_macvim') && has('gui_running')
-    let g:Powerline_symbols = 'fancy'
-else
-    let g:Powerline_symbols = 'unicode'
-endif
-
 " set scrolljump=3
 
 NeoBundle 'rson/vim-conque'
-NeoBundle 'Shougo/vimshell'
-
-" until unite being fast
-NeoBundle 'kien/ctrlp.vim'
-let g:ctrlp_map = '<Leader><C-p>'
-let g:ctrlp_max_files = 0
-nmap <Leader><C-q> :CtrlPQuickfix<CR>
-nmap <Leader><C-m> :CtrlPMRU<CR>
-nmap <Leader><C-c> :CtrlPChangeAll<CR>
-nmap <Leader><C-l> :CtrlPLine<CR>
-nmap <Leader><C-t> :CtrlPTag<CR>
 
 " nmap <Esc>; A;<Esc><Plug>(poslist-prev-pos)
 " imap <Esc>; <C-o><Esc>;
@@ -1187,10 +1202,6 @@ command! Uall :bufdo :update
 " NeoBundle 'ZoomWin'
 
 let g:ConqueTerm_ReadUnfocused = 1
-
-" NeoBundle 'majutsushi/tagbar'
-" nmap <Leader>tb :TagbarToggle<CR>
-" let g:tagbar_ctags_bin = '~/homebrew/bin/ctags'
 
 " NeoBundleLazy 'joonty/vdebug'
 NeoBundle 'ypresto/vdebug', { 'directory' : 'my_vdebug' }
@@ -1248,7 +1259,7 @@ augroup SourceRuby
     autocmd FileType ruby NeoBundleSource vim-ruby-refactoring
 augroup END
 
-NeoBundle 'mattn/qiita-vim'
+NeoBundleLazy 'mattn/qiita-vim'
 
 NeoBundleLazy 'dbext.vim'
 " do end matchit (%)
@@ -1260,16 +1271,12 @@ autocmd VimEnter * imap <silent> <CR> <C-r>=neocomplcache#smart_close_popup()<CR
 call smartinput#map_to_trigger('i', '<Plug>my_cr_function_smartinput', '<Enter>', '<CR>')
 NeoBundleLazy 'taichouchou2/vim-rsense'
 
-NeoBundle 'tpope/vim-commentary'
+" NeoBundle 'tpope/vim-commentary'
 NeoBundle 'taka84u9/unite-git'
 
-NeoBundle 'thinca/vim-prettyprint'
+NeoBundleLazy 'thinca/vim-prettyprint'
 
-" speedup ctrlp
-" https://twitter.com/ltw_/status/248097120140271616
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files --exclude-standard']
-
-NeoBundle 'benmills/vimux'
+NeoBundleLazy 'benmills/vimux'
 
 let g:ConqueTerm_TERM = 'xterm-256color'
 
@@ -1328,7 +1335,7 @@ endif
 " autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 " autocmd FileType perl setlocal omnifunc=PerlComplete
 
-NeoBundle 'Shougo/unite-ssh'
+NeoBundleLazy 'Shougo/unite-ssh'
 NeoBundle 't9md/vim-unite-ack'
 NeoBundle 'tsukkee/unite-help'
 NeoBundle 'MultipleSearch'
@@ -1341,7 +1348,6 @@ nmap R <Plug>(operator-replace)
 
 NeoBundle 'thinca/vim-unite-history'
 NeoBundle 't9md/vim-surround_custom_mapping'
-NeoBundle 'rhysd/clever-f.vim'
 
 " http://hail2u.net/blog/software/only-one-line-life-changing-vimrc-setting.html
 autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
@@ -1356,16 +1362,7 @@ noremap <Leader>f :vertical wincmd f<CR>
     " https://github.com/cpfaff/vim-my-setup/blob/master/vimrc
     set lazyredraw
     set spelllang=en
-    nnoremap U <C-r>
-    " Move lines up and down (bubbling) left and right (indent)
-    nmap <Esc>K [e
-    nmap <Esc>J ]e,
-    vmap <Esc>K [egv
-    vmap <Esc>J ]egv
-    nnoremap <Esc>L >>
-    nnoremap <Esc>H <<
-    vnoremap <Esc>L >gv
-    vnoremap <Esc>H <gv
+    " nnoremap U <C-r>
 
    " Small helper
     function! CmdLine(str)
@@ -1381,7 +1378,7 @@ noremap <Leader>f :vertical wincmd f<CR>
 
 " https://github.com/kazuph/dotfiles/blob/master/_vimrc
 
-set grepprg=ack\ -a
+set grepprg=ag\ -a
 
 NeoBundle 'bkad/CamelCaseMotion'
 
@@ -1391,33 +1388,12 @@ if !exists('g:neocomplcache_keyword_patterns')
 endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
-" =と押して = となるようにする他
-NeoBundle "kana/vim-smartchr"
-" inoremap <expr> = smartchr#one_of(' = ', ' == ', ' === ', '=', '==')
-inoremap <expr> > smartchr#one_of('>', ' => ', '>>', '>>>')
-" inoremap <expr> < smartchr#one_of(' < ', '<', '<<')
-inoremap <expr> - smartchr#one_of('-',  '->', '--', '---')
-inoremap <expr> , smartchr#one_of(',', ' => ')
-
 set autoread
 " set modelines=0
 " set display=uhex " shows unprintable chars as hex
 
 nnoremap 0 ^
 nnoremap 9 $
-
-" visualmodeでインテントを＞＜の連打で変更できるようにする
-vnoremap < <gv
-vnoremap > >gv
-
-" OSのクリップボードを使用する
-" set clipboard+=unnamed
-
-" nnoremap / /\V
-" nnoremap ? ?\V
-
-" can't use incremental search
-" NeoBundle 'othree/eregex.vim'
 
 " ** }}}
 
@@ -1427,13 +1403,6 @@ vnoremap > >gv
 
 " http://mattn.kaoriya.net/software/vim/20121105111112.htm
 NeoBundle 'mattn/multi-vim'
-
-NeoBundle 'rhysd/accelerated-jk'
-nmap j <Plug>(accelerated_jk_gj)
-nmap k <Plug>(accelerated_jk_gk)
-let g:accelerated_jk_anable_deceleration = 1
-" let g:accelerated_jk_acceleration_table = [10,7,5,4,3,2,2,2]
-let g:accelerated_jk_acceleration_table = [10,20,15,15]
 
 NeoBundle 'rhysd/vim-textobj-ruby' " [ai]r
 " g:textobj_ruby_more_mappings = 1 " ro rl rc rd rr
