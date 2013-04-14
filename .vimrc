@@ -647,8 +647,21 @@ omap a/ <Plug>(textobj-between-a)/
 vmap i/ <Plug>(textobj-between-i)/
 vmap a/ <Plug>(textobj-between-a)/
 
-" [ai]u / 'this_is_a_word' will be 4 'words in word'
-NeoBundle 'vimtaku/textobj-wiw'
+" " [ai]u / 'this_is_a_word' will be 4 'words in word'
+" NeoBundle 'vimtaku/textobj-wiw'
+
+" [ai]u / under_bar or CamelCase
+" Also provides motions: ,[wbe]
+" (default: [ai],[bew])
+NeoBundle 'bkad/CamelCaseMotion'
+omap <silent> iu <Plug>CamelCaseMotion_iw
+omap <silent> iu <Plug>CamelCaseMotion_iw
+xmap <silent> au <Plug>CamelCaseMotion_iw
+xmap <silent> au <Plug>CamelCaseMotion_iw
+omap <silent> <Plug>disabled_CamelCaseMotion_ib <Plug>CamelCaseMotion_ib
+xmap <silent> <Plug>disabled_CamelCaseMotion_ib <Plug>CamelCaseMotion_ib
+omap <silent> <Plug>disabled_CamelCaseMotion_ie <Plug>CamelCaseMotion_ie
+xmap <silent> <Plug>disabled_CamelCaseMotion_ie <Plug>CamelCaseMotion_ie
 
 " * Almost For Perl * {{{3
 " [ai]g / a: includes index/key/arrow, i: symbol only
@@ -1178,6 +1191,9 @@ imap <Esc>; <C-R>=Semicolonfun(';')<CR>
 vmap <Esc>, :normal A,<Esc><CR>
 nmap <Esc>, :call Semicolonfun(',')<CR>
 imap <Esc>, <C-R>=Semicolonfun(',')<CR>
+vmap <Esc>: :normal A:<Esc><CR>
+nmap <Esc>: :call Semicolonfun(':')<CR>
+imap <Esc>: <C-R>=Semicolonfun(':')<CR>
 function! Semicolonfun(char)
   call setline(line('.'), substitute(getline('.'), '\s*$', a:char, ''))
   return ''
@@ -1347,7 +1363,7 @@ NeoBundleLazy 'tsukkee/lingr-vim'
 nmap R <Plug>(operator-replace)
 
 NeoBundle 'thinca/vim-unite-history'
-NeoBundle 't9md/vim-surround_custom_mapping'
+" NeoBundle 't9md/vim-surround_custom_mapping'
 
 " http://hail2u.net/blog/software/only-one-line-life-changing-vimrc-setting.html
 autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
@@ -1355,6 +1371,17 @@ autocmd FileType diff setlocal includeexpr=substitute(v:fname,'^[ab]\\/','','')
 
 " http://stackoverflow.com/questions/7672783/how-can-i-do-something-like-gf-but-in-a-new-vertical-split
 noremap <Leader>f :vertical wincmd f<CR>
+
+" [ai], : argument than parameter
+NeoBundle 'sgur/vim-textobj-parameter'
+
+NeoBundle 'thinca/vim-ambicmd'
+
+" let g:indent_guides_auto_colors = 0
+" autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
+" autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
+"
+NeoBundle 'Valloric/MatchTagAlways'
 
 " HERE
 
@@ -1378,9 +1405,7 @@ noremap <Leader>f :vertical wincmd f<CR>
 
 " https://github.com/kazuph/dotfiles/blob/master/_vimrc
 
-set grepprg=ag\ -a
-
-NeoBundle 'bkad/CamelCaseMotion'
+set grepprg=ag\ -a\ 
 
 let g:neocomplcache_min_syntax_length = 3
 if !exists('g:neocomplcache_keyword_patterns')
@@ -1392,8 +1417,9 @@ set autoread
 " set modelines=0
 " set display=uhex " shows unprintable chars as hex
 
-nnoremap 0 ^
-nnoremap 9 $
+" below conflict with repeatation
+" nnoremap 0 ^
+" nnoremap 9 $
 
 " ** }}}
 
@@ -1477,7 +1503,6 @@ NeoBundle 't9md/vim-quickhl'
 set shiftround " round indent with < and >
 set infercase " Ignore case on insert completion.
 set fillchars="vert:\ ,fold:\ ,diff:\ "
-set grepprg="ack -a"
 set isfname-=%,$,@,= " filename characters for gf
 " set directory=~/.vim/swap
 
@@ -1644,6 +1669,10 @@ let g:unite_source_grep_max_candidates = 100
 " let g:unite_source_session_enable_auto_save = 1     " セッション保存
 
 nnoremap <silent> <Leader>u<space> :<C-u>UniteResume<CR>
+
+" http://d.hatena.ne.jp/thinca/20120201/1328099090
+NeoBundle 'thinca/vim-singleton'
+call singleton#enable()
 
 " ** }}}
 
