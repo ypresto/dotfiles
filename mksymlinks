@@ -5,6 +5,7 @@ use warnings;
 
 use File::Spec;
 use File::Basename qw//;
+use File::Path qw//;
 
 my $HOME = $ENV{'HOME'} || die "Environment variable HOME isn't set";
 
@@ -16,6 +17,7 @@ my %TARGET_DIR_TO_FILES = (
 );
 
 for my $dir (keys %TARGET_DIR_TO_FILES) {
+    File::Path::make_path($dir);
     for my $orig_file (@{$TARGET_DIR_TO_FILES{$dir}}) {
         my $fn = File::Basename::fileparse($orig_file);
         my $f = File::Spec->catfile($dir, $fn);
