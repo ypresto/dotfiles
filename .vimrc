@@ -656,8 +656,8 @@ vmap a/ <Plug>(textobj-between-a)/
 NeoBundle 'bkad/CamelCaseMotion'
 omap <silent> iu <Plug>CamelCaseMotion_iw
 omap <silent> iu <Plug>CamelCaseMotion_iw
-xmap <silent> au <Plug>CamelCaseMotion_iw
-xmap <silent> au <Plug>CamelCaseMotion_iw
+xmap <silent> iu <Plug>CamelCaseMotion_iw
+xmap <silent> iu <Plug>CamelCaseMotion_iw
 omap <silent> <Plug>disabled_CamelCaseMotion_ib <Plug>CamelCaseMotion_ib
 xmap <silent> <Plug>disabled_CamelCaseMotion_ib <Plug>CamelCaseMotion_ib
 omap <silent> <Plug>disabled_CamelCaseMotion_ie <Plug>CamelCaseMotion_ie
