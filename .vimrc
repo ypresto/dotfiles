@@ -475,7 +475,7 @@ NeoBundle 'sudo.vim'
 NeoBundle 'scrooloose/syntastic'
 let g:syntastic_mode_map = { 'mode': 'active',
             \ 'active_filetypes' : [],
-            \ 'passive_filetypes': [] }
+            \ 'passive_filetypes': ['java'] }
 let g:syntastic_error_symbol='E>' " ✗
 let g:syntastic_warning_symbol='W>' " ⚠
 let g:syntastic_echo_current_error=0 " too heavy, use below one
@@ -1383,6 +1383,10 @@ NeoBundle 'thinca/vim-ambicmd'
 "
 NeoBundle 'Valloric/MatchTagAlways'
 
+NeoBundle 'kana/vim-fakeclip'
+
+NeoBundle 'terryma/vim-multiple-cursors'
+
 " HERE
 
 " ** vimrc reading @ 2012/11/03 {{{
@@ -1671,8 +1675,11 @@ let g:unite_source_grep_max_candidates = 100
 nnoremap <silent> <Leader>u<space> :<C-u>UniteResume<CR>
 
 " http://d.hatena.ne.jp/thinca/20120201/1328099090
-NeoBundle 'thinca/vim-singleton'
-call singleton#enable()
+NeoBundleLazy 'thinca/vim-singleton'
+if has('clientserver')
+    NeoBundleSource thinca/vim-singleton
+    call singleton#enable()
+endif
 
 " ** }}}
 
