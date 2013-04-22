@@ -3,6 +3,7 @@
 	email = yuya.presto@gmail.com
 [core]
 	excludesfile = ~/.gitignore_global
+	attributesfile = ~/.gitattributes_global
 	editor = vim
 [merge]
 	tool = vimdiff
