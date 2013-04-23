@@ -24,8 +24,10 @@
 	rs = reset
 	rsh = reset --hard
 	dw = diff --color-words
+	dwd = diff --word-diff
 	ds = diff --stat
-	cw = diff --color-words
+	cw = diff --color-words --cached
+	cwd = diff --word-diff --cached
 	cs = diff --stat --cached
 	l = log --stat --decorate
 	lo = log --stat --decorate
