@@ -3,7 +3,7 @@ UNAME := $(shell uname)
 all:
 	echo "call 'make install' or 'make update'"
 
-.PHONY: install update _up vimproc skkdict perldict gitsubmodules bashcompl cleanlinks
+.PHONY: install update _up vimproc skkdict perldict gitsubmodules completions cleanlinks
 
 install:
 	./mksymlinks
@@ -30,7 +30,7 @@ update:
 	make _up
 	./mksymlinks
 
-_up: skkdict perldict gitsubmodules bashcompl cleanlinks
+_up: skkdict perldict gitsubmodules completions cleanlinks
 
 vimproc:
 # build automatically by NeoBundle when vimproc updated
@@ -60,9 +60,10 @@ gitsubmodules:
 	git submodule update --init
 	git submodule foreach 'git checkout master; git pull; git submodule sync; git submodule update --init'
 
-bashcompl:
-	cd bash-completion && \
-	wget --timestamping https://raw.github.com/git/git/master/contrib/completion/git-completion.bash
+completions:
+	cd completions && \
+	wget --timestamping https://raw.github.com/git/git/master/contrib/completion/git-completion.bash && \
+	wget --timestamping https://raw.github.com/git/git/master/contrib/completion/git-completion.zsh
 
 cleanlinks:
 # below also works with BSD find

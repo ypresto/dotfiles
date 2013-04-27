@@ -40,9 +40,6 @@ setopt SHARE_HISTORY
 ## disable mail checking
 #MAILCHECK=0
 
-# autoload -U colors
-#colors
-
 
 autoload -U +X bashcompinit && bashcompinit
 
@@ -91,7 +88,6 @@ autoload -U colors
 colors
 autoload -U add-zsh-hook
 autoload -Uz vcs_info
-autoload -U compinit
 autoload history-search-end
 
 # util
@@ -135,13 +131,11 @@ setopt extended_history
 setopt hist_expand
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
-#bindkey -e
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 bindkey "^P" history-beginning-search-backward-end
 bindkey "^N" history-beginning-search-forward-end
 
-compinit
 zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
 zstyle ':completion:*' max-errors 50
 zstyle ':completion:*' list-colors ''
@@ -275,7 +269,7 @@ source_homebrew () {
 }
 
 # git completion
-source ~/dotfiles/bash-completion/git-completion.bash
+source ~/dotfiles/completions/git-completion.zsh
 # hub completion
 source_homebrew etc/bash_completion.d/hub.bash_completion.sh
 eval "$(hub alias -s zsh)"
