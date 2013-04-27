@@ -149,9 +149,9 @@ set laststatus=2      " Always show statusline
 " endif
 
 " command line
-set cmdheight=2                " Set height of command line
-set wildmode=list:full " command line completion order
-set wildmenu                 " Enhanced completion: disabled
+set cmdheight=2              " Set height of command line
+set wildmode=list:longest    " command line completion order
+set wildmenu                 " Enhanced completion
 " Don't use matched files for completion
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
 
@@ -853,12 +853,19 @@ augroup END
 
 " ** JavaScript ** {{{2
 
+let g:neobundle#default_options['javascript'] = {
+\   'lazy' : 1,
+\   'autoload' : {
+\       'filetypes' : ['javascript']
+\   }
+\ }
+
 autocmd BufNewFile,BufRead *.json setf javascript
-NeoBundleLazy 'jelera/vim-javascript-syntax'
-NeoBundleLazy 'pangloss/vim-javascript' " indent
-NeoBundleLazy 'nono/jquery.vim'
-NeoBundleLazy 'mklabs/grunt.vim'
-" NeoBundleLazy 'wookiehangover/jshint.vim'
+
+NeoBundle 'jelera/vim-javascript-syntax'
+NeoBundle 'pangloss/vim-javascript' " indent
+NeoBundle 'nono/jquery.vim'
+NeoBundle 'mklabs/grunt.vim'
 
 function! SourceJavaScript()
     " source order of these plugins is important
@@ -1375,8 +1382,6 @@ noremap <Leader>f :vertical wincmd f<CR>
 " [ai], : argument than parameter
 NeoBundle 'sgur/vim-textobj-parameter'
 
-NeoBundle 'thinca/vim-ambicmd'
-
 " let g:indent_guides_auto_colors = 0
 " autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
 " autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
@@ -1386,6 +1391,8 @@ NeoBundle 'Valloric/MatchTagAlways'
 NeoBundle 'kana/vim-fakeclip'
 
 NeoBundle 'terryma/vim-multiple-cursors'
+
+let g:syntastic_always_populate_loc_list=1
 
 " HERE
 
@@ -1489,9 +1496,6 @@ set formatoptions+=ctrqlm
 
 " <C-a> や <C-x> で数値を増減させるときに8進数を無効にする
 set nrformats-=octal
-
-" コマンドライン補完の方法
-set wildmode=longest:full
 
 set helplang=ja
 
@@ -1683,6 +1687,70 @@ endif
 
 " ** }}}
 
+" ** vimrc reading @ 2012/04/27 {{{
+
+let g:neobundle#default_options['java'] = {
+\   'lazy' : 1,
+\   'autoload' : {
+\       'filetypes' : ['java']
+\   }
+\}
+
+NeoBundle 'yuratomo/dbg.vim.git'
+
+NeoBundle 'teramako/jscomplete-vim.git', { 'default' : 'javascript' }
+
+NeoBundle 'yuratomo/cpp-api-complete.git', { 'default' : 'java' }
+NeoBundle 'yuratomo/java-api-complete.git', { 'default' : 'java' }
+NeoBundle 'yuratomo/java-api-javax.git', { 'default' : 'java' }
+NeoBundle 'yuratomo/java-api-org.git', { 'default' : 'java' }
+NeoBundle 'yuratomo/java-api-sun.git', { 'default' : 'java' }
+NeoBundle 'yuratomo/java-api-android.git', { 'default' : 'java' }
+
+" java-api-complete
+let g:javaapi#delay_dirs = [
+  \ 'java-api-javax',
+  \ 'java-api-org',
+  \ 'java-api-sun',
+  \ 'java-api-android',
+  \ ]
+
+set complete=.,w,b,u
+set foldcolumn=2
+
+autocmd FileType java       set foldmarker={,} foldmethod=marker
+autocmd FileType cpp        set foldmarker={,} foldmethod=marker
+autocmd FileType c          set foldmarker={,} foldmethod=marker
+autocmd FileType java       set omnifunc=javaapi#complete
+autocmd FileType cpp        set omnifunc=cppapi#complete
+autocmd FileType c          set omnifunc=cppapi#complete
+autocmd CompleteDone *.java call javaapi#showRef()
+
+autocmd FileType javascript set omnifunc=jscomplete#CompleteJS
+let g:jscomplete_use = ['dom', 'webkit']
+
+if has("balloon_eval") && has("balloon_multiline")
+  autocmd FileType java  set bexpr=javaapi#balloon()
+  autocmd FileType cpp   set bexpr=cppapi#balloon()
+  autocmd FileType c     set bexpr=cppapi#balloon()
+  autocmd FileType h     set bexpr=cppapi#balloon()
+  autocmd FileType java  set ballooneval
+  autocmd FileType cpp   set ballooneval
+  autocmd FileType c     set ballooneval
+  autocmd FileType h     set ballooneval
+endif
+
+" 今開いているウィンドウを新しいタブで開きなおす
+command! OpenNewTab  :call OpenNewTab()
+function! OpenNewTab()
+  let l:f = expand("%:p")
+  if winnr('$') != 1 || tabpagenr('$') != 1
+    execute ":q"
+    execute ":tabnew ".l:f
+  endif
+endfunction
+
+" ** }}}
 
 " vimrc reading HERE
 
