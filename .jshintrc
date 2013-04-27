@@ -86,7 +86,7 @@
 
     // Styling
     "camelcase"     : true,   // Enforce variables to be camelCase or UPPER_CASE.
-    "indent"        : 4,      // Enforce indent width.
+    "indent"        : 2,      // Enforce indent width.
     "newcap"        : false,  // Require capitalization of all constructor functions e.g. `new F()`.
     "noempty"       : true,   // Prohibit use of empty blocks.
     "nonew"         : false,  // Prohibit use of constructors for side-effects.
