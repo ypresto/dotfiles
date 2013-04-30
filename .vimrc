@@ -960,6 +960,12 @@ augroup SourcePython
 augroup END
 " ** }}}
 
+" ** Markdown ** {{{
+
+autocmd BufNewFile,BufRead *.md setf markdown
+
+" ** }}}
+
 " ** VimScript ** {{{
 
 autocmd FileType vim,help set keywordprg=":help"
@@ -1394,6 +1400,8 @@ NeoBundle 'terryma/vim-multiple-cursors'
 
 let g:syntastic_always_populate_loc_list=1
 
+NeoBundle 'mattn/mkdpreview-vim', { 'lazy' : 1, 'autoload' : { 'filetyps' : ['markdown'] } }
+
 " HERE
 
 " ** vimrc reading @ 2012/11/03 {{{
@@ -1527,7 +1535,6 @@ set showbreak=>\
 set breakat=\ \	;:,!?.>
 
 " ** }}}
-
 
 " ** vimrc reading @ 2012/03/23 {{{
 
@@ -1753,7 +1760,6 @@ endfunction
 " ** }}}
 
 " vimrc reading HERE
-
 
 " *** }}}
 
