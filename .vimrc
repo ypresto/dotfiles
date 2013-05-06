@@ -465,7 +465,7 @@ NeoBundle 'soh335/vim-ref-jquery'
 let g:ref_perldoc_auto_append_f = 1
 
 " git support
-NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-fugitive', { 'augroup' : 'fugitive' }
 NeoBundle 'mattn/gist-vim'
 
 " read/write by sudo with `vim sudo:file.txt`
@@ -495,9 +495,11 @@ let g:gundo_close_on_revert = 1
 " NeoBundle 'honza/snipmate-snippets'
 
 " Run current file by <Leader>r and get result in another buffer
-NeoBundle 'thinca/vim-quickrun', { 'depends' : [
-\   'tyru/open-browser.vim',
-\] }
+NeoBundle 'thinca/vim-quickrun', {
+\   'depends' : [
+\      'tyru/open-browser.vim',
+\   ]
+\}
 
 " Highlight indent by its levels, must have for pythonist
 NeoBundle 'nathanaelkane/vim-indent-guides'
@@ -545,11 +547,15 @@ nmap <Leader><C-t> :CtrlPTag<CR>
 
 " ** neocomplcache ** {{{2
 
-NeoBundle 'Shougo/neocomplcache'
-NeoBundleLazy 'Shougo/neosnippet'
+NeoBundle 'Shougo/neocomplcache', {
+\   'autoload' : {
+\       'insert' : 1
+\   }
+\}
+NeoBundle 'Shougo/neosnippet'
 " English spell completion with 'look' command
-NeoBundleLazy 'ujihisa/neco-look'
-let g:neocomplcache_enable_at_startup = 0
+NeoBundle 'ujihisa/neco-look'
+let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_prefetch = 1
 let g:neocomplcache_enable_camel_case_completion = 0
 let g:neocomplcache_enable_underbar_completion = 0
@@ -565,24 +571,6 @@ let g:neocomplcache_dictionary_filetype_lists = {
     \ 'default'    : '',
     \ 'perl'       : $HOME . '/.vim/dict/perl.dict'
     \ }
-
-" too heavy when launching vim, make initializing delayed
-augroup InitNeCo
-    autocmd!
-    autocmd CursorMovedI,CursorHold * call DoInitNeco()
-    " Workaround for bug neocon would not be disabled in unite
-    autocmd FileType unite call DoInitNeco()
-augroup END
-function! DoInitNeco()
-    echo "Initializing NeCo..."
-    augroup InitNeCo
-        autocmd!
-    augroup END
-    NeoBundleSource neosnippet
-    NeoBundleSource neco-look
-    :NeoComplCacheEnable
-    echo "Initializing NeCo... Completed."
-endfunction
 
 " ** }}}
 
@@ -753,23 +741,22 @@ augroup END
 
 " ** IME ** {{{2
 
-NeoBundleLazy 'vimtaku/vim-mlh', { 'depends' : [
-\   'mattn/webapi-vim',
-\]}
-if mlh_enabled
-    NeoBundleSource vim-mlh
-    autocmd VimEnter * :ToggleVimMlhKeymap
-endif
+NeoBundleLazy 'vimtaku/vim-mlh', {
+\   'depends' : [
+\       'mattn/webapi-vim',
+\   ],
+\   'commands' : ':ToggleVimMlhKeymap'
+\}
 
 if eskk_enabled
-NeoBundle 'tyru/eskk.vim'
+" NeoBundle 'tyru/eskk.vim'
     let g:eskk#no_default_mappings = 1
     let g:eskk#large_dictionary = { 'path': "~/.vim/dict/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp', }
     let g:eskk#enable_completion = 1
 endif
 
 if skk_enabled
-NeoBundle 'anyakichi/skk.vim'
+" NeoBundle 'anyakichi/skk.vim'
     " original: Bundle 'tyru/skk.vim'
     let g:skk_jisyo = '~/.skk-jisyo'
     let g:skk_large_jisyo = '~/.vim/dict/SKK-JISYO.L'
@@ -810,51 +797,38 @@ set background=dark
 
 " ** HTML / CSS / XML ** {{{2
 
-" NeoBundle 'mattn/zencoding-vim'
-" let g:user_zen_settings = {
-" \   'lang': "ja"
-" \}
-" let g:use_zen_complete_tag = 1
+let g:neobundle#default_options['htmlcss'] = {
+\   'autoload' : {
+\       'filetypes' : ['html', 'css', 'xml', 'htmlcheetah']
+\   }
+\ }
 
-NeoBundleLazy 'othree/html5.vim'
-NeoBundleLazy 'hail2u/vim-css3-syntax'
-" NeoBundleLazy 'skammer/vim-css-color' " conflicts with html syntax
-NeoBundleLazy 'mattn/zencoding-vim'
-NeoBundleLazy 'sukima/xmledit'
+NeoBundleLazy 'othree/html5.vim', '', 'htmlcss'
+NeoBundleLazy 'hail2u/vim-css3-syntax', '', 'htmlcss'
+" NeoBundle 'skammer/vim-css-color' " conflicts with html syntax
+NeoBundleLazy 'mattn/zencoding-vim', '', 'htmlcss'
+let g:user_zen_settings = {
+\   'lang': "ja"
+\}
+let g:use_zen_complete_tag = 1
+
+NeoBundleLazy 'sukima/xmledit', '', 'htmlcss'
 " see http://nanasi.jp/articles/vim/xml-plugin.html
 
 " FIXME autocmd BufNew,BufReadPost *.tmpl setlocal filetype=html
-function! SourceHTML()
-    NeoBundleSource html5.vim
-    NeoBundleSource vim-css3-syntax
-    " NeoBundleSource vim-css-color
-    NeoBundleSource zencoding-vim
-    NeoBundleSource xmledit
-    autocmd! SourceHTML
-endfunction
-augroup SourceHTML
-    autocmd!
-    autocmd FileType html,css,xml call SourceHTML()
-augroup END
 
 " haml / sass / scss
-NeoBundleLazy 'tpope/vim-haml'
+let g:neobundle#default_options['hamlsass'] = {
+\   'autoload' : {
+\       'filetypes' : ['haml', 'sass', 'scss']
+\   }
+\ }
 
-function! SourceHaml()
-    NeoBundleSource vim-haml
-    autocmd! SourceHaml
-endfunction
-augroup SourceHaml
-    autocmd!
-    autocmd FileType haml,sass,scss call SourceHaml()
-augroup END
-
-" ** }}}
+NeoBundleLazy 'tpope/vim-haml', '', 'hamlsass'
 
 " ** JavaScript ** {{{2
 
 let g:neobundle#default_options['javascript'] = {
-\   'lazy' : 1,
 \   'autoload' : {
 \       'filetypes' : ['javascript']
 \   }
@@ -862,26 +836,10 @@ let g:neobundle#default_options['javascript'] = {
 
 autocmd BufNewFile,BufRead *.json setf javascript
 
-NeoBundle 'jelera/vim-javascript-syntax'
-NeoBundle 'pangloss/vim-javascript' " indent
-NeoBundle 'nono/jquery.vim'
-NeoBundle 'mklabs/grunt.vim'
-
-function! SourceJavaScript()
-    " source order of these plugins is important
-    NeoBundleSource vim-javascript-syntax
-    NeoBundleSource vim-javascript
-
-    NeoBundleSource jquery.vim
-    NeoBundleSource grunt.vim
-    " NeoBundleSource jshint.vim
-    autocmd! SourceJavaScript
-endfunction
-augroup SourceJavaScript
-    autocmd!
-    autocmd FileType javascript call SourceJavaScript()
-    autocmd BufNew,BufReadPost *.tmpl call SourceJavaScript()
-augroup END
+NeoBundleLazy 'jelera/vim-javascript-syntax', '', 'javascript'
+NeoBundleLazy 'pangloss/vim-javascript', '', 'javascript' " indent
+NeoBundleLazy 'nono/jquery.vim', '', 'javascript'
+NeoBundleLazy 'mklabs/grunt.vim', '', 'javascript'
 
 " http://wozozo.hatenablog.com/entry/2012/02/08/121504
 map <Leader>FJ !python -m json.tool<CR>
@@ -890,31 +848,25 @@ map <Leader>FJ !python -m json.tool<CR>
 
 " ** Perl ** {{{2
 
+let g:neobundle#default_options['perl'] = {
+\   'autoload' : {
+\       'filetypes' : ['perl']
+\   }
+\ }
+
 " use new perl syntax and indent!
-NeoBundleLazy 'vim-perl/vim-perl'
+NeoBundleLazy 'vim-perl/vim-perl', '', 'perl'
 " Enable perl specific rich fold
 let perl_fold=1
 let perl_fold_blocks=1
 " let perl_nofold_packages = 1
 " let perl_include_pod=1
 
-" NeoBundleLazy 'c9s/perlomni.vim'
-NeoBundleLazy 'mattn/perlvalidate-vim'
+" NeoBundleLazy 'c9s/perlomni.vim', '', 'perl'
+NeoBundleLazy 'mattn/perlvalidate-vim', '', 'perl'
 
-NeoBundleLazy 'yko/mojo.vim'
-let mojo_highlight_data = 1
-
-function! SourcePerl()
-    NeoBundleSource vim-perl
-    " NeoBundleSource perlomni.vim
-    NeoBundleSource perlvalidate-vim
-    NeoBundleSource mojo.vim
-    autocmd! SourcePerl
-endfunction
-augroup SourcePerl
-    autocmd!
-    autocmd FileType perl call SourcePerl()
-augroup END
+" NeoBundleLazy 'yko/mojo.vim', '', 'perl'
+" let mojo_highlight_data = 1
 
 augroup PerlKeys
     autocmd!
@@ -923,7 +875,7 @@ augroup PerlKeys
 augroup END
 
 " Open perl file by package name under the cursor
-NeoBundle 'nakatakeshi/jump2pm.vim'
+NeoBundle 'nakatakeshi/jump2pm.vim', '', 'perl'
 noremap <Leader>pv :call Jump2pm('vne')<CR>
 noremap <Leader>pf :call Jump2pm('e')<CR>
 noremap <Leader>ps :call Jump2pm('sp')<CR>
@@ -947,17 +899,16 @@ command! Upod :Unite ref/perldoc
 " ** }}}
 
 " ** Python ** {{{2
-NeoBundleLazy 'tmhedberg/SimpylFold'
-NeoBundleLazy 'davidhalter/jedi-vim'
-function! SourcePython()
-    NeoBundleSource SimpylFold
-    " NeoBundleSource jedi-vim
-    autocmd! SourcePython
-endfunction
-augroup SourcePython
-    autocmd!
-    autocmd FileType python call SourcePython()
-augroup END
+
+let g:neobundle#default_options['python'] = {
+\   'autoload' : {
+\       'filetypes' : ['python']
+\   }
+\ }
+
+NeoBundleLazy 'tmhedberg/SimpylFold', '', 'python'
+" NeoBundleLazy 'davidhalter/jedi-vim', '', 'python'
+
 " ** }}}
 
 " ** Markdown ** {{{
@@ -1174,12 +1125,14 @@ map <Leader>tl <Plug>TaskList
 NeoBundle 'tpope/vim-abolish'
 
 " TweetVim
-NeoBundleLazy 'basyura/TweetVim', { 'depends' : [
-\   'basyura/twibill.vim',
-\   'basyura/bitly.vim',
-\   'mattn/webapi-vim',
-\   'tyru/open-browser.vim',
-\]}
+NeoBundleLazy 'basyura/TweetVim', {
+\   'depends' : [
+\       'basyura/twibill.vim',
+\       'basyura/bitly.vim',
+\       'mattn/webapi-vim',
+\       'tyru/open-browser.vim',
+\   ],
+\}
 command! TweetVimLoad call InitTweetVim()
 function! InitTweetVim()
     NeoBundleSource TweetVim
@@ -1400,7 +1353,11 @@ NeoBundle 'terryma/vim-multiple-cursors'
 
 let g:syntastic_always_populate_loc_list=1
 
-NeoBundle 'mattn/mkdpreview-vim', { 'lazy' : 1, 'autoload' : { 'filetyps' : ['markdown'] } }
+NeoBundleLazy 'mattn/mkdpreview-vim', {
+\   'autoload' : {
+\       'filetypes' : ['markdown']
+\   }
+\}
 
 " HERE
 
@@ -1697,7 +1654,6 @@ endif
 " ** vimrc reading @ 2012/04/27 {{{
 
 let g:neobundle#default_options['java'] = {
-\   'lazy' : 1,
 \   'autoload' : {
 \       'filetypes' : ['java']
 \   }
@@ -1705,14 +1661,14 @@ let g:neobundle#default_options['java'] = {
 
 NeoBundle 'yuratomo/dbg.vim.git'
 
-NeoBundle 'teramako/jscomplete-vim.git', { 'default' : 'javascript' }
+NeoBundleLazy 'teramako/jscomplete-vim.git', '', 'javascript'
 
-NeoBundle 'yuratomo/cpp-api-complete.git', { 'default' : 'java' }
-NeoBundle 'yuratomo/java-api-complete.git', { 'default' : 'java' }
-NeoBundle 'yuratomo/java-api-javax.git', { 'default' : 'java' }
-NeoBundle 'yuratomo/java-api-org.git', { 'default' : 'java' }
-NeoBundle 'yuratomo/java-api-sun.git', { 'default' : 'java' }
-NeoBundle 'yuratomo/java-api-android.git', { 'default' : 'java' }
+NeoBundleLazy 'yuratomo/cpp-api-complete.git',  '', 'java'
+NeoBundleLazy 'yuratomo/java-api-complete.git', '', 'java'
+NeoBundleLazy 'yuratomo/java-api-javax.git',    '', 'java'
+NeoBundleLazy 'yuratomo/java-api-org.git',      '', 'java'
+NeoBundleLazy 'yuratomo/java-api-sun.git',      '', 'java'
+NeoBundleLazy 'yuratomo/java-api-android.git',  '', 'java'
 
 " java-api-complete
 let g:javaapi#delay_dirs = [
