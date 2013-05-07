@@ -328,54 +328,43 @@ inoremap <expr> <C-p> pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
 
 " デフォルト
 nnoremap <Leader>u: :Unite 
-nnoremap <Leader>U: :Unite -create -no-quit -toggle  -vertical -winwidth=30 
 " バッファ一覧
 nmap <Leader>ub <Leader>u:buffer<CR>
-nmap <Leader>Ub <Leader>U:buffer<CR>
 " ファイル一覧
 nmap <Leader>uf :UniteWithBufferDir -buffer-name=files file file/new<CR>
-nmap <Leader>Uf :UniteWithCurrentDir -create -no-quit -toggle  -vertical -winwidth=30 -buffer-name=files file file/new<CR>
 " レジスタ一覧
 nmap <Leader>ur :Unite -buffer-name=register register<CR>
 " 最近使用したファイル一覧
 nmap <Leader>us <Leader>u:file_mru<CR>
-nmap <Leader>Us <Leader>U:file_mru -winwidth=80<CR>
 " 全部乗せ
 nmap <Leader>ua :Unite buffer file_mru bookmark<CR>
 " コマンド
 nmap <Leader>uc <Leader>u:command<CR>
-nmap <Leader>Uc <Leader>U:command -winwidth=80<CR>
+
 " unite-mark
-nmap <Leader>um <Leader>u: mark<CR>
-nmap <Leader>Um <Leader>U: mark<CR>
+nmap <Leader>um <Leader>u:mark<CR>
+
 " unite-outline
-nmap <Leader>uo <Leader>u: outline<CR>
-nmap <Leader>Uo <Leader>U: outline<CR>
-nmap <Leader>uz <Leader>u: outline:folding<CR>
-nmap <Leader>Uz <Leader>U: outline:folding<CR>
+nmap <Leader>uo <Leader>u:outline<CR>
+" TODO
+nmap <Leader>uz <Leader>u:outline:folding<CR>
+
 " history/yankの有効化
 " let g:unite_source_history_yank_enable = 1
-nmap <Leader>uy <Leader>u: history/yank<CR>
-nmap <Leader>Uy <Leader>U: history/yank<CR>
+nmap <Leader>uy <Leader>u:history/yank<CR>
+" unite-history
+nmap <Leader>uC <Leader>u:history/command<CR>
 
-nmap <Leader>up <Leader>u: git_cached git_untracked<CR>
-nmap <Leader>Up <Leader>U: git_cached git_untracked<CR>
-" nmap <Leader>up <Leader>u: -buffer-name=files file_rec/async<CR>
-" nmap <Leader>Up <Leader>u: -buffer-name=files file_rec/async<CR>
+nmap <Leader>up <Leader>u:git_cached git_untracked<CR>
 
-nmap <Leader>ut <Leader>u: tab<CR>
-nmap <Leader>Ut <Leader>U: tab<CR>
+nmap <Leader>ut <Leader>u:tab<CR>
 
-nmap <Leader>ug <Leader>u: git_modified git_untracked<CR>
-nmap <Leader>Ug <Leader>U: git_modified git_untracked<CR>
-nmap <Leader>uG <Leader>u: giti<CR>
-nmap <Leader>UG <Leader>U: giti<CR>
+nmap <Leader>ug <Leader>u:git_modified git_untracked<CR>
+nmap <Leader>uG <Leader>u:giti<CR>
 
-nmap <Leader>uS <Leader>u: session<CR>
-nmap <Leader>US <Leader>U: session<CR>
+nmap <Leader>uS <Leader>u:session<CR>
 
 nmap <Leader>uu <Leader>u:source<CR>
-nmap <Leader>Uu <Leader>U:soruce<CR>
 
 augroup UniteWindowKeyMaps
     autocmd!
@@ -576,7 +565,11 @@ let g:neocomplcache_dictionary_filetype_lists = {
 
 " ** unite ** {{{2
 
-NeoBundle 'Shougo/unite.vim'
+NeoBundleLazy 'Shougo/unite.vim', {
+\   'autoload' : {
+\       'commands' : ['Unite', 'UniteSessionLoad', 'UniteSessionSave']
+\   }
+\}
 let g:unite_enable_start_insert=1
 let g:unite_split_rule="botright"
 let g:unite_winheight="10"
@@ -1318,11 +1311,11 @@ endif
 " autocmd FileType perl setlocal omnifunc=PerlComplete
 
 NeoBundleLazy 'Shougo/unite-ssh'
-NeoBundle 't9md/vim-unite-ack'
+NeoBundle 't9md/vim-unite-ack' " TODO
 NeoBundle 'tsukkee/unite-help'
-NeoBundle 'MultipleSearch'
-NeoBundle 'airblade/vim-rooter'
-NeoBundleLazy 'tsukkee/lingr-vim'
+NeoBundle 'MultipleSearch' " TODO
+NeoBundle 'airblade/vim-rooter' " TODO
+NeoBundleLazy 'tsukkee/lingr-vim' " TODO
 
 " set foldopen=all
 " set foldclose=all
@@ -1642,11 +1635,15 @@ let g:unite_source_grep_max_candidates = 100
 
 nnoremap <silent> <Leader>u<space> :<C-u>UniteResume<CR>
 
+if 0
+
 " http://d.hatena.ne.jp/thinca/20120201/1328099090
 NeoBundleLazy 'thinca/vim-singleton'
 if has('clientserver')
     NeoBundleSource thinca/vim-singleton
     call singleton#enable()
+endif
+
 endif
 
 " ** }}}
