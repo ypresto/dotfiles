@@ -331,9 +331,9 @@ nnoremap <Leader>u: :Unite
 " バッファ一覧
 nmap <Leader>ub <Leader>u:buffer<CR>
 " ファイル一覧
-nmap <Leader>uf :UniteWithBufferDir -buffer-name=files file file/new<CR>
+nmap <Leader>uf <Leader>u:-buffer-name=files file file/new<CR>
 " レジスタ一覧
-nmap <Leader>ur :Unite -buffer-name=register register<CR>
+nmap <Leader>ur <Leader>u:-buffer-name=register register<CR>
 " 最近使用したファイル一覧
 nmap <Leader>us <Leader>u:file_mru<CR>
 " 全部乗せ
@@ -1684,20 +1684,16 @@ autocmd FileType c          set foldmarker={,} foldmethod=marker
 autocmd FileType java       set omnifunc=javaapi#complete
 autocmd FileType cpp        set omnifunc=cppapi#complete
 autocmd FileType c          set omnifunc=cppapi#complete
-autocmd CompleteDone *.java call javaapi#showRef()
+"autocmd CompleteDone *.java call javaapi#showRef()
 
 autocmd FileType javascript set omnifunc=jscomplete#CompleteJS
 let g:jscomplete_use = ['dom', 'webkit']
 
 if has("balloon_eval") && has("balloon_multiline")
-  autocmd FileType java  set bexpr=javaapi#balloon()
-  autocmd FileType cpp   set bexpr=cppapi#balloon()
-  autocmd FileType c     set bexpr=cppapi#balloon()
-  autocmd FileType h     set bexpr=cppapi#balloon()
-  autocmd FileType java  set ballooneval
-  autocmd FileType cpp   set ballooneval
-  autocmd FileType c     set ballooneval
-  autocmd FileType h     set ballooneval
+  autocmd FileType java  set ballooneval bexpr=javaapi#balloon()
+  autocmd FileType cpp   set ballooneval bexpr=cppapi#balloon()
+  autocmd FileType c     set ballooneval bexpr=cppapi#balloon()
+  autocmd FileType h     set ballooneval bexpr=cppapi#balloon()
 endif
 
 " 今開いているウィンドウを新しいタブで開きなおす
