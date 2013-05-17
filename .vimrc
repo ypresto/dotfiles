@@ -476,13 +476,6 @@ NeoBundle 'sjl/gundo.vim'
 let g:gundo_right = 1
 let g:gundo_close_on_revert = 1
 
-" " SnipMate, TextMate like snippet use with <Tab>
-" NeoBundle 'garbas/vim-snipmate', { 'depends' : [
-" \   'MarcWeber/vim-addon-mw-utils',
-" \   'tomtom/tlib_vim',
-" \]}
-" NeoBundle 'honza/snipmate-snippets'
-
 " Run current file by <Leader>r and get result in another buffer
 NeoBundle 'thinca/vim-quickrun', {
 \   'depends' : [
@@ -542,6 +535,7 @@ NeoBundle 'Shougo/neocomplcache', {
 \   }
 \}
 NeoBundle 'Shougo/neosnippet'
+NeoBundle 'honza/vim-snippets'
 " English spell completion with 'look' command
 NeoBundle 'ujihisa/neco-look'
 let g:neocomplcache_enable_at_startup = 1
