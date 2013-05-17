@@ -656,14 +656,20 @@ NeoBundle 'TaskList.vim'
 
 " Indent comments and expressions
 NeoBundle 'godlygeek/tabular'
-vnoremap <Leader>t=  :Tab/=<CR>
-vnoremap <Leader>th  :Tab/=><CR>
-vnoremap <Leader>t#  :Tab/#<CR>
-vnoremap <Leader>t\| :Tab/\|<CR>
+vnoremap <Leader>t=  :Tabular /=/<CR>
+vnoremap <Leader>th  :Tabular /=>/<CR>
+vnoremap <Leader>t#  :Tabular /#/<CR>
+vnoremap <Leader>t\| :Tabular /\|/<CR>
 " JavaScript-style
-vnoremap <Leader>t:  :Tab/:<CR>
+vnoremap <Leader>t:  :Tabular /:/<CR>
 " YAML-style
-vnoremap <Leader>t;  :Tab/:\zs<CR>
+vnoremap <Leader>t;  :Tabular/:\zs/<CR>
+vnoremap <Leader>t,  :Tabular/,\zs/<CR>
+
+vnoremap <Leader>t<Space> :Tabular multiple_spaces<CR>
+autocmd VimEnter * :AddTabularPipeline multiple_spaces / \{2,}/
+    \ map(a:lines, "substitute(v:val, ' \{2,}', '  ', 'g')")
+    \   | tabular#TabularizeStrings(a:lines, '  ', 'l0')
 
 " extended % key matching
 NeoBundle "tmhedberg/matchit"
