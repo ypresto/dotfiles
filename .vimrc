@@ -559,7 +559,8 @@ let g:neocomplcache_dictionary_filetype_lists = {
 
 " ** unite ** {{{2
 
-NeoBundleLazy 'Shougo/unite.vim', {
+" Cannot make it lazy: vim path/to/file.txt doesn't update file_mru list
+NeoBundle 'Shougo/unite.vim', {
 \   'autoload' : {
 \       'commands' : ['Unite', 'UniteSessionLoad', 'UniteSessionSave']
 \   }
