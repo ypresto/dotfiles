@@ -3,7 +3,32 @@ set smartindent
 set autoindent
 set ignorecase
 set smartcase
+set hlsearch
+" set regexsearch
 set saney
+
+"search
+noremap ,sr :SearchReferencesInProject<C-m>
+
+" yank
+nnoremap yy yy
+" nnoremap yv vawy
+
+"move the cursor
+" nnoremap gb :goToLastEditPosition<C-m>
+" nnoremap gg :0<C-m>
+
+"next member(fields or method)
+nnoremap ]] :GotoNextMember<C-m>
+nnoremap [[ :GotoPreviousMember<C-m>
+
+" Open Declaration
+nnoremap <Space>pf :OpenEditor<C-m>
+
+" refactor
+nnoremap <Space>,r :RenameElement<C-m>
+"nnoremap ,rv :PromoteLocalVariable<C-m>
+
 
 " keymap
 
@@ -26,15 +51,23 @@ nnoremap <space>enc :OpenCallHierarchy<CR>
 nnoremap <space>ens :OpenStructure<CR>
 nnoremap <space>ent :OpenTypeHierarchy<CR>
 
-" vim like
-nnoremap ]] :GotoNextMember<CR>
-nnoremap [[ :GotoPreviousMember<CR>
+" " vim like
+" nnoremap ]] :GotoNextMember<CR>
+" nnoremap [[ :GotoPreviousMember<CR>
 
 " Esc
 inoremap  <A-h> <ESC>h
 inoremap  <A-j> <ESC>j
 inoremap  <A-k> <ESC>k
 inoremap  <A-l> <ESC>l
+
+" Emacs like
+inoremap <C-h> <BS>
+inoremap <C-a> <Esc>^i
+inoremap <C-e> <Esc>:LineEnd<CR>a
+inoremap <C-f> <Esc><Right>a
+inoremap <C-b> <Esc>i
+inoremap <C-d> <Esc><Right>xi
 
 "Action definition ID of the source -> add block comment action 
 eclipseaction AddBlockComment org.eclipse.jdt.ui.edit.text.java.add.block.comment
