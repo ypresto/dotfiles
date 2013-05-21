@@ -316,7 +316,13 @@ if [ "$BYOBU_BACKEND" = "tmux" ]; then
 fi
 
 # bleeding edge
-alias git-new-workdir='sh /usr/share/doc/git-1.7.10.2/contrib/workdir/git-new-workdir'
+if [ -e "$HOME/homebrew/share/git-core/contrib/workdir/git-new-workdir" ]; then
+    alias git-new-workdir="sh $HOME/homebrew/share/git-core/contrib/workdir/git-new-workdir"
+elif [ -e "/usr/share/doc/git-1.7.10.2/contrib/workdir/git-new-workdir" ]; then
+    alias git-new-workdir="sh /usr/share/doc/git-1.7.10.2/contrib/workdir/git-new-workdir"
+else
+    echo "git-new-workdir not available."
+fi
 alias :vl='vim ~/.vimlocal/.vimrc'
 if [ "`uname`" = "Darwin" ]; then
     alias fixfont="defaults -currentHost write -globalDomain AppleFontSmoothing -int 2"
