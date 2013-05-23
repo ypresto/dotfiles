@@ -331,7 +331,7 @@ nnoremap <Leader>u: :Unite
 " バッファ一覧
 nmap <Leader>ub <Leader>u:buffer<CR>
 " ファイル一覧
-nmap <Leader>uf <Leader>u:-buffer-name=files file file/new<CR>
+nmap <Leader>uf :UniteWithBufferDir -buffer-name=files file file/new<CR>
 " レジスタ一覧
 nmap <Leader>ur <Leader>u:-buffer-name=register register<CR>
 " 最近使用したファイル一覧
