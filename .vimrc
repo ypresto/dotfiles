@@ -905,6 +905,20 @@ NeoBundleLazy 'tmhedberg/SimpylFold', '', 'python'
 
 " ** }}}
 
+" ** Objective-C / iOS ** {{{
+
+let g:neobundle#default_options['objc'] = {
+\   'autoload' : {
+\       'filetypes' : ['objc']
+\   }
+\ }
+
+NeoBundleLazy 'Rip-Rip/clang_complete', '', 'objc'
+NeoBundleLazy 'eraserhd/vim-ios', '', 'objc'
+NeoBundleLazy 'msanders/cocoa.vim', '', 'objc'
+
+" ** }}}
+
 " ** Markdown ** {{{
 
 autocmd BufNewFile,BufRead *.md setf markdown
