@@ -7,6 +7,8 @@ bind main    B !git rebase -i %(commit)
 bind main    > !git push
 bind main    < !git pull
 
-bind generic ! !git revert %(commit)
+bind generic R !git revert %(commit)
+bind generic r refresh
 bind generic C !git checkout %(commit)
+bind status  C !git commit
 bind generic Y !git cherry-pick %(commit)

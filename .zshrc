@@ -172,6 +172,7 @@ alias :v='v ~/dotfiles/.vimrc'
 alias :V='V ~/dotfiles/.vimrc'
 alias :gc='v ~/dotfiles/.gitconfig'
 alias :d='cd ~/dotfiles'
+alias :t='v ~/dotfiles/.tigrc'
 alias :h=' \
     [ -d ~/homebrew ] && cd ~/homebrew || \
     [ -d /usr/local ] && cd /usr/local || \
