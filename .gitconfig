@@ -19,8 +19,8 @@
 	br = branch
 	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	g = log --graph --decorate --stat
-	go = log --graph --decorate --stat --format=oneline
-	gog = log --graph --decorate --format=oneline
+	go = log --graph --decorate --stat --oneline
+	gog = log --graph --decorate --oneline
 	rs = reset
 	rsh = reset --hard
 	dw = diff --color-words
@@ -42,6 +42,6 @@
 [github]
 	user = ypresto
 [push]
-	default = tracking
+	default = upstream
 [rerere]
 	enabled = true
