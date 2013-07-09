@@ -542,6 +542,16 @@ autocmd VimEnter * :AddTabularPipeline multiple_spaces / \{2,}/
     \ map(a:lines, "substitute(v:val, ' \{2,}', '  ', 'g')")
     \   | tabular#TabularizeStrings(a:lines, '  ', 'l0')
 
+" Move between buffers, diff hunks, etc places with bracket keys
+NeoBundle 'tpope/vim-abolish'
+
+" Paste with textobj, use this instead of vi"p
+NeoBundle 'kana/vim-operator-replace', {
+\   'depends' : [
+\       'kana/vim-operator-user',
+\   ]
+\}
+
 " ** }}}
 
 " ** neocomplcache ** {{{2
@@ -1131,8 +1141,6 @@ endif
 
 map <Leader>tl <Plug>TaskList
 
-NeoBundle 'tpope/vim-abolish'
-
 " TweetVim
 NeoBundleLazy 'basyura/TweetVim', {
 \   'depends' : [
@@ -1154,7 +1162,7 @@ endfunction
 
 " set scrolljump=3
 
-NeoBundle 'rson/vim-conque'
+NeoBundleLazy 'rson/vim-conque'
 
 " nmap <Esc>; A;<Esc><Plug>(poslist-prev-pos)
 " imap <Esc>; <C-o><Esc>;
@@ -1176,8 +1184,11 @@ endfunction
 
 NeoBundle 'thinca/vim-scouter'
 
-NeoBundle 'kana/vim-operator-user'
-NeoBundle 'tyru/operator-camelize.vim'
+NeoBundle 'tyru/operator-camelize.vim', {
+\   'depends' : [
+\       'kana/vim-operator-user',
+\   ]
+\}
 map <Leader>L <Plug>(operator-camelize-toggle)
 map <Leader>_L <Plug>(operator-upper-camelize)
 let g:operator_camelize_word_case = "lower"
@@ -1296,7 +1307,6 @@ let g:quickrun_config.markdown = {
     \ 'outputter': 'browser'
     \ }
 
-NeoBundle 'kana/vim-operator-replace'
 
 
 " http://d.hatena.ne.jp/heavenshell/20110228/1298899167
@@ -1368,6 +1378,9 @@ NeoBundleLazy 'mattn/mkdpreview-vim', {
 \   }
 \}
 
+let g:loaded_matchparen = 1
+NeoBundle 'haruyama/vim-matchopen'
+
 " HERE
 
 " ** vimrc reading @ 2012/11/03 {{{
@@ -1412,8 +1425,8 @@ set autoread
 
 " https://github.com/yomi322/config/blob/master/dot.vimrc
 
-" http://mattn.kaoriya.net/software/vim/20121105111112.htm
-NeoBundle 'mattn/multi-vim'
+" " http://mattn.kaoriya.net/software/vim/20121105111112.htm
+" NeoBundle 'mattn/multi-vim'
 
 NeoBundle 'rhysd/vim-textobj-ruby' " [ai]r
 " g:textobj_ruby_more_mappings = 1 " ro rl rc rd rr
