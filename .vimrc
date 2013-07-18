@@ -696,9 +696,6 @@ NeoBundle 'Lokaltog/vim-easymotion'
 " endif
 " conflicts with rhysd/accelerated-jk
 
-" Alternative for vimgrep, :Ack and :LAck
-NeoBundle 'mileszs/ack.vim'
-
 " :Rename current file on disk
 NeoBundle 'danro/rename.vim'
 
@@ -859,6 +856,9 @@ let g:neobundle#default_options['perl'] = {
 \   }
 \ }
 
+autocmd BufNewFile,BufRead *.t setf perl
+
+
 " use new perl syntax and indent!
 NeoBundleLazy 'vim-perl/vim-perl', '', 'perl'
 " Enable perl specific rich fold
@@ -880,15 +880,15 @@ augroup PerlKeys
 augroup END
 
 " Open perl file by package name under the cursor
-NeoBundle 'nakatakeshi/jump2pm.vim', '', 'perl'
-noremap <Leader>pv :call Jump2pm('vne')<CR>
-noremap <Leader>pf :call Jump2pm('e')<CR>
-noremap <Leader>ps :call Jump2pm('sp')<CR>
-noremap <Leader>pt :call Jump2pm('tabe')<CR>
-vnoremap <Leader>pv :call Jump2pmV('vne')<CR>
-vnoremap <Leader>pf :call Jump2pmV('e')<CR>
-vnoremap <Leader>ps :call Jump2pmV('sp')<CR>
-vnoremap <Leader>pt :call Jump2pmV('tabe')<CR>
+" NeoBundleLazy 'nakatakeshi/jump2pm.vim', '', 'perl'
+" noremap <Leader>pv :call Jump2pm('vne')<CR>
+" noremap <Leader>pf :call Jump2pm('e')<CR>
+" noremap <Leader>ps :call Jump2pm('sp')<CR>
+" noremap <Leader>pt :call Jump2pm('tabe')<CR>
+" vnoremap <Leader>pv :call Jump2pmV('vne')<CR>
+" vnoremap <Leader>pf :call Jump2pmV('e')<CR>
+" vnoremap <Leader>ps :call Jump2pmV('sp')<CR>
+" vnoremap <Leader>pt :call Jump2pmV('tabe')<CR>
 
 " vim-ref for perldoc
 cnoreabbrev Pod Ref perldoc
@@ -1310,12 +1310,12 @@ let g:quickrun_config.markdown = {
 
 
 " http://d.hatena.ne.jp/heavenshell/20110228/1298899167
-augroup QuickRunUnitTest
-  autocmd!
-  " autocmd BufWinEnter,BufNewFile *test.php setlocal filetype=php.unit
-  " autocmd BufWinEnter,BufNewFile test_*.py setlocal filetype=python.unit
-  autocmd BufWinEnter,BufNewFile *.t setlocal filetype=perl
-augroup END
+" augroup QuickRunUnitTest
+"   autocmd!
+"   " autocmd BufWinEnter,BufNewFile *test.php setlocal filetype=php.unit
+"   " autocmd BufWinEnter,BufNewFile test_*.py setlocal filetype=python.unit
+" augroup END
+
 let g:quickrun_config = {}
 " let g:quickrun_config['php.unit'] = {'command': 'phpunitrunner'}
 " let g:quickrun_config['python.unit'] = {'command': 'nosetests', 'cmdopt': '-s -vv'}
@@ -1369,6 +1369,8 @@ NeoBundle 'Valloric/MatchTagAlways'
 NeoBundle 'kana/vim-fakeclip'
 
 NeoBundle 'terryma/vim-multiple-cursors'
+let g:multi_cursor_start_key='\'
+let g:multi_cursor_quit_key='\'
 
 let g:syntastic_always_populate_loc_list=1
 
@@ -1510,8 +1512,8 @@ if v:version < 7.3 || (v:version == 7.3 && !has('patch336'))
 endif
 
 set linebreak
-set showbreak=>\
-set breakat=\ \	;:,!?.>
+let &showbreak="»   "
+set breakat=\ ;:,!?.>
 
 " ** }}}
 
