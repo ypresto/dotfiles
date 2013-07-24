@@ -9,17 +9,18 @@ let mapleader=" "
 
 " *** Make This Reloadable *** {{{1
 " reset global autocmd
-autocmd!
-" reload when writing .vimrc
-autocmd BufWritePost $MYVIMRC,$HOME/dotfiles/.vimrc source $MYVIMRC |
-            \ if (has('gui_running') && filereadable($MYGVIMRC)) | source $MYGVIMRC
-" TODO: should :colorscheme manually and fire ColorScheme autocmd
-autocmd BufWritePost $MYGVIMRC,$HOME/dotfiles/.gvimrc if has('gui_running') | source $MYGVIMRC
+augroup VimrcGlobal
+    autocmd!
+    " reload when writing .vimrc
+    autocmd BufWritePost $MYVIMRC,$HOME/dotfiles/.vimrc source $MYVIMRC |
+                \ if (has('gui_running') && filereadable($MYGVIMRC)) | source $MYGVIMRC
+    " TODO: should :colorscheme manually and fire ColorScheme autocmd
+    autocmd BufWritePost $MYGVIMRC,$HOME/dotfiles/.gvimrc if has('gui_running') | source $MYGVIMRC
+augroup END
 " *** }}}
 
 " *** Switches  *** {{{1
 " IMEs
-let mlh_enabled = 1
 let skk_enabled = 0
 let eskk_enabled = 0
 " *** }}}
@@ -36,7 +37,7 @@ if has('vim_starting')
     set nocompatible
     set rtp+=~/.vim/bundle/neobundle.vim/
 endif
-call neobundle#rc(expand('~/.vim/bundle/'))
+call neobundle#rc(expand('~/.vim/bundle'))
 NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc', {
 \   'build' : {
@@ -78,15 +79,17 @@ set shiftround    " Round indent when < or > is used
 
 " * Filetype specific indent * {{{
 
-" Force using <Tab>, not <Space>s
-autocmd FileType make setlocal softtabstop=8 shiftwidth=8 noexpandtab
-" 2-space indent
-autocmd FileType
-    \ html,scss,javascript,ruby,tex,xml
-    \ setlocal shiftwidth=2 softtabstop=2 nosmartindent
-autocmd FileType python     setlocal nosmartindent
-" Use smarter auto indent for C-languages
-autocmd FileType c,cpp,java setlocal cindent
+augroup VimrcGlobal
+    " Force using <Tab>, not <Space>s
+    autocmd FileType make setlocal softtabstop=8 shiftwidth=8 noexpandtab
+    " 2-space indent
+    autocmd FileType
+        \ html,scss,javascript,ruby,tex,xml
+        \ setlocal shiftwidth=2 softtabstop=2 nosmartindent
+    autocmd FileType python     setlocal nosmartindent
+    " Use smarter auto indent for C-languages
+    autocmd FileType c,cpp,java setlocal cindent
+augroup END
 
 " * }}}
 
@@ -105,7 +108,7 @@ set viminfo='100,<100,s10
 " Jump to the last known cursos position when opening file
 " Refer: :help last-position-jump
 " 'zv' and 'zz' was added by ypresto
-autocmd BufReadPost *
+autocmd VimrcGlobal BufReadPost *
   \ if line("'\"") > 1 && line("'\"") <= line("$") |
   \   exe "normal! g`\"" |
   \ endif |
@@ -174,9 +177,7 @@ function! s:HighlightSetup()
     highlight ZenkakuSpace ctermbg=darkgray   guibg=darkgray
 endfunction
 
-augroup HighlightSetup
-    autocmd!
-
+augroup VimrcGlobal
     " Highlight current line only on current window
     autocmd WinLeave * set nocursorline
     autocmd WinEnter,BufRead * set cursorline
@@ -224,7 +225,7 @@ set shortmess+=I      " Surpress intro message when starting vim
 
 " *** Keymapping *** {{{1
 
-if has('gui_mac')
+if has('gui_running')
     set notimeout  " to avoid Esc+Key waiting bug
     set nottimeout " blah, no effect on gui...
     " below lines are problematic on MacVim with Alt+Key physically mapped to Esc+Key
@@ -238,7 +239,8 @@ else
     set ttimeoutlen=150
 endif
 
-noremap ZJ :w<CR> " Fast saving
+" Fast saving
+noremap ZJ :update<CR>
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>
 
 " swap g[jk] (move displayed line) and [jk] (move original line)
@@ -271,10 +273,7 @@ cnoremap <Esc>d <Del>
 snoremap <Esc>d <Del>
 " Remap <C-d> de-indentation to Alt-t
 inoremap <Esc>t <C-d>
-" TODO using at end of line causes backspace
 inoremap <C-k> <C-o>D
-" delimitMate requires below binding
-imap <C-h> <BS>
 " ** }}}
 
 " Move lines up and down (bubbling) left and right (indent)
@@ -364,10 +363,11 @@ nmap <Leader>uG <Leader>u:giti<CR>
 
 nmap <Leader>uS <Leader>u:session<CR>
 
+nmap <Leader>uh <Leader>u:help<CR>
+
 nmap <Leader>uu <Leader>u:source<CR>
 
-augroup UniteWindowKeyMaps
-    autocmd!
+augroup VimrcGlobal
     autocmd FileType unite nnoremap <silent><buffer><expr> <C-j> unite#do_action('split')
     autocmd FileType unite inoremap <silent><buffer><expr> <C-j> unite#do_action('split')
     autocmd FileType unite nnoremap <silent><buffer><expr> <C-l> unite#do_action('vsplit')
@@ -431,19 +431,12 @@ nmap <C-n> <Plug>yankstack_substitute_newer_paste
 
 " autocompletes parenthesis, braces and more
 NeoBundle 'kana/vim-smartinput'
-call smartinput#define_rule({ 'at': '\[\_s*\%#\_s*\]', 'char': '<Enter>', 'input': '<Enter><C-o>O' })
-call smartinput#define_rule({ 'at': '{\_s*\%#\_s*}'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
-call smartinput#define_rule({ 'at': '(\_s*\%#\_s*)'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
-
-" smartinput deprecates belows
-" NeoBundle 'Raimondi/delimitMate'
-" imap <Esc>g <Plug>delimitMateS-Tab
-" " instead of above, use below one
-" NeoBundle 'jiangmiao/auto-pairs'
-" let g:AutoPairsShortcutToggle = '<Plug>_disabled_AutoPairsShortcutToggle'
-" let g:AutoPairsShortcutFastWrap = '<Plug>_disabled_AutoPairsShortcutFastWrap'
-" let g:AutoPairsShortcutJump = '<Esc>g'
-" let g:AutoPairsShortcutBackInsert = '<Esc>p'
+"call smartinput#define_rule({ 'at': '\[\_s*\%#\_s*\]', 'char': '<Enter>', 'input': '<Enter><C-o>O' })
+"call smartinput#define_rule({ 'at': '{\_s*\%#\_s*}'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
+"call smartinput#define_rule({ 'at': '(\_s*\%#\_s*)'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
+" To avoid conflict with neocomplcache; refer :help neocomplcache-faq
+autocmd VimrcGlobal VimEnter * imap <silent> <CR> <C-r>=neocomplcache#smart_close_popup()<CR><Plug>my_cr_function_smartinput
+call smartinput#map_to_trigger('i', '<Plug>my_cr_function_smartinput', '<Enter>', '<CR>')
 
 " surrounding with braces or quotes with s and S key
 NeoBundle 'tpope/vim-surround'
@@ -482,6 +475,8 @@ NeoBundle 'thinca/vim-quickrun', {
 \      'tyru/open-browser.vim',
 \   ]
 \}
+let g:quickrun_config = {}
+let g:quickrun_config['perl'] = {'command': 'prove'}
 
 " Highlight indent by its levels, must have for pythonist
 NeoBundle 'nathanaelkane/vim-indent-guides'
@@ -538,9 +533,6 @@ vnoremap <Leader>t;  :Tabular/:\zs/<CR>
 vnoremap <Leader>t,  :Tabular/,\zs/<CR>
 
 vnoremap <Leader>t<Space> :Tabular multiple_spaces<CR>
-autocmd VimEnter * :AddTabularPipeline multiple_spaces / \{2,}/
-    \ map(a:lines, "substitute(v:val, ' \{2,}', '  ', 'g')")
-    \   | tabular#TabularizeStrings(a:lines, '  ', 'l0')
 
 " Move between buffers, diff hunks, etc places with bracket keys
 NeoBundle 'tpope/vim-abolish'
@@ -598,7 +590,9 @@ let g:unite_winheight="10"
 
 NeoBundle 'tacroe/unite-mark'
 NeoBundle 'h1mesuke/unite-outline'
+NeoBundle 'taka84u9/unite-git'
 NeoBundle 'kmnk/vim-unite-giti.git'
+NeoBundle 'tsukkee/unite-help'
 NeoBundle 'Shougo/unite-session'
 let g:unite_source_session_options = &sessionoptions
 
@@ -615,7 +609,7 @@ NeoBundle 'kana/vim-textobj-user'
 " too many, refer help
 " Bundle 'kana/vim-textobj-diff'
 " [ai]e
-" Bundle 'kana/vim-textobj-entire'
+NeoBundle 'kana/vim-textobj-entire'
 " [ai]z
 NeoBundle 'kana/vim-textobj-fold'
 " [ai]f
@@ -702,18 +696,6 @@ NeoBundle 'danro/rename.vim'
 " Bulk renamer
 NeoBundle 'renamer.vim'
 
-" Buffer list in bottom of window
-" NeoBundle 'buftabs'
-" (You can use status line with option
-"  or you can expand command line with 'set cmdheight')
-
-" Micro <C-i> and <C-o>
-" NeoBundle 'thinca/vim-poslist'
-" map <Esc>, <Plug>(poslist-next-pos)
-" map <Esc>. <Plug>(poslist-prev-pos)
-" imap <Esc>, <C-o><Plug>(poslist-next-pos)
-" imap <Esc>. <C-o><Plug>(poslist-prev-pos)
-
 " ** }}}
 
 " ** nerdcommenter ** {{{
@@ -722,22 +704,11 @@ NeoBundle 'renamer.vim'
 " xmap <Leader>cj <Plug>NERDCommenterToggle
 " nmap <Leader>cj <Plug>NERDCommenterToggle
 NeoBundle 'kien/rainbow_parentheses.vim'
-augroup RainbowParentheses
-    autocmd!
+augroup VimrcGlobal
     autocmd VimEnter * :RainbowParenthesesToggle
     autocmd Syntax * call DelayedExecute('RainbowParenthesesLoadRound')
     autocmd Syntax * call DelayedExecute('call rainbow_parentheses#activate()')
 augroup END
-" ** }}}
-
-" ** TODO: To be used ** {{{2
-" Bundle 'scrooloose/nerdtree'
-" required by fuzzyfinder
-" Bundle 'L9'
-" Bundle 'FuzzyFinder'
-" Bundle 'kana/vim-smartchr'
-
-" Bundle 'Shougo/vimshell'
 " ** }}}
 
 " ** IME ** {{{2
@@ -745,19 +716,19 @@ augroup END
 NeoBundleLazy 'vimtaku/vim-mlh', {
 \   'depends' : [
 \       'mattn/webapi-vim',
-\   ],
-\   'commands' : ':ToggleVimMlhKeymap'
+\   ]
 \}
+command! LoadMlh NeoBundleSource vim-mlh
 
 if eskk_enabled
-" NeoBundle 'tyru/eskk.vim'
+    NeoBundle 'tyru/eskk.vim'
     let g:eskk#no_default_mappings = 1
     let g:eskk#large_dictionary = { 'path': "~/.vim/dict/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp', }
     let g:eskk#enable_completion = 1
 endif
 
 if skk_enabled
-" NeoBundle 'anyakichi/skk.vim'
+    NeoBundle 'anyakichi/skk.vim'
     " original: Bundle 'tyru/skk.vim'
     let g:skk_jisyo = '~/.skk-jisyo'
     let g:skk_large_jisyo = '~/.vim/dict/SKK-JISYO.L'
@@ -817,8 +788,6 @@ let g:use_zen_complete_tag = 1
 NeoBundleLazy 'sukima/xmledit', '', 'htmlcss'
 " see http://nanasi.jp/articles/vim/xml-plugin.html
 
-" FIXME autocmd BufNew,BufReadPost *.tmpl setlocal filetype=html
-
 " haml / sass / scss
 let g:neobundle#default_options['hamlsass'] = {
 \   'autoload' : {
@@ -836,7 +805,7 @@ let g:neobundle#default_options['javascript'] = {
 \   }
 \ }
 
-autocmd BufNewFile,BufRead *.json setf javascript
+autocmd VimrcGlobal BufNewFile,BufRead *.json setf javascript
 
 NeoBundleLazy 'jelera/vim-javascript-syntax', '', 'javascript'
 NeoBundleLazy 'pangloss/vim-javascript', '', 'javascript' " indent
@@ -856,7 +825,7 @@ let g:neobundle#default_options['perl'] = {
 \   }
 \ }
 
-autocmd BufNewFile,BufRead *.t setf perl
+autocmd VimrcGlobal BufNewFile,BufRead *.t setf perl
 
 
 " use new perl syntax and indent!
@@ -873,22 +842,10 @@ NeoBundleLazy 'mattn/perlvalidate-vim', '', 'perl'
 " NeoBundleLazy 'yko/mojo.vim', '', 'perl'
 " let mojo_highlight_data = 1
 
-augroup PerlKeys
-    autocmd!
+augroup VimrcGlobal
     autocmd FileType perl inoremap <buffer> <C-l> $
     autocmd FileType perl snoremap <buffer> <C-l> $
 augroup END
-
-" Open perl file by package name under the cursor
-" NeoBundleLazy 'nakatakeshi/jump2pm.vim', '', 'perl'
-" noremap <Leader>pv :call Jump2pm('vne')<CR>
-" noremap <Leader>pf :call Jump2pm('e')<CR>
-" noremap <Leader>ps :call Jump2pm('sp')<CR>
-" noremap <Leader>pt :call Jump2pm('tabe')<CR>
-" vnoremap <Leader>pv :call Jump2pmV('vne')<CR>
-" vnoremap <Leader>pf :call Jump2pmV('e')<CR>
-" vnoremap <Leader>ps :call Jump2pmV('sp')<CR>
-" vnoremap <Leader>pt :call Jump2pmV('tabe')<CR>
 
 " vim-ref for perldoc
 cnoreabbrev Pod Ref perldoc
@@ -896,11 +853,6 @@ command! Upod :Unite ref/perldoc
 
 " Refer: Also refer textobj section
 
-" ** }}}
-
-" ** PHP ** {{{2
-" I'm not using symfony recently
-" Bundle 'soh335/vim-symfony'
 " ** }}}
 
 " ** Python ** {{{2
@@ -932,13 +884,13 @@ NeoBundleLazy 'msanders/cocoa.vim', '', 'objc'
 
 " ** Markdown ** {{{
 
-autocmd BufNewFile,BufRead *.md setf markdown
+autocmd VimrcGlobal BufNewFile,BufRead *.md setf markdown
 
 " ** }}}
 
 " ** VimScript ** {{{
 
-autocmd FileType vim,help set keywordprg=":help"
+autocmd VimrcGlobal FileType vim,help set keywordprg=":help"
 
 " ** }}}
 
@@ -975,9 +927,8 @@ function! RunDelayedExecute()
     autocmd! DelayedExecutor
     for cmd in s:delayed_execute_queue
         execute cmd
-        unlet cmd
     endfor
-    unlet s:delayed_execute_queue
+    unlet cmd s:delayed_execute_queue
 endfunction
 
 " ** }}}
@@ -1012,11 +963,10 @@ function! FoldRenewerInit()
         endif
         let w:fold_renewer_init_done = 1
         " Delay for permit other plugins to initialize
-        " FIXME: this autocmd should be WINDOW SPECIFIC
+        " CursorMoved: called at start of editting, after ready to edit
         augroup DelayedStashFoldMethod
             autocmd!
-            " CursorMoved: called at start of editting, after ready to edit
-            autocmd CursorMoved,CursorMovedI * call StashFoldMethod()
+            autocmd CursorMoved,CursorMovedI <buffer> call StashFoldMethodAfterInit()
         augroup END
     endif
 endfunction
@@ -1038,6 +988,11 @@ function! RestoreFoldMethod()
     endif
 endfunction
 
+function! StashFoldMethodAfterInit()
+    call StashFoldMethod()
+    autocmd! DelayedStashFoldMethod
+endfunction
+
 " Preserve foldmethod and set it to 'manual'
 function! StashFoldMethod()
     if !exists('w:last_fdm') && (&foldmethod == 'expr' || &foldmethod == 'syntax')
@@ -1045,7 +1000,6 @@ function! StashFoldMethod()
         let w:last_fdm=&foldmethod
         setlocal foldmethod=manual
     endif
-    autocmd! DelayedStashFoldMethod
 endfunction
 
 " ** }}}
@@ -1089,24 +1043,9 @@ endfunction
 
 " Beta: These are currently testing/starting-to-use!
 
-" Bundle 'fuenor/qfixgrep'
-" nnoremap <C-n> :lnext<CR>
-" nnoremap <C-p> :lprev<CR>
-" nnoremap <Leader>n :next<CR>
-" nnoremap <Leader>p :prev<CR>
-" nnoremap <C-h> :tn<CR>
-" nnoremap <C-l> :tp<CR>
-
-" Bundle 't9md/vim-phrase'
+NeoBundle 'fuenor/qfixgrep'
 
 " set showtabline=2
-
-" Bundle 'mbriggs/mark.vim'
-" TODO
-" let g:neocomplcache_ctags_arguments_list = {
-"   \ 'perl' : '-R -h ".pm"'
-"   \ }
-" Bundle 'astashov/vim-ruby-debugger'
 
 NeoBundle 'taku-o/vim-copypath'
 let g:copypath_copy_to_unnamed_register = 1
@@ -1116,21 +1055,6 @@ nmap ]r <Plug>(altr-forward)
 nmap [r <Plug>(altr-back)
 
 " Bundle 'jpalardy/vim-slime'
-
-if 0
-augroup TriggerUpdateTags
-    autocmd!
-    autocmd CursorHold * call g:UpdateTags()
-    autocmd CursorHoldI * call g:UpdateTags()
-augroup END
-function! g:UpdateTags()
-    if !exists(":NeoComplCacheCachingInclude") | return | endif
-    NeoComplCacheCachingInclude
-    for filename in neocomplcache#sources#include_complete#get_include_files(bufnr('%'))
-      execute "setlocal tags+=" . neocomplcache#cache#encode_name('include_tags', filename)
-    endfor
-endfunction
-endif
 
 if has('mac') && !has('gui_running')
     nnoremap <silent> <Space>y :.w !pbcopy<CR><CR>
@@ -1150,22 +1074,17 @@ NeoBundleLazy 'basyura/TweetVim', {
 \       'tyru/open-browser.vim',
 \   ],
 \}
-command! TweetVimLoad call InitTweetVim()
-function! InitTweetVim()
-    NeoBundleSource TweetVim
-endfunction
+command! TweetVimLoad :NeoBundleSource TweetVim
 
-" NeoBundle 'fuzzyjump.vim'
-" use H / M / L motion instead
-
-" NeoBundle 'mikewest/vimroom'
-
-" set scrolljump=3
-
-NeoBundleLazy 'rson/vim-conque'
-
-" nmap <Esc>; A;<Esc><Plug>(poslist-prev-pos)
-" imap <Esc>; <C-o><Esc>;
+NeoBundleLazy 'http://conque.googlecode.com/svn/trunk/', 'conque-read-only', {
+\   'name' : 'vim-conque',
+\   'type' : 'svn',
+\   'autoload' : {
+\       'commands' : ['ConqueTerm', 'ConqueTermSplit', 'ConqueTermTab', 'ConqueTermVSplit']
+\   },
+\}
+let g:ConqueTerm_ReadUnfocused = 1
+let g:ConqueTerm_InsertOnEnter = 0
 
 " http://stackoverflow.com/questions/7187477/vim-smart-insert-semicolon
 vmap <Esc>; :normal A;<Esc><CR>
@@ -1197,23 +1116,28 @@ let g:operator_camelize_word_case = "lower"
 
 let g:gist_open_browser_after_post = 1
 
-NeoBundle 'mbbill/fencview'
+NeoBundleLazy 'mbbill/fencview', {
+\   'autoload' : {
+\       'commands' : ['FencAutoDetect', 'FencManualEncoding', 'FencView']
+\   }
+\}
+
 
 command! Uall :bufdo :update
 
-" NeoBundle 'ZoomWin'
-
-let g:ConqueTerm_ReadUnfocused = 1
 
 " NeoBundleLazy 'joonty/vdebug'
-NeoBundle 'ypresto/vdebug', { 'directory' : 'my_vdebug' }
+NeoBundleLazy 'ypresto/vdebug', { 'directory' : 'my_vdebug' }
 
-" autocmd VimEnter * let g:vdebug_options['exec_perl']   = $HOME.'/dotfiles/bin/komodo-perl.sh %s'
-" autocmd VimEnter * let g:vdebug_options['exec_python'] = $HOME.'/dotfiles/bin/komodo-python.sh %s'
-" autocmd VimEnter * let g:vdebug_options['exec_ruby']   = $HOME.'/dotfiles/bin/komodo-ruby.sh %s'
-autocmd VimEnter * let g:vdebug_options['command_perl']   = ':call OpenDebugTerminal("'.$HOME.'/dotfiles/bin/komodo-perl.sh %s")'
-autocmd VimEnter * let g:vdebug_options['command_python'] = ':call OpenDebugTerminal("'.$HOME.'/dotfiles/bin/komodo-python.sh %s")'
-autocmd VimEnter * let g:vdebug_options['command_ruby']   = ':call OpenDebugTerminal("'.$HOME.'/dotfiles/bin/komodo-ruby.sh %s")'
+if !exists("g:vdebug_options")
+    let g:vdebug_options = {}
+endif
+" let g:vdebug_options['exec_perl']   = $HOME.'/dotfiles/bin/komodo-perl.sh %s'
+" let g:vdebug_options['exec_python'] = $HOME.'/dotfiles/bin/komodo-python.sh %s'
+" let g:vdebug_options['exec_ruby']   = $HOME.'/dotfiles/bin/komodo-ruby.sh %s'
+let g:vdebug_options['command_perl']   = ':call OpenDebugTerminal("'.$HOME.'/dotfiles/bin/komodo-perl.sh %s")'
+let g:vdebug_options['command_python'] = ':call OpenDebugTerminal("'.$HOME.'/dotfiles/bin/komodo-python.sh %s")'
+let g:vdebug_options['command_ruby']   = ':call OpenDebugTerminal("'.$HOME.'/dotfiles/bin/komodo-ruby.sh %s")'
 
 let s:debug_terminal = 0
 function! OpenDebugTerminal(cmd)
@@ -1227,9 +1151,7 @@ function! OpenDebugTerminal(cmd)
         endif
     endif
 endfunction
-let g:ConqueTerm_InsertOnEnter = 0
 
-let g:ruby_debugger_progname = 'mvim'
 
 NeoBundleLazy 'tell-k/vim-browsereload-mac'
 NeoBundleLazy 'lordm/vim-browser-reload-linux'
@@ -1239,42 +1161,38 @@ elseif has('linux')
     NeoBundleSource vim-browser-reload-linux
 endif
 
-" NeoBundle 'AndrewRadev/splitjoin.vim'
-" nmap <Esc>i      :SplitjoinJoin<cr>
-" imap <Esc>i <C-o>:SplitjoinJoin<cr>
-" smap <Esc>i      :SplitjoinJoin<cr>
-" nmap <Esc>p      :SplitjoinSplit<cr>
-" imap <Esc>p <C-o>:SplitjoinSplit<cr>
-" smap <Esc>p      :SplitjoinSplit<cr>
 
-NeoBundleLazy 'reinh/vim-makegreen'
-NeoBundleLazy 'sontek/rope-vim'
-augroup SourcePython
-    autocmd FileType python NeoBundleSource vim-makegreen
-    autocmd FileType python NeoBundleSource rope-vim | nmap <Leader>mg <Plug>MakeGreen
-augroup END
+NeoBundleLazy 'AndrewRadev/splitjoin.vim', {
+\   'autoload' : {
+\       'commands' : ['SplitjoinJoin', 'SplitjoinSplit']
+\   }
+\}
+nmap <Esc>i      :SplitjoinJoin<CR>
+imap <Esc>i <C-o>:SplitjoinJoin<CR>
+smap <Esc>i      :SplitjoinJoin<CR>
+nmap <Esc>p      :SplitjoinSplit<CR>
+imap <Esc>p <C-o>:SplitjoinSplit<CR>
+smap <Esc>p      :SplitjoinSplit<CR>
 
-NeoBundleLazy 'vim-ruby/vim-ruby'
-NeoBundleLazy 'ecomba/vim-ruby-refactoring'
-augroup SourceRuby
-    autocmd FileType ruby NeoBundleSource vim-ruby
-    autocmd FileType ruby NeoBundleSource vim-ruby-refactoring
-augroup END
 
-NeoBundleLazy 'mattn/qiita-vim'
+NeoBundleLazy 'reinh/vim-makegreen', '', 'python'
+NeoBundleLazy 'sontek/rope-vim', '', 'python'
 
-NeoBundleLazy 'dbext.vim'
-" do end matchit (%)
-NeoBundle 'semmons99/vim-ruby-matchit'
-" NeoBundle 'vim-rsense'
+let g:neobundle#default_options['ruby'] = {
+\   'autoload' : {
+\       'filetypes' : ['ruby']
+\   }
+\ }
+NeoBundleLazy 'vim-ruby/vim-ruby', '', 'ruby'
+NeoBundleLazy 'ecomba/vim-ruby-refactoring', '', 'ruby'
+NeoBundleLazy 'taichouchou2/vim-rsense', '', 'ruby'
+
+NeoBundleLazy 'dbext.vim' " TODO
+
+NeoBundleLazy 'mattn/qiita-vim' " TODO
+
+" supports ruby, vimscript
 NeoBundle 'tpope/vim-endwise'
-" To avoid conflict with neocomplcache; refer :help neocomplcache-faq
-autocmd VimEnter * imap <silent> <CR> <C-r>=neocomplcache#smart_close_popup()<CR><Plug>my_cr_function_smartinput
-call smartinput#map_to_trigger('i', '<Plug>my_cr_function_smartinput', '<Enter>', '<CR>')
-NeoBundleLazy 'taichouchou2/vim-rsense'
-
-" NeoBundle 'tpope/vim-commentary'
-NeoBundle 'taka84u9/unite-git'
 
 NeoBundleLazy 'thinca/vim-prettyprint'
 
@@ -1316,16 +1234,14 @@ let g:quickrun_config.markdown = {
 "   " autocmd BufWinEnter,BufNewFile test_*.py setlocal filetype=python.unit
 " augroup END
 
-let g:quickrun_config = {}
 " let g:quickrun_config['php.unit'] = {'command': 'phpunitrunner'}
 " let g:quickrun_config['python.unit'] = {'command': 'nosetests', 'cmdopt': '-s -vv'}
-let g:quickrun_config['perl'] = {'command': 'prove'}
 
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-" autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-" autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-" autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd VimrcGlobal FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd VimrcGlobal FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+" autocmd VimrcGlobal FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+" autocmd VimrcGlobal FileType python setlocal omnifunc=pythoncomplete#Complete
+" autocmd VimrcGlobal FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 " Enable heavy omni completion.
 if !exists('g:neocomplcache_omni_patterns')
@@ -1333,12 +1249,10 @@ if !exists('g:neocomplcache_omni_patterns')
 endif
 " let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 " let g:neocomplcache_omni_patterns.perl = '[^. *\t]\.\w*\|\h\w*::'
-" autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-" autocmd FileType perl setlocal omnifunc=PerlComplete
+" autocmd VimrcGlobal FileType ruby setlocal omnifunc=rubycomplete#Complete
+" autocmd VimrcGlobal FileType perl setlocal omnifunc=PerlComplete
 
-NeoBundleLazy 'Shougo/unite-ssh'
-NeoBundle 't9md/vim-unite-ack' " TODO
-NeoBundle 'tsukkee/unite-help'
+NeoBundleLazy 'Shougo/unite-ssh' " TODO
 NeoBundle 'MultipleSearch' " TODO
 NeoBundle 'airblade/vim-rooter' " TODO
 NeoBundleLazy 'tsukkee/lingr-vim' " TODO
@@ -1351,8 +1265,8 @@ NeoBundle 'thinca/vim-unite-history'
 " NeoBundle 't9md/vim-surround_custom_mapping'
 
 " http://hail2u.net/blog/software/only-one-line-life-changing-vimrc-setting.html
-autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
-autocmd FileType diff setlocal includeexpr=substitute(v:fname,'^[ab]\\/','','')
+autocmd VimrcGlobal FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
+autocmd VimrcGlobal FileType diff setlocal includeexpr=substitute(v:fname,'^[ab]\\/','','')
 
 " http://stackoverflow.com/questions/7672783/how-can-i-do-something-like-gf-but-in-a-new-vertical-split
 noremap <Leader>f :vertical wincmd f<CR>
@@ -1361,8 +1275,8 @@ noremap <Leader>f :vertical wincmd f<CR>
 NeoBundle 'sgur/vim-textobj-parameter'
 
 " let g:indent_guides_auto_colors = 0
-" autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
-" autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
+" autocmd VimrcGlobal VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
+" autocmd VimrcGlobal VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
 "
 NeoBundle 'Valloric/MatchTagAlways'
 
@@ -1573,10 +1487,7 @@ nnoremap <Space>gw  :<C-u>Gwrite<CR>
 
 " gitv
 NeoBundle 'gregsexton/gitv'
-augroup Gitv
-  autocmd!
-  autocmd FileType git :setlocal foldlevel=99
-augroup END
+autocmd VimrcGlobal FileType git :setlocal foldlevel=99
 nnoremap <Space>gv  :<C-u>Gitv<CR>
 nnoremap <Space>gV  :<C-u>Gitv!<CR>
 
@@ -1588,7 +1499,7 @@ set fileencodings=iso-2022-jp-3,iso-2022-jp,euc-jisx0213,euc-jp,utf-8,ucs-bom,eu
 set encoding=utf-8
 set fileformats=unix,dos,mac
 
-autocmd BufReadPost *
+autocmd VimrcGlobal BufReadPost *
 \   if &modifiable && !search('[^\x00-\x7F]', 'cnw')
 \ |   setlocal fileencoding=
 \ | endif
@@ -1606,54 +1517,6 @@ set formatoptions-=o
 " TODO: check m flag meaning
 set formatoptions+=m
 set formatoptions+=M
-
-" 前回終了したカーソル行に移動
-" autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
-
-if 0
-
-" 必要なときのみ、カーソル行をハイライト
-" http://d.hatena.ne.jp/thinca/20090530/1243615055
-augroup vimrc-auto-cursorline
-    autocmd!
-    autocmd CursorMoved,CursorMovedI * call Auto_cursorline('CursorMoved')
-    autocmd CursorHold,CursorHoldI * call Auto_cursorline('CursorHold')
-    autocmd WinEnter * call Auto_cursorline('WinEnter')
-    autocmd WinLeave * call Auto_cursorline('WinLeave')
-
-    let g:cursorline_lock = 0
-    function! Auto_cursorline(event)
-        if a:event ==# 'WinEnter'
-            setlocal cursorline
-            setlocal cursorcolumn
-            let g:cursorline_lock = 2
-        elseif a:event ==# 'WinLeave'
-            setlocal nocursorline
-            setlocal nocursorcolumn
-        elseif a:event ==# 'CursorMoved'
-            if g:cursorline_lock
-                if 1 < g:cursorline_lock
-                    let g:cursorline_lock = 1
-                else
-                    setlocal nocursorline
-                    setlocal nocursorcolumn
-                    let g:cursorline_lock = 0
-                endif
-            endif
-        elseif a:event ==# 'CursorHold'
-            setlocal cursorline
-            setlocal cursorcolumn
-            let g:cursorline_lock = 1
-        endif
-    endfunction
-augroup END
-
-endif
-
-
-" setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class
-" IndentGuidesEnable
-
 
 " grepソース
 " let g:unite_source_grep_default_opts = '-Hn --include="*.vim" --include="*.txt" --include="*.php" --include="*.xml" --include="*.mkd" --include="*.hs" --include="*.js" --include="*.log" --include="*.sql" --include="*.coffee"'
@@ -1709,23 +1572,25 @@ let g:javaapi#delay_dirs = [
 set complete=.,w,b,u
 set foldcolumn=2
 
-autocmd FileType java       set foldmarker={,} foldmethod=marker
-autocmd FileType cpp        set foldmarker={,} foldmethod=marker
-autocmd FileType c          set foldmarker={,} foldmethod=marker
-autocmd FileType java       set omnifunc=javaapi#complete
-autocmd FileType cpp        set omnifunc=cppapi#complete
-autocmd FileType c          set omnifunc=cppapi#complete
-"autocmd CompleteDone *.java call javaapi#showRef()
+augroup VimrcGlobal
+    autocmd FileType java       set foldmarker={,} foldmethod=marker
+    autocmd FileType cpp        set foldmarker={,} foldmethod=marker
+    autocmd FileType c          set foldmarker={,} foldmethod=marker
+    autocmd FileType java       set omnifunc=javaapi#complete
+    autocmd FileType cpp        set omnifunc=cppapi#complete
+    autocmd FileType c          set omnifunc=cppapi#complete
+    "autocmd CompleteDone *.java call javaapi#showRef()
 
-autocmd FileType javascript set omnifunc=jscomplete#CompleteJS
-let g:jscomplete_use = ['dom', 'webkit']
+    autocmd FileType javascript set omnifunc=jscomplete#CompleteJS
+    let g:jscomplete_use = ['dom', 'webkit']
 
-if has("balloon_eval") && has("balloon_multiline")
-  autocmd FileType java  set ballooneval bexpr=javaapi#balloon()
-  autocmd FileType cpp   set ballooneval bexpr=cppapi#balloon()
-  autocmd FileType c     set ballooneval bexpr=cppapi#balloon()
-  autocmd FileType h     set ballooneval bexpr=cppapi#balloon()
-endif
+    if has("balloon_eval") && has("balloon_multiline")
+    autocmd FileType java  set ballooneval bexpr=javaapi#balloon()
+    autocmd FileType cpp   set ballooneval bexpr=cppapi#balloon()
+    autocmd FileType c     set ballooneval bexpr=cppapi#balloon()
+    autocmd FileType h     set ballooneval bexpr=cppapi#balloon()
+    endif
+augroup END
 
 " 今開いているウィンドウを新しいタブで開きなおす
 command! OpenNewTab  :call OpenNewTab()
