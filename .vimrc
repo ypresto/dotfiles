@@ -1162,18 +1162,7 @@ elseif has('linux')
 endif
 
 
-NeoBundleLazy 'AndrewRadev/splitjoin.vim', {
-\   'autoload' : {
-\       'commands' : ['SplitjoinJoin', 'SplitjoinSplit']
-\   }
-\}
-nmap <Esc>i      :SplitjoinJoin<CR>
-imap <Esc>i <C-o>:SplitjoinJoin<CR>
-smap <Esc>i      :SplitjoinJoin<CR>
-nmap <Esc>p      :SplitjoinSplit<CR>
-imap <Esc>p <C-o>:SplitjoinSplit<CR>
-smap <Esc>p      :SplitjoinSplit<CR>
-
+NeoBundle 'AndrewRadev/splitjoin.vim'
 
 NeoBundleLazy 'reinh/vim-makegreen', '', 'python'
 NeoBundleLazy 'sontek/rope-vim', '', 'python'
@@ -1426,7 +1415,7 @@ if v:version < 7.3 || (v:version == 7.3 && !has('patch336'))
 endif
 
 set linebreak
-let &showbreak="»   "
+let &showbreak="» "
 set breakat=\ ;:,!?.>
 
 " ** }}}

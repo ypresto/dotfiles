@@ -333,4 +333,6 @@ fi
 # export PERL5LIB="./lib:./t/inc:$PERL5LIB"
 alias ws='python -m SimpleHTTPServer'
 
+alias ag="ag --search-binary --pager='less -RS'"
+
 source $HOME/.zshrc_local
