@@ -548,31 +548,46 @@ NeoBundle 'kana/vim-operator-replace', {
 
 " ** neocomplcache ** {{{2
 
-NeoBundle 'Shougo/neocomplcache', {
-\   'autoload' : {
-\       'insert' : 1
-\   }
-\}
+if has('lua')
+    NeoBundle 'Shougo/neocomplete', {
+    \   'autoload' : {
+    \       'insert' : 1
+    \   }
+    \}
+    let s:neocompl_config_prefix = 'neocomplete#'
+else
+    NeoBundle 'Shougo/neocomplcache', {
+    \   'autoload' : {
+    \       'insert' : 1
+    \   }
+    \}
+    let s:neocompl_config_prefix = 'neocomplcache_'
+endif
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'honza/vim-snippets'
 " English spell completion with 'look' command
 NeoBundle 'ujihisa/neco-look'
-let g:neocomplcache_enable_at_startup = 1
-let g:neocomplcache_enable_prefetch = 1
-let g:neocomplcache_enable_camel_case_completion = 0
-let g:neocomplcache_enable_underbar_completion = 0
-let g:neocomplcache_enable_wildcard = 0
-let g:neocomplcache_enable_fuzzy_completion = 1
-let g:neocomplcache_fuzzy_completion_start_length = 3
-let g:neocomplcache_enable_auto_delimiter = 1
-let g:neocomplcache_max_list = 100
-let g:neocomplcache_source_disable = {
-    \ 'tags_complete' : 1,
-    \}
-let g:neocomplcache_dictionary_filetype_lists = {
-    \ 'default'    : '',
-    \ 'perl'       : $HOME . '/.vim/dict/perl.dict'
-    \ }
+
+let s:neocompl_options = {
+\   'enable_at_startup'             : 1,
+\   'enable_prefetch'               : 1,
+\   'enable_fuzzy_completion'       : 1,
+\   'fuzzy_completion_start_length' : 3,
+\   'enable_auto_delimiter'         : 1,
+\   'enable_refresh_always'         : 1,
+\   'max_list'                      : 100,
+\   'source_disable' : {
+\       'tags_complete' : 1,
+\   },
+\   'dictionary_filetype_lists' : {
+\       'default'    : '',
+\       'perl'       : $HOME . '/.vim/dict/perl.dict'
+\   },
+\}
+
+for s:k in keys(s:neocompl_options)
+    execute printf('let g:%s%s = s:neocompl_options[s:k]', s:neocompl_config_prefix, s:k)
+endfor
 
 " ** }}}
 
