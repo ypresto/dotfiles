@@ -435,7 +435,7 @@ NeoBundle 'kana/vim-smartinput'
 "call smartinput#define_rule({ 'at': '{\_s*\%#\_s*}'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
 "call smartinput#define_rule({ 'at': '(\_s*\%#\_s*)'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
 " To avoid conflict with neocomplcache; refer :help neocomplcache-faq
-autocmd VimrcGlobal VimEnter * imap <silent> <CR> <C-r>=neocomplcache#smart_close_popup()<CR><Plug>my_cr_function_smartinput
+autocmd VimrcGlobal VimEnter * execute printf('imap <silent> <CR> <C-r>=%ssmart_close_popup()<CR><Plug>my_cr_function_smartinput', s:neocompl_config_prefix)
 call smartinput#map_to_trigger('i', '<Plug>my_cr_function_smartinput', '<Enter>', '<CR>')
 
 " surrounding with braces or quotes with s and S key
@@ -823,7 +823,7 @@ let g:neobundle#default_options['javascript'] = {
 autocmd VimrcGlobal BufNewFile,BufRead *.json setf javascript
 
 NeoBundleLazy 'jelera/vim-javascript-syntax', '', 'javascript'
-NeoBundleLazy 'pangloss/vim-javascript', '', 'javascript' " indent
+"NeoBundleLazy 'pangloss/vim-javascript', '', 'javascript' " indent
 NeoBundleLazy 'nono/jquery.vim', '', 'javascript'
 NeoBundleLazy 'mklabs/grunt.vim', '', 'javascript'
 
