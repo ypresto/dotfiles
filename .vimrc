@@ -1372,7 +1372,8 @@ nmap SS <Plug>YSsurround
 
 " set directory-=. " don't save tmp swap file in current directory
 
-nnoremap Y y$
+call yankstack#setup()
+nmap Y y$
 
 " ** }}}
 
