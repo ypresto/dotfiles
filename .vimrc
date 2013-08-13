@@ -108,12 +108,17 @@ set viminfo='100,<100,s10
 " Jump to the last known cursos position when opening file
 " Refer: :help last-position-jump
 " 'zv' and 'zz' was added by ypresto
-autocmd VimrcGlobal BufReadPost *
-  \ if line("'\"") > 1 && line("'\"") <= line("$") |
-  \   exe "normal! g`\"" |
-  \ endif |
-  \ execute "normal! zv" | " open fold under cursor
-  \ execute "normal! zz"   " Move current line on center of window
+autocmd VimrcGlobal BufReadPost * call s:MoveToLastPosition()
+
+function! s:MoveToLastPosition()
+    if line("'\"") > 1 && line("'\"") <= line("$")
+        exe "normal! g`\""
+    endif
+    " open fold under cursor
+    execute "normal! zv"
+    " Move current line on center of window
+    execute "normal! zz"
+endfunction
 
 set sessionoptions-=options
 
@@ -126,7 +131,7 @@ set backspace=indent,eol,start " go to previous line with backspace
 set textwidth=0                " don't insert break automatically
 
 set foldmethod=marker " Use '{{{' and '}}}' for marker
-set foldlevelstart=0  " Start with all folds closed
+set foldlevelstart=1  " Start with some folds closed
 set noeb vb t_vb=     " no beep
 set scrolloff=1       " show N more next line when scrolling
 
@@ -460,9 +465,6 @@ let g:syntastic_mode_map = { 'mode': 'active',
             \ 'passive_filetypes': ['java'] }
 let g:syntastic_error_symbol='E>' " ✗
 let g:syntastic_warning_symbol='W>' " ⚠
-let g:syntastic_echo_current_error=0 " too heavy, use below one
-" show quickfix text of current line on statusline
-NeoBundle 'dannyob/quickfixstatus'
 
 " rich-formatted undo history
 NeoBundle 'sjl/gundo.vim'
@@ -513,7 +515,7 @@ endif
 NeoBundle 'kien/ctrlp.vim'
 let g:ctrlp_map = '<Leader><C-p>'
 let g:ctrlp_max_files = 0
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files --exclude-standard'] " speedup
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files --cached --others --exclude-standard'] " speedup
 nmap <Leader><C-q> :CtrlPQuickfix<CR>
 nmap <Leader><C-m> :CtrlPMRU<CR>
 nmap <Leader><C-c> :CtrlPChangeAll<CR>
@@ -604,7 +606,7 @@ let g:unite_split_rule="botright"
 let g:unite_winheight="10"
 
 NeoBundle 'tacroe/unite-mark'
-NeoBundle 'h1mesuke/unite-outline'
+NeoBundle 'Shougo/unite-outline'
 NeoBundle 'taka84u9/unite-git'
 NeoBundle 'kmnk/vim-unite-giti.git'
 NeoBundle 'tsukkee/unite-help'
@@ -851,7 +853,7 @@ let perl_fold_blocks=1
 " let perl_nofold_packages = 1
 " let perl_include_pod=1
 
-" NeoBundleLazy 'c9s/perlomni.vim', '', 'perl'
+NeoBundleLazy 'c9s/perlomni.vim', '', 'perl'
 NeoBundleLazy 'mattn/perlvalidate-vim', '', 'perl'
 
 " NeoBundleLazy 'yko/mojo.vim', '', 'perl'
@@ -1256,6 +1258,13 @@ endif
 " autocmd VimrcGlobal FileType ruby setlocal omnifunc=rubycomplete#Complete
 " autocmd VimrcGlobal FileType perl setlocal omnifunc=PerlComplete
 
+
+if !exists('g:neocomplete#sources#omni#input_patterns')
+    let g:neocomplete#sources#omni#input_patterns = {}
+endif
+let g:neocomplete#sources#omni#input_patterns.perl =
+\   '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+
 NeoBundleLazy 'Shougo/unite-ssh' " TODO
 NeoBundle 'MultipleSearch' " TODO
 NeoBundle 'airblade/vim-rooter' " TODO
@@ -1301,6 +1310,8 @@ NeoBundleLazy 'mattn/mkdpreview-vim', {
 let g:loaded_matchparen = 1
 NeoBundle 'haruyama/vim-matchopen'
 
+noremap <C-w><C-f> :vertical wincmd f<CR>
+
 " HERE
 
 " ** vimrc reading @ 2012/11/03 {{{
@@ -1323,7 +1334,7 @@ NeoBundle 'haruyama/vim-matchopen'
 
 " https://github.com/kazuph/dotfiles/blob/master/_vimrc
 
-set grepprg=ag\ -a\ 
+let &grepprg='ag --search-binary'
 
 let g:neocomplcache_min_syntax_length = 3
 if !exists('g:neocomplcache_keyword_patterns')
