@@ -4,6 +4,10 @@
 # functions, options, key bindings, etc.
 #
 
+if [ -f "$HOME/.zshrc_local_init" ]; then
+    source "$HOME/.zshrc_local_init"
+fi
+
 if [ "$TERM" = "xterm" ]; then
     # No it isn't, it's gnome-terminal
     export TERM=xterm-256color
@@ -12,10 +16,10 @@ fi
 #bindkey -v
 bindkey -e
 
-fpath=(~/.zsh/functions ~/homebrew/share/zsh/{site-,}functions /usr/local/share/zsh/{site-,}functions ${fpath})
-
 autoload -U compinit
 compinit
+
+fpath=(~/.zsh/functions ~/homebrew/share/zsh/{site-,}functions /usr/local/share/zsh/{site-,}functions ${fpath})
 
 #allow tab completion in the middle of a word
 setopt COMPLETE_IN_WORD
@@ -43,7 +47,7 @@ setopt SHARE_HISTORY
 
 autoload -U +X bashcompinit && bashcompinit
 
-source ~/.bashrc
+# source ~/.bashrc
 
 # *** moved from .bashrc_public ***
 
@@ -271,8 +275,6 @@ source_homebrew () {
     return 1
 }
 
-# git completion
-source ~/dotfiles/completions/git-completion.zsh
 # hub completion
 source_homebrew etc/bash_completion.d/hub.bash_completion.sh
 eval "$(hub alias -s zsh)"

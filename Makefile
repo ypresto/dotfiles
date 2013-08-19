@@ -61,9 +61,9 @@ gitsubmodules:
 	git submodule foreach 'git checkout master; git pull; git submodule sync; git submodule update --init'
 
 completions:
-	cd completions && \
-	wget --timestamping https://raw.github.com/git/git/master/contrib/completion/git-completion.bash && \
-	wget --timestamping https://raw.github.com/git/git/master/contrib/completion/git-completion.zsh
+	cd .zsh/functions && \
+	curl -o _git https://raw.github.com/git/git/master/contrib/completion/git-completion.zsh && \
+	curl -o _brew https://raw.github.com/mxcl/homebrew/master/Library/Contributions/brew_zsh_completion.zsh
 
 cleanlinks:
 # below also works with BSD find
