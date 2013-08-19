@@ -460,9 +460,11 @@ NeoBundle 'sudo.vim'
 
 " shows syntax error on every save
 NeoBundle 'scrooloose/syntastic'
-let g:syntastic_mode_map = { 'mode': 'active',
-            \ 'active_filetypes' : [],
-            \ 'passive_filetypes': ['java'] }
+let g:syntastic_mode_map = {
+\   'mode': 'active',
+\   'active_filetypes' : [],
+\   'passive_filetypes': ['java']
+\}
 let g:syntastic_error_symbol='E>' " ✗
 let g:syntastic_warning_symbol='W>' " ⚠
 
@@ -551,14 +553,14 @@ NeoBundle 'kana/vim-operator-replace', {
 " ** neocomplcache ** {{{2
 
 if has('lua')
-    NeoBundle 'Shougo/neocomplete', {
+    NeoBundleLazy 'Shougo/neocomplete', {
     \   'autoload' : {
     \       'insert' : 1
     \   }
     \}
     let s:neocompl_config_prefix = 'neocomplete#'
 else
-    NeoBundle 'Shougo/neocomplcache', {
+    NeoBundleLazy 'Shougo/neocomplcache', {
     \   'autoload' : {
     \       'insert' : 1
     \   }
