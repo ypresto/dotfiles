@@ -1314,6 +1314,10 @@ NeoBundle 'haruyama/vim-matchopen'
 
 noremap <C-w><C-f> :vertical wincmd f<CR>
 
+let g:syntastic_perl_checkers = ['perl', 'perlcritic', 'podchecker']
+let g:syntastic_perl_perlcritic_thres = 4
+nmap <Leader>s :SyntasticCheck<CR>
+
 " HERE
 
 " ** vimrc reading @ 2012/11/03 {{{
