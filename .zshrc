@@ -337,4 +337,7 @@ alias ws='python -m SimpleHTTPServer'
 
 alias ag="ag --search-binary --pager='less -RS'"
 
+alias modified='git diff --name-only'
+alias staged='git diff --name-only --cached'
+
 source $HOME/.zshrc_local

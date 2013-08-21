@@ -29,12 +29,16 @@
 	cw = diff --color-words --cached
 	cwd = diff --word-diff --cached
 	cs = diff --stat --cached
+	dn = diff --name-only
 	l = log --stat --decorate
-	lo = log --stat --decorate
+	lp = log --stat --decorate -p
+	lw = log --stat --decorate -p --color-words
+	lo = log --stat --decorate --oneline
 	pr = pull --rebase
-	re = rebase
+	rb = rebase
 	ru = remote update
 	mt = mergetool
+	cp = cherry-pick
 [diff]
 	tool = vimdiff
 [difftool]
@@ -45,3 +49,5 @@
 	default = upstream
 [rerere]
 	enabled = true
+
+# vim: noet:nosta:ts=8:sts=0:sw=8
