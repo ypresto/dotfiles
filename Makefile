@@ -30,7 +30,7 @@ update:
 	make _up
 	./mksymlinks
 
-_up: skkdict perldict gitsubmodules completions cleanlinks
+_up: skkdict perldict gitsubmodules completions
 
 vimproc:
 # build automatically by NeoBundle when vimproc updated
