@@ -826,8 +826,8 @@ let g:neobundle#default_options['javascript'] = {
 
 autocmd VimrcGlobal BufNewFile,BufRead *.json setf javascript
 
-NeoBundleLazy 'jelera/vim-javascript-syntax', '', 'javascript'
-"NeoBundleLazy 'pangloss/vim-javascript', '', 'javascript' " indent
+NeoBundle 'jelera/vim-javascript-syntax', '', 'javascript' " TODO: conflicts with vim-javascript when lazy load
+NeoBundleLazy 'pangloss/vim-javascript', '', 'javascript' " indent
 NeoBundleLazy 'nono/jquery.vim', '', 'javascript'
 NeoBundleLazy 'mklabs/grunt.vim', '', 'javascript'
 
