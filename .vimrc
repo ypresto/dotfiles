@@ -922,9 +922,6 @@ autocmd VimrcGlobal FileType vim,help set keywordprg=":help"
 command! DiffOrig vert new | set bt=nofile | r ++edit # | 0d_
                 \ | diffthis | wincmd p | diffthis
 
-" Show path
-command! F :echo expand('%')
-
 " *** }}}
 
 " *** Utility Function *** {{{1
