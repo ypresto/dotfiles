@@ -11,7 +11,7 @@ my $HOME = $ENV{'HOME'} || die "Environment variable HOME isn't set";
 
 my %TARGET_DIR_TO_FILES = (
     $HOME          => [
-        grep { !/^\.{1,2}$/ && !/^.git$/ && !/.swp$/ } glob(".*")
+        grep { !/^(\.{1,2}|\.git|\.gitmodules|\.sw[po])$/ } glob(".*")
     ],
     "$HOME/.byobu" => ['.tmux.conf'],
 );
