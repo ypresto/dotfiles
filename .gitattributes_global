@@ -8,6 +8,7 @@
 *.tmpl diff=html
 *.pl diff=perl
 *.pm diff=perl
+*.t diff=perl
 *.php diff=php
 *.py diff=python
 *.rb diff=ruby
