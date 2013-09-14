@@ -453,7 +453,11 @@ let g:ref_perldoc_auto_append_f = 1
 
 " git support
 NeoBundle 'tpope/vim-fugitive', { 'augroup' : 'fugitive' }
-NeoBundle 'mattn/gist-vim'
+NeoBundle 'mattn/gist-vim', {
+\   'depends' : [
+\       'mattn/webapi-vim',
+\   ],
+\}
 
 " read/write by sudo with `vim sudo:file.txt`
 NeoBundle 'sudo.vim'
