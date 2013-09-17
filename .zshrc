@@ -161,7 +161,7 @@ alias d='git diff'
 alias D='git diff --color-words'
 alias c='git diff --cached'
 alias C='git diff --cached --color-words'
-alias s='git status --short'
+alias s='git status --short --branch'
 alias t='tig'
 alias p='popd'
 alias gl='g l'
@@ -182,6 +182,7 @@ alias :h=' \
     [ -d /usr/local ] && cd /usr/local || \
     echo "no homebrew" >&2 && return 1'
 alias :g='cd ~/repo/github.com'
+alias :by='v ~/dotfiles/byobu_keybindings'
 #alias snip='open ~/.vim/bundle/snipMate/snippets'
 a() { 1=${1:--A}; git add $*; git status --short }
 m() { git commit -m "$*" }
@@ -334,6 +335,14 @@ if [ "`uname`" = "Darwin" ]; then
 fi
 # export PERL5LIB="./lib:./t/inc:$PERL5LIB"
 alias ws='python -m SimpleHTTPServer'
+
+wsr() {
+ruby -rwebrick <<EOS
+    server = WEBrick::HTTPServer.new(:Port => $hoge, :DocumentRoot => Dir.pwd)
+    trap 'INT' do server.shutdown end
+    server.start
+EOS
+}
 
 alias ag="ag --search-binary --pager='less -RS'"
 

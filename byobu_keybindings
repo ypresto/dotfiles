@@ -1,0 +1,54 @@
+# To use this config, add below line to `$HOME/.byobu/keybindings.tmux'.
+#
+#     source $HOME/dotfiles/byobu_keybindings
+#
+
+bind-key -n M-F2 display-panes \; split-window -h
+bind-key -n M-S-F2 new-session
+bind-key -n M-F3 display-panes \; swap-pane -s :. -t :.- \; select-pane -t :.-
+bind-key -n M-F4 display-panes \; swap-pane -s :. -t :.+ \; select-pane -t :.+
+bind-key -n M-S-F3 swap-window -t :-1
+bind-key -n M-S-F4 swap-window -t :+1
+bind-key -n M-Up resize-pane -U
+bind-key -n M-Down resize-pane -D
+bind-key -n M-Left resize-pane -L
+bind-key -n M-Right resize-pane -R
+bind-key -n M-F5 send-keys ". $BYOBU_PREFIX/bin/byobu-reconnect-sockets" \; send-keys Enter
+bind-key -n M-S-F5 new-window -d "byobu-select-profile -r"
+bind-key -n M-F6 kill-pane
+bind-key -n M-NPage copy-mode \; send-keys NPage
+bind-key -n M-PPage copy-mode \; send-keys PPage
+bind-key -n M-F8 new-window -k "byobu-layout restore; clear; $SHELL"
+bind-key -n M-S-F8 command-prompt -p "Save byobu layout as:" "run-shell 'byobu-layout save %%'"
+bind-key -n M-F11 join-pane -h -s :. -t :-1
+bind-key -n M-S-F12 new-window $BYOBU_PREFIX/lib/byobu/include/mondrian
+bind-key -n M-IC paste-buffer
+
+bind-key -n M-a new-window -n "ctrl-a" "byobu-ctrl-a"
+
+bind-key C-s display-panes \; split-window
+bind-key C-v display-panes \; split-window -h
+bind-key C-n new-session
+bind-key C-S-H display-panes \; swap-pane -s :. -t :.- \; select-pane -t :.-
+bind-key C-S-L display-panes \; swap-pane -s :. -t :.+ \; select-pane -t :.+
+bind-key S-F3 swap-window -t :-1
+bind-key S-F4 swap-window -t :+1
+bind-key Up resize-pane -U
+bind-key Down resize-pane -D
+bind-key Left resize-pane -L
+bind-key Right resize-pane -R
+bind-key F5 send-keys ". $BYOBU_PREFIX/bin/byobu-reconnect-sockets" \; send-keys Enter
+bind-key S-F5 new-window -d "byobu-select-profile -r"
+bind-key F6 kill-pane
+bind-key NPage copy-mode \; send-keys NPage
+bind-key PPage copy-mode \; send-keys PPage
+bind-key F8 new-window -k "byobu-layout restore; clear; $SHELL"
+bind-key S-F8 command-prompt -p "Save byobu layout as:" "run-shell 'byobu-layout save %%'"
+bind-key F11 join-pane -h -s :. -t :-1
+bind-key S-F12 new-window $BYOBU_PREFIX/lib/byobu/include/mondrian
+bind-key IC paste-buffer
+
+bind-key C-j display-panes \; select-pane -U
+bind-key C-k display-panes \; select-pane -D
+bind-key C-h display-panes \; select-pane -L
+bind-key C-l display-panes \; select-pane -R

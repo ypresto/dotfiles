@@ -7,13 +7,15 @@ use File::Spec;
 use File::Basename qw//;
 use File::Path qw//;
 
+sub filter_ignore {
+    grep { !/(^|\/)(\.{1,2}|\.git|\.gitmodules|.*\.sw[po]|\.Apple.*)$/ } @_
+}
+
 my $HOME = $ENV{'HOME'} || die "Environment variable HOME isn't set";
 
 my %TARGET_DIR_TO_FILES = (
-    $HOME          => [
-        grep { !/^(\.{1,2}|\.git|\.gitmodules|\.sw[po]|\.Apple.*)$/ } glob(".*")
-    ],
-    "$HOME/.byobu" => ['.tmux.conf'],
+    $HOME          => [ grep { !/^\.byobu|\.config$/ } filter_ignore glob(".*") ],
+    "$HOME/.byobu" => [ filter_ignore glob(".byobu/{.*,*}") ],
 );
 
 for my $dir (keys %TARGET_DIR_TO_FILES) {
@@ -27,7 +29,7 @@ for my $dir (keys %TARGET_DIR_TO_FILES) {
             print " [link exists]\n";
             next;
         }
-        if (-e $f and ! -w $f) {
+        if (-e $f && !-w $f) {
             print ": file is not writable\n";
             next;
         }
