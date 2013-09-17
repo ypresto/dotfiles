@@ -3,8 +3,9 @@
   "version"      : "0.0.1",
   "private"      : true,
   "dependencies" : {
-    "jshint"  : "*",
-    "csslint" : "*",
-    "grunt"   : "*"
+    "jshint"   : "*",
+    "csslint"  : "*",
+    "grunt"    : "*",
+    "jsonlint" : "*"
   }
 }

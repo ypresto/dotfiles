@@ -84,7 +84,7 @@ augroup VimrcGlobal
     autocmd FileType make setlocal softtabstop=8 shiftwidth=8 noexpandtab
     " 2-space indent
     autocmd FileType
-        \ html,scss,javascript,ruby,tex,xml
+        \ html,scss,javascript,json,ruby,tex,xml
         \ setlocal shiftwidth=2 softtabstop=2 nosmartindent
     autocmd FileType python     setlocal nosmartindent
     " Use smarter auto indent for C-languages
@@ -149,12 +149,6 @@ set smartcase         " Do not ignorecase if keyword contains uppercase
 set number            " Show number of line on left
 set showcmd           " Show what keys input for command, but too slow on terminal
 set laststatus=2      " Always show statusline
-" using powerline, not setting statusline
-" if skk_enabled
-"     set statusline=%<%f\ %h%m%r\ %{SkkGetModeStr()}%=%-14.(%l,%c%V%)\ %P
-" else
-"     set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-" endif
 
 " command line
 set cmdheight=2              " Set height of command line
@@ -325,13 +319,15 @@ inoremap <expr> <C-p> pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
 " inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
 " 補完をキャンセル＋End
 " inoremap <expr> <C-e>  pumvisible() ? neocomplcache#close_popup() : "\<End>"
+" 補完候補が表示されている場合は確定。そうでない場合は改行
+imap <expr> <C-j>  pumvisible() ? neocomplete#close_popup() : "\<CR>"
 
 " ** }}}
 
 " ** unite ** {{{2
 
 " デフォルト
-nnoremap <Leader>u: :Unite 
+nnoremap <Leader>u: :Unite<Space>
 " バッファ一覧
 nmap <Leader>ub <Leader>u:buffer<CR>
 " ファイル一覧
@@ -509,13 +505,8 @@ let g:accelerated_jk_anable_deceleration = 1
 " let g:accelerated_jk_acceleration_table = [10,7,5,4,3,2,2,2]
 let g:accelerated_jk_acceleration_table = [10,20,15,15]
 
-" Instant and Cool modeline
-NeoBundle 'Lokaltog/vim-powerline'
-if has('gui_macvim') && has('gui_running')
-    let g:Powerline_symbols = 'fancy'
-else
-    let g:Powerline_symbols = 'unicode'
-endif
+NeoBundle 'bling/vim-airline'
+" alternative: itchyny/lightline.vim
 
 " Fast file selector
 NeoBundle 'kien/ctrlp.vim'
@@ -828,12 +819,16 @@ let g:neobundle#default_options['javascript'] = {
 \   }
 \ }
 
-autocmd VimrcGlobal BufNewFile,BufRead *.json setf javascript
+autocmd VimrcGlobal FileType json call DelayedExecute('set syntax=javascript')
+autocmd VimrcGlobal BufNewFile,BufRead *.json setf json
 
 NeoBundle 'jelera/vim-javascript-syntax', '', 'javascript' " TODO: conflicts with vim-javascript when lazy load
 NeoBundleLazy 'pangloss/vim-javascript', '', 'javascript' " indent
+" https://github.com/nono/jquery.vim
 NeoBundleLazy 'nono/jquery.vim', '', 'javascript'
-NeoBundleLazy 'mklabs/grunt.vim', '', 'javascript'
+" NeoBundleLazy 'mklabs/grunt.vim', '', 'javascript'
+
+autocmd VimrcGlobal FileType javascript call DelayedExecute('set syntax=jquery')
 
 " http://wozozo.hatenablog.com/entry/2012/02/08/121504
 map <Leader>FJ !python -m json.tool<CR>
@@ -936,12 +931,12 @@ command! DiffOrig vert new | set bt=nofile | r ++edit # | 0d_
 function! DelayedExecute(command)
     if !exists('s:delayed_execute_queue')
         let s:delayed_execute_queue = []
+        augroup DelayedExecutor
+            autocmd!
+            autocmd CursorHold,CursorHoldI,CursorMoved,CursorMovedI * call RunDelayedExecute()
+        augroup END
     endif
     call add(s:delayed_execute_queue, a:command)
-    augroup DelayedExecutor
-        autocmd!
-        autocmd CursorHold,CursorHoldI,CursorMoved,CursorMovedI * call RunDelayedExecute()
-    augroup END
 endfunction
 function! RunDelayedExecute()
     autocmd! DelayedExecutor
@@ -1266,7 +1261,8 @@ if !exists('g:neocomplete#sources#omni#input_patterns')
     let g:neocomplete#sources#omni#input_patterns = {}
 endif
 let g:neocomplete#sources#omni#input_patterns.perl =
-\   '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+\   '[^. \t]->\%(\h\w*\)\?'
+" \   '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
 
 NeoBundleLazy 'Shougo/unite-ssh' " TODO
 NeoBundle 'MultipleSearch' " TODO
@@ -1318,6 +1314,19 @@ noremap <C-w><C-f> :vertical wincmd f<CR>
 let g:syntastic_perl_checkers = ['perl', 'perlcritic', 'podchecker']
 let g:syntastic_perl_perlcritic_thres = 4
 nmap <Leader>s :SyntasticCheck<CR>
+
+NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript', {
+\   'build' : {
+\       'windows' : 'npm install',
+\       'cygwin'  : 'npm install',
+\       'mac'     : 'npm install',
+\       'unix'    : 'npm install',
+\   }
+\}
+" let g:tern#command = "~/dotfiles/node_modules/.bin/tern"
+let g:tern#is_show_argument_hints_enabled = 0
+
+NeoBundle 'rking/ag.vim'
 
 " HERE
 
@@ -1456,6 +1465,8 @@ set breakat=\ ;:,!?.>
 
 " ** vimrc reading @ 2012/03/23 {{{
 
+if 0
+
 " @see http://vim-users.jp/2011/02/hack202/
 " 保存時に対象ディレクトリが存在しなければ作成する(作成有無は確認できる)
 augroup AutoMkdir
@@ -1469,6 +1480,7 @@ augroup AutoMkdir
   endfunction
 augroup END
 
+endif
 
 " command mode
 cnoremap <C-a> <Home>
@@ -1604,8 +1616,9 @@ augroup VimrcGlobal
     autocmd FileType c          set omnifunc=cppapi#complete
     "autocmd CompleteDone *.java call javaapi#showRef()
 
-    autocmd FileType javascript set omnifunc=jscomplete#CompleteJS
-    let g:jscomplete_use = ['dom', 'webkit']
+    " use tern instead
+    " autocmd FileType javascript set omnifunc=jscomplete#CompleteJS
+    " let g:jscomplete_use = ['dom', 'webkit']
 
     if has("balloon_eval") && has("balloon_multiline")
     autocmd FileType java  set ballooneval bexpr=javaapi#balloon()
