@@ -345,6 +345,7 @@ EOS
 }
 
 alias ag="ag --search-binary --pager='less -RS'"
+alias agnb="ag --pager='less -RS'"
 
 alias modified='git diff --name-only'
 alias staged='git diff --name-only --cached'

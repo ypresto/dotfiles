@@ -1328,6 +1328,8 @@ let g:tern#is_show_argument_hints_enabled = 0
 
 NeoBundle 'rking/ag.vim'
 
+command! PurgeTrailingSpace :%s/\v\s+$//
+
 " HERE
 
 " ** vimrc reading @ 2012/11/03 {{{

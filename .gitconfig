@@ -25,11 +25,10 @@
 	rsh = reset --hard
 	dw = diff --color-words
 	dwd = diff --word-diff
-	ds = diff --stat
 	cw = diff --color-words --cached
 	cwd = diff --word-diff --cached
-	cs = diff --stat --cached
 	dn = diff --name-only
+	cn = diff --cached --name-only
 	l = log --stat --decorate
 	lp = log --stat --decorate -p
 	lw = log --stat --decorate -p --color-words
