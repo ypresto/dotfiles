@@ -815,7 +815,7 @@ NeoBundleLazy 'tpope/vim-haml', '', 'hamlsass'
 
 let g:neobundle#default_options['javascript'] = {
 \   'autoload' : {
-\       'filetypes' : ['javascript']
+\       'filetypes' : ['javascript', 'json']
 \   }
 \ }
 
@@ -1324,11 +1324,14 @@ NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript', {
 \   }
 \}
 " let g:tern#command = "~/dotfiles/node_modules/.bin/tern"
-let g:tern#is_show_argument_hints_enabled = 0
+" let g:tern#is_show_argument_hints_enabled = 0
 
 NeoBundle 'rking/ag.vim'
 
 command! PurgeTrailingSpace :%s/\v\s+$//
+
+command! TwoIndent  set softtabstop=2 shiftwidth=2 | :IndentGuidesToggle | :IndentGuidesToggle
+command! FourIndent set softtabstop=4 shiftwidth=4 | :IndentGuidesToggle | :IndentGuidesToggle
 
 " HERE
 

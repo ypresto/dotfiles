@@ -52,3 +52,6 @@ bind-key C-j display-panes \; select-pane -U
 bind-key C-k display-panes \; select-pane -D
 bind-key C-h display-panes \; select-pane -L
 bind-key C-l display-panes \; select-pane -R
+
+bind-key -n F11 swap-window -t :-1
+bind-key -n F12 swap-window -t :+1
