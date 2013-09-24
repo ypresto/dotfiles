@@ -38,6 +38,7 @@
 	ru = remote update
 	mt = mergetool
 	cp = cherry-pick
+	mb = merge-base
 [diff]
 	tool = vimdiff
 [difftool]

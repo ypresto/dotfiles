@@ -257,8 +257,11 @@ zstyle ':completion:*' completer _oldlist _complete
 # FIXME: conflicts with auto-fu, use Ctrl-C to avoid
 source ~/dotfiles/zaw/zaw.zsh
 zstyle ':filter-select' case-insensitive yes
+bindkey '^Z^D' zaw-cdr
 bindkey '^V' zaw-cdr
-bindkey '^O' zaw-git-files
+bindkey '^Z^G' zaw-git-files
+bindkey '^O' popd
+bindkey '^Z^B' zaw-git-recent-branches
 
 unsetopt list_beep
 unsetopt beep
