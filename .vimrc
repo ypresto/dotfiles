@@ -1315,15 +1315,16 @@ let g:syntastic_perl_checkers = ['perl', 'perlcritic', 'podchecker']
 let g:syntastic_perl_perlcritic_thres = 4
 nmap <Leader>s :SyntasticCheck<CR>
 
-NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript', {
-\   'build' : {
-\       'windows' : 'npm install',
-\       'cygwin'  : 'npm install',
-\       'mac'     : 'npm install',
-\       'unix'    : 'npm install',
-\   }
-\}
-" let g:tern#command = "~/dotfiles/node_modules/.bin/tern"
+NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript'
+" NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript', {
+" \   'build' : {
+" \       'windows' : 'npm install',
+" \       'cygwin'  : 'npm install',
+" \       'mac'     : 'npm install',
+" \       'unix'    : 'npm install',
+" \   }
+" \}
+let g:tern#command = ['node', $HOME.'/dotfiles/node_modules/.bin/tern']
 " let g:tern#is_show_argument_hints_enabled = 0
 
 NeoBundle 'rking/ag.vim'
@@ -1332,6 +1333,9 @@ command! PurgeTrailingSpace :%s/\v\s+$//
 
 command! TwoIndent  set softtabstop=2 shiftwidth=2 | :IndentGuidesToggle | :IndentGuidesToggle
 command! FourIndent set softtabstop=4 shiftwidth=4 | :IndentGuidesToggle | :IndentGuidesToggle
+
+" set previewheight=
+set pumheight=10
 
 " HERE
 

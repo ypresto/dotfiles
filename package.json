@@ -6,6 +6,8 @@
     "jshint"   : "*",
     "csslint"  : "*",
     "grunt"    : "*",
-    "jsonlint" : "*"
+    "jsonlint" : "*",
+    "tern"     : "*",
+    "jsgrep"   : "*"
   }
 }
