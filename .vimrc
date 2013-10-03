@@ -97,8 +97,10 @@ augroup END
 
 " ** Undo / Backup / History / Session ** {{{2
 
-set undofile            " Save undo history to file
-set undodir=~/.vim/undo " Specify where to save
+if has('persistent_undo')
+    set undofile            " Save undo history to file
+    set undodir=~/.vim/undo " Specify where to save
+endif
 set nobackup            " Don't create backup files (foobar~)
 
 " reffer: http://vimwiki.net/?'viminfo'
@@ -162,7 +164,9 @@ set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
 " ** Highlighting ** {{{2
 
 set cursorline              " Highlight current line
-set colorcolumn=73,74,81,82 " Highlight border of 'long line'
+if exists("+colorcolumn")
+    set colorcolumn=73,74,81,82 " Highlight border of 'long line'
+endif
 set list                    " highlight garbage characters (see below)
 set listchars=tab:»-,trail:\ ,extends:»,precedes:«,nbsp:%
 
