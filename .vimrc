@@ -440,8 +440,13 @@ NeoBundle 'kana/vim-smartinput'
 "call smartinput#define_rule({ 'at': '{\_s*\%#\_s*}'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
 "call smartinput#define_rule({ 'at': '(\_s*\%#\_s*)'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
 " To avoid conflict with neocomplcache; refer :help neocomplcache-faq
-autocmd VimrcGlobal VimEnter * execute printf('imap <silent> <CR> <C-r>=%ssmart_close_popup()<CR><Plug>my_cr_function_smartinput', s:neocompl_config_prefix)
-call smartinput#map_to_trigger('i', '<Plug>my_cr_function_smartinput', '<Enter>', '<CR>')
+autocmd VimrcGlobal VimEnter * call s:SetupCRMapping()
+function! s:SetupCRMapping()
+    if s:is_neocomplete_available
+        execute printf('imap <silent> <CR> <C-r>=%ssmart_close_popup()<CR><Plug>my_cr_function_smartinput', s:neocompl_function_prefix)
+    endif
+    call smartinput#map_to_trigger('i', '<Plug>my_cr_function_smartinput', '<Enter>', '<CR>')
+endfunction
 
 " surrounding with braces or quotes with s and S key
 NeoBundle 'tpope/vim-surround'
@@ -557,14 +562,18 @@ if has('lua')
     \       'insert' : 1
     \   }
     \}
-    let s:neocompl_config_prefix = 'neocomplete#'
+    let s:is_neocomplete_available = 1
+    let s:neocompl_config_prefix   = 'neocomplete#'
+    let s:neocompl_function_prefix = 'neocomplete#'
 else
     NeoBundleLazy 'Shougo/neocomplcache', {
     \   'autoload' : {
     \       'insert' : 1
     \   }
     \}
-    let s:neocompl_config_prefix = 'neocomplcache_'
+    let s:is_neocomplete_available = 0
+    let s:neocompl_config_prefix   = 'neocomplcache_'
+    let s:neocompl_function_prefix = 'neocomplcache#'
 endif
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'honza/vim-snippets'
