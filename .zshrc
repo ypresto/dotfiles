@@ -49,9 +49,25 @@ autoload -U +X bashcompinit && bashcompinit
 
 # source ~/.bashrc
 
+_missing_commands=''
+function _is_available () {
+    which $1 >/dev/null 2>&1 && return 0 || return 1
+}
+function _should_available () {
+    if _is_available $1; then
+        return 0
+    else
+        _not_available $1
+        return 1
+    fi
+}
+function _not_available () {
+    _missing_commands="$_missing_commands $1"
+}
+
 # *** moved from .bashrc_public ***
 
-if which gls >/dev/null 2>&1; then
+if _is_available 'gls'; then
     # os x with homebrew/coreutils
     alias ls='gls --color=auto'
     eval `gdircolors ~/dotfiles/dircolors-solarized/dircolors.ansi-dark`
@@ -64,14 +80,18 @@ else
     eval `dircolors ~/dotfiles/dircolors-solarized/dircolors.ansi-dark`
 fi
 
-if which gfind >/dev/null 2>&1; then
+if _is_available 'gfind'; then
     alias find='gfind'
 fi
 
 # color / ignore case
 alias less='less -Ri'
-# export PAGER='less -Ri'
-export PAGER='lv -c'
+if _should_available 'lv'; then
+    export PAGER='lv -c'
+else
+    export PAGER='less -Ri'
+fi
+export PAGER='less -Ri'
 
 # ENV
 export PATH="$HOME/dotfiles/bin:$HOME/dotfiles/node_modules/.bin:$HOME/node_modules/.bin:$PATH"
@@ -279,12 +299,12 @@ source_homebrew () {
     return 1
 }
 
-# hub completion
-source_homebrew etc/bash_completion.d/hub.bash_completion.sh
-eval "$(hub alias -s zsh)"
+if _should_available 'hub'; then
+    eval "$(hub alias -s zsh)"
+fi
 
 # for ubuntu
-if which ack-grep >/dev/null 2>&1; then
+if _is_available 'ack-grep'; then
     alias ack='ack-grep'
     # compdef ack-grep=ack
 fi
@@ -330,7 +350,7 @@ if [ -e "$HOME/homebrew/share/git-core/contrib/workdir/git-new-workdir" ]; then
 elif [ -e "/usr/share/doc/git-1.7.10.2/contrib/workdir/git-new-workdir" ]; then
     alias git-new-workdir="sh /usr/share/doc/git-1.7.10.2/contrib/workdir/git-new-workdir"
 else
-    echo "git-new-workdir not available."
+    _not_available 'git-new-workdir'
 fi
 alias :vl='vim ~/.vimlocal/.vimrc'
 if [ "`uname`" = "Darwin" ]; then
@@ -353,4 +373,26 @@ alias agnb="ag --pager='less -RS'"
 alias modified='git diff --name-only'
 alias staged='git diff --name-only --cached'
 
-source $HOME/.zshrc_local
+if [ -f "$HOME/.zshrc_local" ]; then
+    source $HOME/.zshrc_local
+fi
+
+[ -n "$_missing_commands" ] && echo "Command not available:$_missing_commands"
+
+function _is_available () {
+    which $1 >/dev/null 2>&1 && return 0 || return 1
+}
+function _should_available () {
+    if _is_available $1; then
+        return 0
+    else
+        _not_available $1
+        return 1
+    fi
+}
+function _not_available () {
+    _missing_commands="$_missing_commands $1"
+}
+
+unfunction _is_available _should_available _not_available
+unset _missing_commands
