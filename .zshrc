@@ -367,8 +367,10 @@ ruby -rwebrick <<EOS
 EOS
 }
 
-alias ag="ag --search-binary --pager='less -RS'"
-alias agnb="ag --pager='less -RS'"
+unalias ag 2> /dev/null
+orig_ag=`which ag`
+alias agnb="$orig_ag --pager='less -RS'"
+alias ag="$orig_ag --search-binary --pager='less -RS'"
 
 alias modified='git diff --name-only'
 alias staged='git diff --name-only --cached'
