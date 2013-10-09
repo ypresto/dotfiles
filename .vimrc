@@ -1350,6 +1350,8 @@ command! FourIndent set softtabstop=4 shiftwidth=4 | :IndentGuidesToggle | :Inde
 " set previewheight=
 set pumheight=10
 
+NeoBundle 'airblade/vim-gitgutter'
+
 " HERE
 
 " ** vimrc reading @ 2012/11/03 {{{
