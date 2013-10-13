@@ -44,6 +44,8 @@ setopt SHARE_HISTORY
 ## disable mail checking
 #MAILCHECK=0
 
+setopt INTERACTIVE_COMMENTS
+
 
 autoload -U +X bashcompinit && bashcompinit
 source "$HOME/dotfiles/bashcomp/tig-completion.bash"
