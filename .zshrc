@@ -195,6 +195,7 @@ alias :bb='. ~/.bashrc'
 alias :v='v ~/dotfiles/.vimrc'
 alias :V='V ~/dotfiles/.vimrc'
 alias :gc='v ~/dotfiles/.gitconfig'
+alias :gcl='v ~/.gitconfig_local'
 alias :d='cd ~/dotfiles'
 alias :t='v ~/dotfiles/.tigrc'
 alias :h=' \
