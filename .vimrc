@@ -421,19 +421,6 @@ NeoBundle 'maxbrunsfeld/vim-yankstack'
 nmap <C-p> <Plug>yankstack_substitute_older_paste
 nmap <C-n> <Plug>yankstack_substitute_newer_paste
 
-" deprecates below
-
-" C-[np] after paste, textobj [ai]'"()[]{} , and more, more!!
-" NeoBundle 'YankRing.vim'
-" let g:yankring_n_keys = 'Y D' " refuse x and X
-" let g:yankring_o_keys = 'b B w W e E d y $ G ; iw iW aw aW' " refuse ,
-" let g:yankring_manual_clipboard_check = 0
-" let g:yankring_max_history = 30
-" let g:yankring_max_display = 70
-" " Yankの履歴参照
-" nmap ,y ;YRShow<CR>
-
-
 " autocompletes parenthesis, braces and more
 NeoBundle 'kana/vim-smartinput'
 "call smartinput#define_rule({ 'at': '\[\_s*\%#\_s*\]', 'char': '<Enter>', 'input': '<Enter><C-o>O' })
@@ -511,11 +498,11 @@ NeoBundle 'rhysd/accelerated-jk'
 nmap j <Plug>(accelerated_jk_gj)
 nmap k <Plug>(accelerated_jk_gk)
 let g:accelerated_jk_anable_deceleration = 1
-" let g:accelerated_jk_acceleration_table = [10,7,5,4,3,2,2,2]
 let g:accelerated_jk_acceleration_table = [10,20,15,15]
 
 NeoBundle 'bling/vim-airline'
 " alternative: itchyny/lightline.vim
+let g:airline_theme = 'solarized'
 
 " Fast file selector
 NeoBundle 'kien/ctrlp.vim'
@@ -1402,6 +1389,8 @@ let g:airline_mode_map = {
 
 nnoremap <Leader>R R
 
+NeoBundle 'vim-scripts/argtextobj.vim'
+
 " HERE
 
 " ** vimrc reading @ 2012/11/03 {{{
@@ -1540,6 +1529,7 @@ set breakat=\ ;:,!?.>
 " ** vimrc reading @ 2012/03/23 {{{
 
 if 0
+" buggy on relative paths?
 
 " @see http://vim-users.jp/2011/02/hack202/
 " 保存時に対象ディレクトリが存在しなければ作成する(作成有無は確認できる)
@@ -1579,12 +1569,15 @@ set winaltkeys=no
 NeoBundleLazy 'yuratomo/gmail.vim'
 let g:gmail_user_name = 'yuya.presto@gmail.com'
 
-" let g:quickrun_config._ = {'runner' : 'vimproc'}
+let g:quickrun_config._ = {
+\   'runner' : 'vimproc',
+\   'runner/vimproc/updatetime' : '500',
+\}
 
-NeoBundle 'itchyny/thumbnail.vim'
+"UUB NeoBundle 'itchyny/thumbnail.vim'
 
 " @see http://d.hatena.ne.jp/itchyny/20130319/1363690268
-augroup NeoBundleChecker
+augroup VimrcGlobal
     autocmd VimEnter * NeoBundleCheck
 augroup END
 
@@ -1594,11 +1587,11 @@ nnoremap <Space>gs  :<C-u>Gstatus<CR>
 nnoremap <Space>gd  :<C-u>Gdiff<CR>
 nnoremap <Space>gw  :<C-u>Gwrite<CR>
 
-" gitv
-NeoBundle 'gregsexton/gitv'
-autocmd VimrcGlobal FileType git :setlocal foldlevel=99
-nnoremap <Space>gv  :<C-u>Gitv<CR>
-nnoremap <Space>gV  :<C-u>Gitv!<CR>
+"UUB " gitv
+"UUB NeoBundle 'gregsexton/gitv'
+"UUB autocmd VimrcGlobal FileType git :setlocal foldlevel=99
+"UUB nnoremap <Space>gv  :<C-u>Gitv<CR>
+"UUB nnoremap <Space>gV  :<C-u>Gitv!<CR>
 
 " ** }}}
 
