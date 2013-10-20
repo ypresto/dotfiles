@@ -62,8 +62,12 @@ gitsubmodules:
 
 completions:
 	cd .zsh/functions && \
-	curl -o _git https://raw.github.com/git/git/master/contrib/completion/git-completion.zsh && \
-	curl -o _brew https://raw.github.com/mxcl/homebrew/master/Library/Contributions/brew_zsh_completion.zsh
+		curl -O https://raw.github.com/git/git/master/contrib/completion/git-completion.bash && \
+		curl -o _git https://raw.github.com/git/git/master/contrib/completion/git-completion.zsh && \
+		curl -o _hub https://raw.github.com/github/hub/master/etc/hub.zsh_completion && \
+		curl -o _brew https://raw.github.com/mxcl/homebrew/master/Library/Contributions/brew_zsh_completion.zsh
+	cd bashcomp && \
+		curl -O https://raw.github.com/jonas/tig/master/contrib/tig-completion.bash
 
 cleanlinks:
 # below also works with BSD find

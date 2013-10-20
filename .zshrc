@@ -16,10 +16,10 @@ fi
 #bindkey -v
 bindkey -e
 
+fpath=(~/.zsh/functions ~/homebrew/share/zsh/{site-,}functions /usr/local/share/zsh/{site-,}functions ${fpath})
+
 autoload -U compinit
 compinit
-
-fpath=(~/.zsh/functions ~/homebrew/share/zsh/{site-,}functions /usr/local/share/zsh/{site-,}functions ${fpath})
 
 #allow tab completion in the middle of a word
 setopt COMPLETE_IN_WORD
@@ -46,6 +46,7 @@ setopt SHARE_HISTORY
 
 
 autoload -U +X bashcompinit && bashcompinit
+source "$HOME/dotfiles/bashcomp/tig-completion.bash"
 
 # source ~/.bashrc
 
@@ -303,6 +304,8 @@ source_homebrew () {
 if _should_available 'hub'; then
     eval "$(hub alias -s zsh)"
 fi
+# hack to activate hub completions
+_hub >/dev/null 2>&1
 
 # for ubuntu
 if _is_available 'ack-grep'; then
