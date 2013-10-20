@@ -1,0 +1,59 @@
+set incsearch
+set ignorecase
+set smartcase
+
+" Fast saving
+noremap ZJ :update<CR>
+nnoremap <silent> <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>
+
+" swap g[jk] (move displayed line) and [jk] (move original line)
+noremap <silent> j gj
+noremap <silent> gj j
+noremap <silent> k gk
+noremap <silent> gk k
+inoremap <silent> <C-[> <Esc>
+
+" ** Partial Emacs Keybind in Insert Mode ** {{{2
+" Refer: :help tcsh-style
+" Note: 'map!' maps both insert and command-line mode
+noremap! <C-f> <Right>
+noremap! <C-b> <Left>
+" <C-o> and <Home> is different on indented line
+inoremap <C-a> <C-o>^
+cnoremap <C-a> <Home>
+snoremap <C-a> <Home>
+" End-key in insert results end-of-page
+inoremap <C-e> <C-o>A
+cnoremap <C-e> <End>
+snoremap <C-e> <End>
+" Del-key in insert results backspace
+inoremap <C-d> <Right><BS>
+cnoremap <C-d> <Del>
+snoremap <C-d> <Del>
+inoremap <M-f> <S-Right>
+cnoremap <M-f> <S-Right>
+snoremap <M-f> <S-Right>
+inoremap <M-b> <S-Left>
+cnoremap <M-b> <S-Left>
+snoremap <M-b> <S-Left>
+inoremap <M-d> <C-o>de
+" Degraded map for commandline / select mode
+cnoremap <M-d> <Del>
+snoremap <M-d> <Del>
+" Remap <C-d> de-indentation to Alt-t
+inoremap <M-t> <C-d>
+inoremap <C-k> <C-o>D
+" ** }}}
+
+" Move lines up and down (bubbling) left and right (indent)
+nmap <M-K> [e
+nmap <M-J> ]e,
+vmap <M-K> [egv
+vmap <M-J> ]egv
+nnoremap <M-L> >>
+nnoremap <M-H> <<
+vnoremap <M-L> >gv
+vnoremap <M-H> <gv
+" visualmodeでインテントを＞＜の連打で変更できるようにする
+vnoremap < <gv
+vnoremap > >gv
