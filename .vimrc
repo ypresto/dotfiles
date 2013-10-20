@@ -1352,6 +1352,56 @@ set pumheight=10
 
 NeoBundle 'airblade/vim-gitgutter'
 
+" Reflection
+" @see http://mattn.kaoriya.net/software/vim/20110728094347.htm
+
+function! GetSidForScript(script_name)
+    silent! redir => scriptname_text
+    silent! scriptnames
+    silent! redir END
+    return matchstr(matchstr(split(scriptname_text, '\n'), '\W'.a:script_name), '\d\+')
+endfunction
+
+function! FunctionForSID(sid, func_name)
+    return function('<SNR>'.a:sid.'_'.a:func_name)
+endfunction
+
+" patch airline solarized theme, make blue
+let g:airline_theme_patch_func = 'AirlineThemePatch'
+function! AirlineThemePatch(palette)
+    if g:airline_theme == 'solarized'
+        let background  = get(g:, 'airline_solarized_bg', &background)
+        let ansi_colors = get(g:, 'solarized_termcolors', 16) != 256 && &t_Co >= 16 ? 1 : 0
+        let tty         = &t_Co == 8
+
+        let violet  = {'t': ansi_colors ?  13 : (tty ? '5' : 61 ), 'g': '#6c71c4'}
+        let blue    = {'t': ansi_colors ?   4 : (tty ? '4' : 33 ), 'g': '#268bd2'}
+        let cyan    = {'t': ansi_colors ?   6 : (tty ? '6' : 37 ), 'g': '#2aa198'}
+        let green   = {'t': ansi_colors ?   2 : (tty ? '2' : 64 ), 'g': '#859900'}
+        let normal_color = violet
+
+        let a:palette.normal.airline_a[1] = normal_color.g
+        let a:palette.normal.airline_a[3] = normal_color.t
+        let a:palette.normal.airline_z[1] = normal_color.g
+        let a:palette.normal.airline_z[3] = normal_color.t
+    endif
+endfunction
+let g:airline_mode_map = {
+\   '__' : '-',
+\   'n'  : 'N',
+\   'i'  : 'I',
+\   'R'  : 'R',
+\   'c'  : 'C',
+\   'v'  : 'V',
+\   'V'  : 'L',
+\   '' : 'B',
+\   's'  : 'S',
+\   'S'  : 'S',
+\   '' : 'S',
+\}
+
+nnoremap <Leader>R R
+
 " HERE
 
 " ** vimrc reading @ 2012/11/03 {{{
