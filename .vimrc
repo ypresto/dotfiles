@@ -882,7 +882,14 @@ let g:neobundle#default_options['python'] = {
 \ }
 
 NeoBundleLazy 'tmhedberg/SimpylFold', '', 'python'
-" NeoBundleLazy 'davidhalter/jedi-vim', '', 'python'
+NeoBundleLazy 'yuroyoro/vim-python', '', 'python'
+NeoBundleLazy 'davidhalter/jedi-vim', '', 'python', {
+\   'build' : {
+\       'windows' : 'git submodule update --init',
+\       'mac'     : 'git submodule update --init',
+\       'unix'    : 'git submodule update --init',
+\      },
+\   }
 
 " ** }}}
 
@@ -1338,6 +1345,8 @@ command! FourIndent set softtabstop=4 shiftwidth=4 | :IndentGuidesToggle | :Inde
 set pumheight=10
 
 NeoBundle 'airblade/vim-gitgutter'
+map ]g :GitGutterNextHunk<CR>
+map [g :GitGutterPrevHunk<CR>
 
 " Reflection
 " @see http://mattn.kaoriya.net/software/vim/20110728094347.htm
@@ -1500,7 +1509,7 @@ set helplang=ja
 " 行をまたいでカーソル移動
 set whichwrap+=h,l
 
-NeoBundle 't9md/vim-quickhl'
+"UUB NeoBundle 't9md/vim-quickhl'
 
 " ** }}}
 
@@ -1704,6 +1713,59 @@ function! OpenNewTab()
     execute ":tabnew ".l:f
   endif
 endfunction
+
+" ** }}}
+
+" ** vimrc reading @ 2013/10/27 {{{
+
+" Complement command in command-line like zsh
+cnoremap <C-P> <UP>
+cnoremap <C-N> <Down>
+
+nnoremap <silent>gM :Gcommit --amend<CR>
+nnoremap <silent>gb :Gblame<CR>
+nnoremap <silent>gB :Gbrowse<CR>
+nnoremap <silent>gm :Gcommit<CR>
+
+autocmd FileType gitcommit,git-diff nnoremap <buffer>q :q<CR>
+
+NeoBundle 'kana/vim-niceblock'
+xmap I  <Plug>(niceblock-I)
+xmap A  <Plug>(niceblock-A)
+
+let bundle = neobundle#get('neocomplete')
+function! bundle.hooks.on_source(bundle)
+    let g:neocomplete#sources#omni#functions.java = 'eclim#java#complete#CodeComplete'
+
+    let g:neocomplete#keyword_patterns = {
+    \   '_' : '[0-9a-zA-Z:#_]\+',
+    \   'c' : '[^.[:digit:]*\t]\%(\.\|->\)',
+    \}
+
+    let g:neocomplete#sources#omni#input_patterns.c =
+    \   '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
+    let g:neocomplete#sources#omni#input_patterns.cpp =
+    \   '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+
+    let g:neocomplete#force_omni_input_patterns.c =
+    \   '[^.[:digit:] *\t]\%(\.\|->\)'
+    let g:neocomplete#force_omni_input_patterns.cpp =
+    \   '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+    let g:neocomplete#force_omni_input_patterns.objc =
+    \   '[^.[:digit:] *\t]\%(\.\|->\)'
+    let g:neocomplete#force_omni_input_patterns.objcpp =
+    \   '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+endfunction
+
+let g:surround_no_imappings = 1
+imap <expr><C-G> pumvisible() ? neocomplete#undo_completion() : "\<Esc>"
+
+let g:echodoc_enable_at_startup = 1
+NeoBundle 'Shougo/echodoc', {
+\   'autoload' : { 'insert' : 1 }
+\}
+
+command! UnwatchBuffer setlocal buftype=nofile nobuflisted noswapfile bufhidden=hide
 
 " ** }}}
 
