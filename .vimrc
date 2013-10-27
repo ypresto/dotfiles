@@ -19,12 +19,6 @@ augroup VimrcGlobal
 augroup END
 " *** }}}
 
-" *** Switches  *** {{{1
-" IMEs
-let skk_enabled = 0
-let eskk_enabled = 0
-" *** }}}
-
 " *** Start up *** {{{1
 
 " for neobundle
@@ -60,9 +54,15 @@ catch
     :language C
 endtry
 
+set helplang=ja
+
 set encoding=utf-8
-" FIXME maybe below line has some bug
-set fileencodings=ucs-bom,utf-8,iso-2022-jp-3,iso-2022-jp,eucjp-ms,euc-jisx0213,euc-jp,sjis,cp932
+set fileencodings=iso-2022-jp-3,iso-2022-jp,euc-jisx0213,euc-jp,utf-8,ucs-bom,euc-jp,eucjp-ms,cp932
+set fileformats=unix,dos,mac
+autocmd VimrcGlobal BufReadPost *
+\   if &modifiable && !search('[^\x00-\x7F]', 'cnw')
+\ |   setlocal fileencoding=
+\ | endif
 
 " ** }}}
 
@@ -71,6 +71,7 @@ set fileencodings=ucs-bom,utf-8,iso-2022-jp-3,iso-2022-jp,eucjp-ms,euc-jisx0213,
 set tabstop=8     " <Tab>s are shown with this num of <Space>s
 set softtabstop=4 " Use this num of spaces as <Tab> on insert and delete
 set shiftwidth=4  " Use this num of spaces for auto indent
+set shiftround    " round indent with < and >
 set expandtab     " Always use <Tab> for indent and insert
 set smarttab      " Use shiftwidth on beginning of line when <Tab> key
 set autoindent    " Use same indent level on next line
@@ -104,8 +105,8 @@ endif
 set nobackup            " Don't create backup files (foobar~)
 
 " reffer: http://vimwiki.net/?'viminfo'
-set history=100
-set viminfo='100,<100,s10
+set history=1000
+set viminfo='1000,<800,s300,\"1000,f1,:1000,/1000
 
 " Jump to the last known cursos position when opening file
 " Refer: :help last-position-jump
@@ -130,18 +131,40 @@ set sessionoptions-=options
 
 " Editing
 set backspace=indent,eol,start " go to previous line with backspace
+set whichwrap+=h,l             " 行をまたいでカーソル移動
 set textwidth=0                " don't insert break automatically
 
 set foldmethod=marker " Use '{{{' and '}}}' for marker
 set foldlevelstart=1  " Start with some folds closed
+set foldcolumn=2
 set noeb vb t_vb=     " no beep
 set scrolloff=1       " show N more next line when scrolling
+
+" Complete
+set complete=.,w,b,u,U,s,i,d,t
+set completeopt=menu,menuone
+set pumheight=10
+
+" Format
+" 自動整形の実行方法 (see also :help fo-table)
+set formatoptions&
+set formatoptions-=o
+set formatoptions+=ctrqlmM
+
+" Long line wrapping
+set linebreak
+let &showbreak='»'
+let &breakat=' ;:,!?.>'
 
 " Search
 set incsearch         " Use 'incremental search'
 set hlsearch          " Highlight search result
 set ignorecase        " Ignore case when searching
 set smartcase         " Do not ignorecase if keyword contains uppercase
+set infercase         " Ignore case on insert completion.
+
+" Misc
+set nrformats-=octal  " <c-a> や <c-x> で数値を増減させるときに8進数を無効にする
 
 " ** }}}
 
@@ -153,9 +176,9 @@ set showcmd           " Show what keys input for command, but too slow on termin
 set laststatus=2      " Always show statusline
 
 " command line
-set cmdheight=2              " Set height of command line
-set wildmode=list:longest    " command line completion order
-set wildmenu                 " Enhanced completion
+set cmdheight=2                " Set height of command line
+set wildmode=longest:full,full " command line completion order
+set wildmenu                   " Enhanced completion
 " Don't use matched files for completion
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
 
@@ -221,7 +244,15 @@ endif
 " ** }}}
 
 " ** Misc ** {{{2
+
+set isfname-=%,$,@,= " filename characters for gf
+let &fillchars='vert: ,fold: ,diff: '
 set shortmess+=I      " Surpress intro message when starting vim
+
+" enforce to use curl over links for http urls
+let g:netrw_http_cmd = 'curl -L'
+let g:netrw_http_xcmd = '-o'
+
 " ** }}}
 
 " *** }}}
@@ -292,6 +323,20 @@ vnoremap <Esc>H <gv
 vnoremap < <gv
 vnoremap > >gv
 
+" http://stackoverflow.com/questions/7187477/vim-smart-insert-semicolon
+vmap <Esc>; :normal A;<Esc><CR>
+nmap <Esc>; :call AppendSemicolon(';')<CR>
+imap <Esc>; <C-R>=AppendSemicolon(';')<CR>
+vmap <Esc>, :normal A,<Esc><CR>
+nmap <Esc>, :call AppendSemicolon(',')<CR>
+imap <Esc>, <C-R>=AppendSemicolon(',')<CR>
+vmap <Esc>: :normal A:<Esc><CR>
+nmap <Esc>: :call AppendSemicolon(':')<CR>
+imap <Esc>: <C-R>=AppendSemicolon(':')<CR>
+function! AppendSemicolon(char)
+  call setline(line('.'), substitute(getline('.'), '\s*$', a:char, ''))
+  return ''
+endfunction
 
 " Maximizes current split, <C-w>= to restore
 nnoremap <C-w>a <C-w>\|<C-w>_
@@ -330,47 +375,27 @@ imap <expr> <C-j>  pumvisible() ? neocomplete#close_popup() : "\<CR>"
 
 " ** unite ** {{{2
 
-" デフォルト
-nnoremap <Leader>u: :Unite<Space>
-" バッファ一覧
+nnoremap <Leader>u: :<C-u>Unite<Space>
 nmap <Leader>ub <Leader>u:buffer<CR>
-" ファイル一覧
 nmap <Leader>uf :UniteWithBufferDir -buffer-name=files file file/new<CR>
-" レジスタ一覧
 nmap <Leader>ur <Leader>u:-buffer-name=register register<CR>
-" 最近使用したファイル一覧
 nmap <Leader>us <Leader>u:file_mru<CR>
-" 全部乗せ
 nmap <Leader>ua :Unite buffer file_mru bookmark<CR>
-" コマンド
 nmap <Leader>uc <Leader>u:command<CR>
-
-" unite-mark
 nmap <Leader>um <Leader>u:mark<CR>
-
-" unite-outline
 nmap <Leader>uo <Leader>u:outline<CR>
-" TODO
 nmap <Leader>uz <Leader>u:outline:folding<CR>
-
-" history/yankの有効化
-" let g:unite_source_history_yank_enable = 1
-nmap <Leader>uy <Leader>u:history/yank<CR>
-" unite-history
 nmap <Leader>uC <Leader>u:history/command<CR>
-
-nmap <Leader>up <Leader>u:git_cached git_untracked<CR>
-
 nmap <Leader>ut <Leader>u:tab<CR>
-
+nmap <Leader>up <Leader>u:git_cached git_untracked<CR>
 nmap <Leader>ug <Leader>u:git_modified git_untracked<CR>
 nmap <Leader>uG <Leader>u:giti<CR>
-
 nmap <Leader>uS <Leader>u:session<CR>
-
 nmap <Leader>uh <Leader>u:help<CR>
-
 nmap <Leader>uu <Leader>u:source<CR>
+nmap <Leader>udp <Leader>u:ref/perldoc<CR>
+nmap <Leader>udr <Leader>u:ref/refe<CR>
+nnoremap <silent> <Leader>u<space> :<C-u>UniteResume<CR>
 
 augroup VimrcGlobal
     autocmd FileType unite nnoremap <silent><buffer><expr> <C-j> unite#do_action('split')
@@ -397,18 +422,6 @@ function! UniteSessionSaveAndQAll(session)
 endfunction
 command! -nargs=? SL UniteSessionLoad <args>
 
-nmap <Leader>udp <Leader>u: ref/perldoc<CR>
-nmap <Leader>udr <Leader>u: ref/refe<CR>
-
-" ** }}}
-
-" ** IME ** {{{2
-if eskk_enabled
-    inoremap <expr> <C-l> eskk#toggle()
-endif
-if skk_enabled
-    let g:skk_control_j_key = '<C-l>'
-endif
 " ** }}}
 
 " *** }}}
@@ -451,6 +464,12 @@ NeoBundle 'mattn/gist-vim', {
 \   ],
 \}
 
+" show marker on edited lines
+NeoBundle 'airblade/vim-gitgutter'
+let g:gitgutter_sign_removed = "-"
+map ]g :GitGutterNextHunk<CR>
+map [g :GitGutterPrevHunk<CR>
+
 " read/write by sudo with `vim sudo:file.txt`
 NeoBundle 'sudo.vim'
 
@@ -463,6 +482,10 @@ let g:syntastic_mode_map = {
 \}
 let g:syntastic_error_symbol='E>' " ✗
 let g:syntastic_warning_symbol='W>' " ⚠
+let g:syntastic_always_populate_loc_list=1
+let g:syntastic_perl_checkers = ['perl', 'perlcritic', 'podchecker']
+let g:syntastic_perl_perlcritic_thres = 4
+nmap <Leader>s :SyntasticCheck<CR>
 
 " rich-formatted undo history
 NeoBundle 'sjl/gundo.vim'
@@ -476,7 +499,12 @@ NeoBundle 'thinca/vim-quickrun', {
 \   ]
 \}
 let g:quickrun_config = {}
-let g:quickrun_config['perl'] = {'command': 'prove'}
+let g:quickrun_config._ = {
+\   'runner' : 'vimproc',
+\   'runner/vimproc/updatetime' : '500',
+\}
+
+let g:quickrun_config.perl = {'command': 'prove'}
 
 " Highlight indent by its levels, must have for pythonist
 NeoBundle 'nathanaelkane/vim-indent-guides'
@@ -501,8 +529,40 @@ let g:accelerated_jk_anable_deceleration = 1
 let g:accelerated_jk_acceleration_table = [10,20,15,15]
 
 NeoBundle 'bling/vim-airline'
-" alternative: itchyny/lightline.vim
-let g:airline_theme = 'solarized'
+" patch airline solarized theme, make blue
+let g:airline_theme_patch_func = 'AirlineThemePatch'
+function! AirlineThemePatch(palette)
+    if g:airline_theme == 'solarized'
+        let background  = get(g:, 'airline_solarized_bg', &background)
+        let ansi_colors = get(g:, 'solarized_termcolors', 16) != 256 && &t_Co >= 16 ? 1 : 0
+        let tty         = &t_Co == 8
+
+        let violet  = {'t': ansi_colors ?  13 : (tty ? '5' : 61 ), 'g': '#6c71c4'}
+        let blue    = {'t': ansi_colors ?   4 : (tty ? '4' : 33 ), 'g': '#268bd2'}
+        let cyan    = {'t': ansi_colors ?   6 : (tty ? '6' : 37 ), 'g': '#2aa198'}
+        let green   = {'t': ansi_colors ?   2 : (tty ? '2' : 64 ), 'g': '#859900'}
+        let normal_color = violet
+
+        let a:palette.normal.airline_a[1] = normal_color.g
+        let a:palette.normal.airline_a[3] = normal_color.t
+        let a:palette.normal.airline_z[1] = normal_color.g
+        let a:palette.normal.airline_z[3] = normal_color.t
+    endif
+endfunction
+
+let g:airline_mode_map = {
+\   '__' : '-',
+\   'n'  : 'N',
+\   'i'  : 'I',
+\   'R'  : 'R',
+\   'c'  : 'C',
+\   'v'  : 'V',
+\   'V'  : 'L',
+\   '' : 'B',
+\   's'  : 'S',
+\   'S'  : 'S',
+\   '' : 'S',
+\}
 
 " Fast file selector
 NeoBundle 'kien/ctrlp.vim'
@@ -526,6 +586,8 @@ vnoremap <Leader>t:  :Tabular /:/<CR>
 " YAML-style
 vnoremap <Leader>t;  :Tabular/:\zs/<CR>
 vnoremap <Leader>t,  :Tabular/,\zs/<CR>
+" Vim
+vnoremap <Leader>t"  :Tabular/"/<CR>
 
 vnoremap <Leader>t<Space> :Tabular multiple_spaces<CR>
 
@@ -538,6 +600,10 @@ NeoBundle 'kana/vim-operator-replace', {
 \       'kana/vim-operator-user',
 \   ]
 \}
+nmap R <Plug>(operator-replace)
+
+" :grep by ag
+NeoBundle 'rking/ag.vim'
 
 " ** }}}
 
@@ -602,12 +668,12 @@ let g:unite_enable_start_insert=1
 let g:unite_split_rule="botright"
 let g:unite_winheight="10"
 
-NeoBundle 'tacroe/unite-mark'
-NeoBundle 'Shougo/unite-outline'
-NeoBundle 'taka84u9/unite-git'
 NeoBundle 'kmnk/vim-unite-giti.git'
-NeoBundle 'tsukkee/unite-help'
 NeoBundle 'Shougo/unite-session'
+NeoBundleLazy 'tacroe/unite-mark',    { 'autoload' : { 'unite_sources' : ['mark'] } }
+NeoBundleLazy 'Shougo/unite-outline', { 'autoload' : { 'unite_sources' : ['outline', 'outline:folding'] } }
+NeoBundleLazy 'taka84u9/unite-git',   { 'autoload' : { 'unite_sources' : ['git_untracked', 'git_cached', 'git_modified'] } }
+NeoBundleLazy 'tsukkee/unite-help',   { 'autoload' : { 'unite_sources' : ['help'] } }
 let g:unite_source_session_options = &sessionoptions
 
 " ** }}}
@@ -616,117 +682,71 @@ let g:unite_source_session_options = &sessionoptions
 
 " select range of text with only two or three keys
 " For example: [ai]w
+" @see http://d.hatena.ne.jp/osyo-manga/20130717/1374069987
 
-" framework for all belows
-NeoBundle 'kana/vim-textobj-user'
+NeoBundle 'kana/vim-textobj-user'            " framework for all belows
+NeoBundle 'kana/vim-textobj-entire'          " [ai]e
+NeoBundle 'kana/vim-textobj-fold'            " [ai]z
+NeoBundle 'kana/vim-textobj-function'        " [ai]f
+NeoBundle 'kana/vim-textobj-indent'          " [ai][iI]
+NeoBundle 'kana/vim-textobj-syntax'          " [ai]y
+NeoBundle 'kana/vim-textobj-line'            " [ai]l
+NeoBundle 'vimtaku/vim-textobj-sigil'        " [ai]g / a: includes index/key/arrow, i: symbol only
+NeoBundle 'vimtaku/vim-textobj-keyvalue'     " [ai][kv]
+NeoBundle 'vimtaku/vim-textobj-doublecolon'  " [ai]:
+NeoBundle 'thinca/vim-textobj-comment'       " [ai]c
+NeoBundle 'deris/vim-textobj-enclosedsyntax' " [ai]q / perl/ruby regex and literal, eruby
 
-" too many, refer help
-" Bundle 'kana/vim-textobj-diff'
-" [ai]e
-NeoBundle 'kana/vim-textobj-entire'
-" [ai]z
-NeoBundle 'kana/vim-textobj-fold'
-" [ai]f
-NeoBundle 'kana/vim-textobj-function'
-" [ai][iI]
-NeoBundle 'kana/vim-textobj-indent'
-" [ai][/?]
-" Bundle 'kana/vim-textobj-lastpat'
-" [ai]y
-NeoBundle 'kana/vim-textobj-syntax'
-" [ai]l
-NeoBundle 'kana/vim-textobj-line'
+NeoBundle 'thinca/vim-textobj-function-javascript'
+NeoBundle 'thinca/vim-textobj-function-perl'
 
-" [ai]c : textobj-comment
-" [ai]f : Add perl and javascript support to textobj-function
-" [ai]b : textobj-between, refer below
-" http://d.hatena.ne.jp/thinca/20100614/1276448745
-NeoBundle 'thinca/vim-textobj-plugins'
-" damn, [ai]f mappings are overwrapping...
-omap if <Plug>(textobj-function-i)
-omap af <Plug>(textobj-function-a)
-vmap if <Plug>(textobj-function-i)
-vmap af <Plug>(textobj-function-a)
-omap iF <Plug>(textobj-between-i)
-omap aF <Plug>(textobj-between-a)
-vmap iF <Plug>(textobj-between-i)
-vmap aF <Plug>(textobj-between-a)
-
-" Perl very like /slash braces/
-omap i/ <Plug>(textobj-between-i)/
-omap a/ <Plug>(textobj-between-a)/
-vmap i/ <Plug>(textobj-between-i)/
-vmap a/ <Plug>(textobj-between-a)/
-
-" " [ai]u / 'this_is_a_word' will be 4 'words in word'
-" NeoBundle 'vimtaku/textobj-wiw'
+" function: [ai]f / class: [ai]c
+NeoBundle 'bps/vim-textobj-python'
+function! s:MapTextobjPython()
+    omap <silent><buffer> iC <Plug>(textobj-python-class-i)
+    omap <silent><buffer> aC <Plug>(textobj-python-class-a)
+    vmap <silent><buffer> iC <Plug>(textobj-python-class-i)
+    vmap <silent><buffer> aC <Plug>(textobj-python-class-a)
+endfunction
+autocmd VimrcGlobal FileType python call s:MapTextobjPython()
 
 " [ai]u / under_bar or CamelCase
 " Also provides motions: ,[wbe]
 " (default: [ai],[bew])
 NeoBundle 'bkad/CamelCaseMotion'
 omap <silent> iu <Plug>CamelCaseMotion_iw
-omap <silent> iu <Plug>CamelCaseMotion_iw
-xmap <silent> iu <Plug>CamelCaseMotion_iw
 xmap <silent> iu <Plug>CamelCaseMotion_iw
 omap <silent> <Plug>disabled_CamelCaseMotion_ib <Plug>CamelCaseMotion_ib
 xmap <silent> <Plug>disabled_CamelCaseMotion_ib <Plug>CamelCaseMotion_ib
 omap <silent> <Plug>disabled_CamelCaseMotion_ie <Plug>CamelCaseMotion_ie
 xmap <silent> <Plug>disabled_CamelCaseMotion_ie <Plug>CamelCaseMotion_ie
 
-" * Almost For Perl * {{{3
-" [ai]g / a: includes index/key/arrow, i: symbol only
-NeoBundle 'vimtaku/vim-textobj-sigil'
-" [ai][kv]
-NeoBundle 'vimtaku/vim-textobj-keyvalue'
-" [ai]:
-NeoBundle 'vimtaku/vim-textobj-doublecolon'
-" * }}}
-
 " ** }}}
 
 " ** Misc ** {{{2
 
 " List or Highlight all todo, fixme, xxx comments
-NeoBundle 'TaskList.vim'
+NeoBundleLazy 'TaskList.vim', { 'autoload' : { 'mappings' : ['<Plug>TaskList'] } }
 
 " extended % key matching
 NeoBundle "tmhedberg/matchit"
-
-" moving more far easily
-NeoBundle 'Lokaltog/vim-easymotion'
-
-" " Smooth <C-{f,b,u,d}> scrolls
-" " not work with macvim
-" NeoBundleLazy 'Smooth-Scroll'
-" if !(has('gui_macvim') && has('gui_running'))
-"     NeoBundleSource Smooth-Scroll
-" endif
-" conflicts with rhysd/accelerated-jk
+NeoBundle 'tpope/vim-endwise' " supports ruby, vimscript
 
 " :Rename current file on disk
-NeoBundle 'danro/rename.vim'
+NeoBundleLazy 'danro/rename.vim', { 'autoload' : { 'commands' : 'Rename' } }
 
 " Bulk renamer
-NeoBundle 'renamer.vim'
+NeoBundleLazy 'renamer.vim', { 'autoload' : { 'commands' : 'Renamer' } }
 
-" ** }}}
-
-" ** nerdcommenter ** {{{
-" NeoBundle 'scrooloose/nerdcommenter'
-" let NERDSpaceDelims = 1
-" xmap <Leader>cj <Plug>NERDCommenterToggle
-" nmap <Leader>cj <Plug>NERDCommenterToggle
+" Colorize any parenthesis or brackets
 NeoBundle 'kien/rainbow_parentheses.vim'
 augroup VimrcGlobal
     autocmd VimEnter * :RainbowParenthesesToggle
     autocmd Syntax * call DelayedExecute('RainbowParenthesesLoadRound')
     autocmd Syntax * call DelayedExecute('call rainbow_parentheses#activate()')
 augroup END
-" ** }}}
 
-" ** IME ** {{{2
-
+" IME
 NeoBundleLazy 'vimtaku/vim-mlh', {
 \   'depends' : [
 \       'mattn/webapi-vim',
@@ -734,39 +754,15 @@ NeoBundleLazy 'vimtaku/vim-mlh', {
 \}
 command! LoadMlh NeoBundleSource vim-mlh
 
-if eskk_enabled
-    NeoBundle 'tyru/eskk.vim'
-    let g:eskk#no_default_mappings = 1
-    let g:eskk#large_dictionary = { 'path': "~/.vim/dict/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp', }
-    let g:eskk#enable_completion = 1
-endif
-
-if skk_enabled
-    NeoBundle 'anyakichi/skk.vim'
-    " original: Bundle 'tyru/skk.vim'
-    let g:skk_jisyo = '~/.skk-jisyo'
-    let g:skk_large_jisyo = '~/.vim/dict/SKK-JISYO.L'
-    let g:skk_auto_save_jisyo = 1
-    let g:skk_keep_state = 1
-    let g:skk_egg_like_newline = 1
-    let g:skk_show_annotation = 1
-    let g:skk_use_face = 1
-    let g:skk_use_numeric_conversion = 1
-    let g:skk_sticky_key = ";"
-    let g:skk_kutouten_type = "en"
-endif
-
 " ** }}}
 
 " ** Color Scheme ** {{{2
 
 " Too hard to setup not-degraded-mode...
 " (You should setup your term emulator first)
-" So please try it first with degrade=1, then setup if you like it.
+" So please try it first with termcolors=256, then setup if you like it.
 
 NeoBundle 'altercation/vim-colors-solarized'
-" let g:solarized_termcolors=256
-" let g:solarized_degrade=1
 let g:solarized_termcolors=16
 let g:solarized_termtrans=1
 let g:solarized_bold=1
@@ -781,19 +777,22 @@ set background=dark
 
 " *** Filetypes *** {{{1
 
+function! s:NeoBundleAutoloadFiletypes(name, filetypes)
+    let g:neobundle#default_options[a:name] = {
+    \   'autoload' : {
+    \       'filetypes' : a:filetypes
+    \   },
+    \ }
+endfunction
+
 " ** HTML / CSS / XML ** {{{2
 
-let g:neobundle#default_options['htmlcss'] = {
-\   'autoload' : {
-\       'filetypes' : ['html', 'css', 'xml', 'htmlcheetah']
-\   }
-\ }
+call s:NeoBundleAutoloadFiletypes('htmlcss', ['html', 'css', 'xml', 'htmlcheetah'])
 
-NeoBundleLazy 'othree/html5.vim', '', 'htmlcss'
+NeoBundleLazy 'othree/html5.vim',       '', 'htmlcss'
 NeoBundleLazy 'hail2u/vim-css3-syntax', '', 'htmlcss'
-" NeoBundle 'skammer/vim-css-color' " conflicts with html syntax
-" NeoBundle ap/vim-css-color
-NeoBundleLazy 'mattn/zencoding-vim', '', 'htmlcss'
+NeoBundleLazy 'skammer/vim-css-color',  '', 'htmlcss'
+NeoBundleLazy 'mattn/zencoding-vim',    '', 'htmlcss'
 let g:user_zen_settings = {
 \   'lang': "ja"
 \}
@@ -803,32 +802,39 @@ NeoBundleLazy 'sukima/xmledit', '', 'htmlcss'
 " see http://nanasi.jp/articles/vim/xml-plugin.html
 
 " haml / sass / scss
-let g:neobundle#default_options['hamlsass'] = {
-\   'autoload' : {
-\       'filetypes' : ['haml', 'sass', 'scss']
-\   }
-\ }
-
+call s:NeoBundleAutoloadFiletypes('hamlsass', ['haml', 'sass', 'scss'])
 NeoBundleLazy 'tpope/vim-haml', '', 'hamlsass'
+
+" ** }}}
 
 " ** JavaScript ** {{{2
 
-let g:neobundle#default_options['javascript'] = {
-\   'autoload' : {
-\       'filetypes' : ['javascript', 'json']
-\   }
-\ }
+call s:NeoBundleAutoloadFiletypes('javascript', ['javascript', 'json'])
 
 autocmd VimrcGlobal FileType json call DelayedExecute('set syntax=javascript')
 autocmd VimrcGlobal BufNewFile,BufRead *.json setf json
 
-NeoBundle 'jelera/vim-javascript-syntax', '', 'javascript' " TODO: conflicts with vim-javascript when lazy load
-NeoBundleLazy 'pangloss/vim-javascript', '', 'javascript' " indent
-" https://github.com/nono/jquery.vim
-NeoBundleLazy 'nono/jquery.vim', '', 'javascript'
+NeoBundleLazy 'jelera/vim-javascript-syntax',         '', 'javascript'
+NeoBundleLazy 'jiangmiao/simple-javascript-indenter', '', 'javascript'
+NeoBundleLazy 'nono/jquery.vim',                      '', 'javascript'
+
 " NeoBundleLazy 'mklabs/grunt.vim', '', 'javascript'
+" NeoBundleLazy 'pangloss/vim-javascript', '', 'javascript' " indent, conflicts with lazyloaded vim-javascript-syntax
 
 autocmd VimrcGlobal FileType javascript call DelayedExecute('set syntax=jquery')
+
+NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript'
+" NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript', {
+" \   'build' : {
+" \       'windows' : 'npm install',
+" \       'cygwin'  : 'npm install',
+" \       'mac'     : 'npm install',
+" \       'unix'    : 'npm install',
+" \   }
+" \}
+
+let g:tern#command = ['node', $HOME.'/dotfiles/node_modules/.bin/tern']
+" let g:tern#is_show_argument_hints_enabled = 0
 
 " http://wozozo.hatenablog.com/entry/2012/02/08/121504
 map <Leader>FJ !python -m json.tool<CR>
@@ -837,14 +843,9 @@ map <Leader>FJ !python -m json.tool<CR>
 
 " ** Perl ** {{{2
 
-let g:neobundle#default_options['perl'] = {
-\   'autoload' : {
-\       'filetypes' : ['perl']
-\   }
-\ }
+call s:NeoBundleAutoloadFiletypes('perl', ['perl'])
 
 autocmd VimrcGlobal BufNewFile,BufRead *.t setf perl
-
 
 " use new perl syntax and indent!
 NeoBundleLazy 'vim-perl/vim-perl', '', 'perl'
@@ -854,7 +855,7 @@ let perl_fold_blocks=1
 " let perl_nofold_packages = 1
 " let perl_include_pod=1
 
-NeoBundleLazy 'c9s/perlomni.vim', '', 'perl'
+NeoBundleLazy 'c9s/perlomni.vim',       '', 'perl'
 NeoBundleLazy 'mattn/perlvalidate-vim', '', 'perl'
 
 " NeoBundleLazy 'yko/mojo.vim', '', 'perl'
@@ -875,14 +876,10 @@ command! Upod :Unite ref/perldoc
 
 " ** Python ** {{{2
 
-let g:neobundle#default_options['python'] = {
-\   'autoload' : {
-\       'filetypes' : ['python']
-\   }
-\ }
+call s:NeoBundleAutoloadFiletypes('python', ['python'])
 
 NeoBundleLazy 'tmhedberg/SimpylFold', '', 'python'
-NeoBundleLazy 'yuroyoro/vim-python', '', 'python'
+NeoBundleLazy 'yuroyoro/vim-python',  '', 'python'
 NeoBundleLazy 'davidhalter/jedi-vim', '', 'python', {
 \   'build' : {
 \       'windows' : 'git submodule update --init',
@@ -895,21 +892,28 @@ NeoBundleLazy 'davidhalter/jedi-vim', '', 'python', {
 
 " ** Objective-C / iOS ** {{{
 
-let g:neobundle#default_options['objc'] = {
-\   'autoload' : {
-\       'filetypes' : ['objc']
-\   }
-\ }
+call s:NeoBundleAutoloadFiletypes('objc', ['objc'])
 
-NeoBundleLazy 'Rip-Rip/clang_complete', '', 'objc'
-NeoBundleLazy 'eraserhd/vim-ios', '', 'objc'
-NeoBundleLazy 'msanders/cocoa.vim', '', 'objc'
+" TODO check out [here]( http://d.hatena.ne.jp/thinca/20130522/1369234427 )
+" NeoBundleLazy 'Rip-Rip/clang_complete', '', 'objc'
+" NeoBundleLazy 'osyo-manga/neocomplcache-clang_complete', { 'autoload' : {
+"      \ 'filetypes' : g:my.ft.c_files,
+"      \ }}
+NeoBundleLazy 'eraserhd/vim-ios',       '', 'objc'
+NeoBundleLazy 'msanders/cocoa.vim',     '', 'objc'
 
 " ** }}}
 
 " ** Markdown ** {{{
 
 autocmd VimrcGlobal BufNewFile,BufRead *.md setf markdown
+
+" ** }}}
+
+" ** Shell ** {{{
+
+call s:NeoBundleAutoloadFiletypes('sh', ['sh'])
+NeoBundleLazy 'sh.vim', '', 'sh'
 
 " ** }}}
 
@@ -1067,8 +1071,6 @@ endfunction
 
 NeoBundle 'fuenor/qfixgrep'
 
-" set showtabline=2
-
 NeoBundle 'taku-o/vim-copypath'
 let g:copypath_copy_to_unnamed_register = 1
 
@@ -1076,9 +1078,9 @@ NeoBundle 'kana/vim-altr'
 nmap ]r <Plug>(altr-forward)
 nmap [r <Plug>(altr-back)
 
-" Bundle 'jpalardy/vim-slime'
+" Bundle 'jpalardy/vim-slime' " TODO
 
-if has('mac') && !has('gui_running')
+if has('mac')
     nnoremap <silent> <Space>y :.w !pbcopy<CR><CR>
     vnoremap <silent> <Space>y :w !pbcopy<CR><CR>
     nnoremap <silent> <Space>p :r !pbpaste<CR>
@@ -1087,18 +1089,7 @@ endif
 
 map <Leader>tl <Plug>TaskList
 
-" TweetVim
-NeoBundleLazy 'basyura/TweetVim', {
-\   'depends' : [
-\       'basyura/twibill.vim',
-\       'basyura/bitly.vim',
-\       'mattn/webapi-vim',
-\       'tyru/open-browser.vim',
-\   ],
-\}
-command! TweetVimLoad :NeoBundleSource TweetVim
-
-NeoBundleLazy 'http://conque.googlecode.com/svn/trunk/', 'conque-read-only', {
+NeoBundleLazy 'http://conque.googlecode.com/svn/trunk/', {
 \   'name' : 'vim-conque',
 \   'type' : 'svn',
 \   'autoload' : {
@@ -1107,21 +1098,7 @@ NeoBundleLazy 'http://conque.googlecode.com/svn/trunk/', 'conque-read-only', {
 \}
 let g:ConqueTerm_ReadUnfocused = 1
 let g:ConqueTerm_InsertOnEnter = 0
-
-" http://stackoverflow.com/questions/7187477/vim-smart-insert-semicolon
-vmap <Esc>; :normal A;<Esc><CR>
-nmap <Esc>; :call Semicolonfun(';')<CR>
-imap <Esc>; <C-R>=Semicolonfun(';')<CR>
-vmap <Esc>, :normal A,<Esc><CR>
-nmap <Esc>, :call Semicolonfun(',')<CR>
-imap <Esc>, <C-R>=Semicolonfun(',')<CR>
-vmap <Esc>: :normal A:<Esc><CR>
-nmap <Esc>: :call Semicolonfun(':')<CR>
-imap <Esc>: <C-R>=Semicolonfun(':')<CR>
-function! Semicolonfun(char)
-  call setline(line('.'), substitute(getline('.'), '\s*$', a:char, ''))
-  return ''
-endfunction
+let g:ConqueTerm_TERM = 'xterm-256color'
 
 NeoBundle 'thinca/vim-scouter'
 
@@ -1131,8 +1108,8 @@ NeoBundle 'tyru/operator-camelize.vim', {
 \   ]
 \}
 map <Leader>L <Plug>(operator-camelize-toggle)
-map <Leader>_L <Plug>(operator-upper-camelize)
-let g:operator_camelize_word_case = "lower"
+" map <Leader>_L <Plug>(operator-upper-camelize)
+" let g:operator_camelize_word_case = "lower"
 
 " NeoBundle 'chikatoike/activefix.vim'
 
@@ -1144,9 +1121,7 @@ NeoBundleLazy 'mbbill/fencview', {
 \   }
 \}
 
-
 command! Uall :bufdo :update
-
 
 " NeoBundleLazy 'joonty/vdebug'
 NeoBundleLazy 'ypresto/vdebug', { 'directory' : 'my_vdebug' }
@@ -1184,32 +1159,20 @@ elseif has('linux')
 endif
 
 
-NeoBundle 'AndrewRadev/splitjoin.vim'
+NeoBundle 'AndrewRadev/splitjoin.vim' " improve gS and gJ mappings
 
 NeoBundleLazy 'reinh/vim-makegreen', '', 'python'
 NeoBundleLazy 'sontek/rope-vim', '', 'python'
 
-let g:neobundle#default_options['ruby'] = {
-\   'autoload' : {
-\       'filetypes' : ['ruby']
-\   }
-\ }
-NeoBundleLazy 'vim-ruby/vim-ruby', '', 'ruby'
+call s:NeoBundleAutoloadFiletypes('ruby', ['ruby'])
+NeoBundleLazy 'vim-ruby/vim-ruby',           '', 'ruby'
 NeoBundleLazy 'ecomba/vim-ruby-refactoring', '', 'ruby'
-NeoBundleLazy 'taichouchou2/vim-rsense', '', 'ruby'
+NeoBundleLazy 'taichouchou2/vim-rsense',     '', 'ruby'
 
 NeoBundleLazy 'dbext.vim' " TODO
-
 NeoBundleLazy 'mattn/qiita-vim' " TODO
-
-" supports ruby, vimscript
-NeoBundle 'tpope/vim-endwise'
-
 NeoBundleLazy 'thinca/vim-prettyprint'
-
-NeoBundleLazy 'benmills/vimux'
-
-let g:ConqueTerm_TERM = 'xterm-256color'
+NeoBundleLazy 'benmills/vimux' " TODO
 
 nmap <expr><TAB> neosnippet#jumpable() ?
  \ "i<TAB>" : "\<TAB>"
@@ -1223,46 +1186,14 @@ smap <expr><TAB> neosnippet#expandable() ?
 nmap <Esc>s i_<Plug>(neosnippet_start_unite_snippet)
 imap <Esc>s i_<Plug>(neosnippet_start_unite_snippet)
 
-let g:netrw_http_cmd = 'curl -L'
-let g:netrw_http_xcmd = '-o'
-
-let g:quickrun_config = {}
-let g:quickrun_config._ = {
-    \ 'runmode': 'async:vimproc'
-    \ }
 let g:quickrun_config.markdown = {
     \ 'type': 'markdown/pandoc',
     \ 'cmdopt': '-s',
     \ 'outputter': 'browser'
     \ }
 
-
-
-" http://d.hatena.ne.jp/heavenshell/20110228/1298899167
-" augroup QuickRunUnitTest
-"   autocmd!
-"   " autocmd BufWinEnter,BufNewFile *test.php setlocal filetype=php.unit
-"   " autocmd BufWinEnter,BufNewFile test_*.py setlocal filetype=python.unit
-" augroup END
-
-" let g:quickrun_config['php.unit'] = {'command': 'phpunitrunner'}
-" let g:quickrun_config['python.unit'] = {'command': 'nosetests', 'cmdopt': '-s -vv'}
-
 autocmd VimrcGlobal FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd VimrcGlobal FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-" autocmd VimrcGlobal FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-" autocmd VimrcGlobal FileType python setlocal omnifunc=pythoncomplete#Complete
-" autocmd VimrcGlobal FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplcache_omni_patterns')
-    let g:neocomplcache_omni_patterns = {}
-endif
-" let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-" let g:neocomplcache_omni_patterns.perl = '[^. *\t]\.\w*\|\h\w*::'
-" autocmd VimrcGlobal FileType ruby setlocal omnifunc=rubycomplete#Complete
-" autocmd VimrcGlobal FileType perl setlocal omnifunc=PerlComplete
-
 
 if !exists('g:neocomplete#sources#omni#input_patterns')
     let g:neocomplete#sources#omni#input_patterns = {}
@@ -1271,20 +1202,14 @@ let g:neocomplete#sources#omni#input_patterns.perl =
 \   '[^. \t]->\%(\h\w*\)\?'
 " \   '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
 
-NeoBundleLazy 'Shougo/unite-ssh' " TODO
 NeoBundle 'MultipleSearch' " TODO
-NeoBundle 'airblade/vim-rooter' " TODO
-NeoBundleLazy 'tsukkee/lingr-vim' " TODO
-
-" set foldopen=all
-" set foldclose=all
-nmap R <Plug>(operator-replace)
+" NeoBundle 'airblade/vim-rooter'
 
 NeoBundle 'thinca/vim-unite-history'
 " NeoBundle 't9md/vim-surround_custom_mapping'
 
 " http://hail2u.net/blog/software/only-one-line-life-changing-vimrc-setting.html
-autocmd VimrcGlobal FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
+autocmd VimrcGlobal FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') path+=;/
 autocmd VimrcGlobal FileType diff setlocal includeexpr=substitute(v:fname,'^[ab]\\/','','')
 
 " http://stackoverflow.com/questions/7672783/how-can-i-do-something-like-gf-but-in-a-new-vertical-split
@@ -1296,16 +1221,12 @@ NeoBundle 'sgur/vim-textobj-parameter'
 " let g:indent_guides_auto_colors = 0
 " autocmd VimrcGlobal VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
 " autocmd VimrcGlobal VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
-"
-NeoBundle 'Valloric/MatchTagAlways'
 
-NeoBundle 'kana/vim-fakeclip'
+call s:NeoBundleAutoloadFiletypes('xmlbased', ['html', 'xhtml', 'xml'])
+" highlight matching tags
+NeoBundleLazy 'Valloric/MatchTagAlways', '', 'xmlbased'
 
-NeoBundle 'terryma/vim-multiple-cursors'
-let g:multi_cursor_start_key='\'
-let g:multi_cursor_quit_key='\'
-
-let g:syntastic_always_populate_loc_list=1
+NeoBundle 'kana/vim-fakeclip' " TODO
 
 NeoBundleLazy 'mattn/mkdpreview-vim', {
 \   'autoload' : {
@@ -1313,40 +1234,16 @@ NeoBundleLazy 'mattn/mkdpreview-vim', {
 \   }
 \}
 
+" highlight matching open and close parentheses pair
 let g:loaded_matchparen = 1
 NeoBundle 'haruyama/vim-matchopen'
 
 noremap <C-w><C-f> :vertical wincmd f<CR>
 
-let g:syntastic_perl_checkers = ['perl', 'perlcritic', 'podchecker']
-let g:syntastic_perl_perlcritic_thres = 4
-nmap <Leader>s :SyntasticCheck<CR>
-
-NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript'
-" NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript', {
-" \   'build' : {
-" \       'windows' : 'npm install',
-" \       'cygwin'  : 'npm install',
-" \       'mac'     : 'npm install',
-" \       'unix'    : 'npm install',
-" \   }
-" \}
-let g:tern#command = ['node', $HOME.'/dotfiles/node_modules/.bin/tern']
-" let g:tern#is_show_argument_hints_enabled = 0
-
-NeoBundle 'rking/ag.vim'
-
 command! PurgeTrailingSpace :%s/\v\s+$//
 
 command! TwoIndent  set softtabstop=2 shiftwidth=2 | :IndentGuidesToggle | :IndentGuidesToggle
 command! FourIndent set softtabstop=4 shiftwidth=4 | :IndentGuidesToggle | :IndentGuidesToggle
-
-" set previewheight=
-set pumheight=10
-
-NeoBundle 'airblade/vim-gitgutter'
-map ]g :GitGutterNextHunk<CR>
-map [g :GitGutterPrevHunk<CR>
 
 " Reflection
 " @see http://mattn.kaoriya.net/software/vim/20110728094347.htm
@@ -1361,40 +1258,6 @@ endfunction
 function! FunctionForSID(sid, func_name)
     return function('<SNR>'.a:sid.'_'.a:func_name)
 endfunction
-
-" patch airline solarized theme, make blue
-let g:airline_theme_patch_func = 'AirlineThemePatch'
-function! AirlineThemePatch(palette)
-    if g:airline_theme == 'solarized'
-        let background  = get(g:, 'airline_solarized_bg', &background)
-        let ansi_colors = get(g:, 'solarized_termcolors', 16) != 256 && &t_Co >= 16 ? 1 : 0
-        let tty         = &t_Co == 8
-
-        let violet  = {'t': ansi_colors ?  13 : (tty ? '5' : 61 ), 'g': '#6c71c4'}
-        let blue    = {'t': ansi_colors ?   4 : (tty ? '4' : 33 ), 'g': '#268bd2'}
-        let cyan    = {'t': ansi_colors ?   6 : (tty ? '6' : 37 ), 'g': '#2aa198'}
-        let green   = {'t': ansi_colors ?   2 : (tty ? '2' : 64 ), 'g': '#859900'}
-        let normal_color = violet
-
-        let a:palette.normal.airline_a[1] = normal_color.g
-        let a:palette.normal.airline_a[3] = normal_color.t
-        let a:palette.normal.airline_z[1] = normal_color.g
-        let a:palette.normal.airline_z[3] = normal_color.t
-    endif
-endfunction
-let g:airline_mode_map = {
-\   '__' : '-',
-\   'n'  : 'N',
-\   'i'  : 'I',
-\   'R'  : 'R',
-\   'c'  : 'C',
-\   'v'  : 'V',
-\   'V'  : 'L',
-\   '' : 'B',
-\   's'  : 'S',
-\   'S'  : 'S',
-\   '' : 'S',
-\}
 
 nnoremap <Leader>R R
 
@@ -1496,42 +1359,7 @@ endif
 
 " ** vimrc reading @ 2012/01/19 {{{
 
-" 自動整形の実行方法 (see also :help fo-table)
-set formatoptions&
-set formatoptions-=o
-set formatoptions+=ctrqlm
-
-" <C-a> や <C-x> で数値を増減させるときに8進数を無効にする
-set nrformats-=octal
-
-set helplang=ja
-
-" 行をまたいでカーソル移動
-set whichwrap+=h,l
-
 "UUB NeoBundle 't9md/vim-quickhl'
-
-" ** }}}
-
-" ** vimrc reading @ 2012/01/26 {{{
-
-set shiftround " round indent with < and >
-set infercase " Ignore case on insert completion.
-set fillchars="vert:\ ,fold:\ ,diff:\ "
-set isfname-=%,$,@,= " filename characters for gf
-" set directory=~/.vim/swap
-
-" Set tags file.
-" Don't search tags file in current directory. And search upward.
-set tags& tags-=tags tags+=./tags;
-if v:version < 7.3 || (v:version == 7.3 && !has('patch336'))
-  " Vim's bug.
-  set notagbsearch
-endif
-
-set linebreak
-let &showbreak="» "
-set breakat=\ ;:,!?.>
 
 " ** }}}
 
@@ -1578,11 +1406,6 @@ set winaltkeys=no
 NeoBundleLazy 'yuratomo/gmail.vim'
 let g:gmail_user_name = 'yuya.presto@gmail.com'
 
-let g:quickrun_config._ = {
-\   'runner' : 'vimproc',
-\   'runner/vimproc/updatetime' : '500',
-\}
-
 "UUB NeoBundle 'itchyny/thumbnail.vim'
 
 " @see http://d.hatena.ne.jp/itchyny/20130319/1363690268
@@ -1606,28 +1429,11 @@ nnoremap <Space>gw  :<C-u>Gwrite<CR>
 
 " ** vimrc reading @ 2012/04/06 {{{
 
-set fileencodings=iso-2022-jp-3,iso-2022-jp,euc-jisx0213,euc-jp,utf-8,ucs-bom,euc-jp,eucjp-ms,cp932
-set encoding=utf-8
-set fileformats=unix,dos,mac
-
-autocmd VimrcGlobal BufReadPost *
-\   if &modifiable && !search('[^\x00-\x7F]', 'cnw')
-\ |   setlocal fileencoding=
-\ | endif
-
 " ペアとなる括弧の定義
-set matchpairs+=<:>
+autocmd VimrcGlobal FileType html setlocal matchpairs+=<:>
 
 set nojoinspaces
 
-" 改行時のコメントと、自動改行を無効化
-set formatoptions-=t
-set formatoptions-=c
-set formatoptions-=r
-set formatoptions-=o
-" TODO: check m flag meaning
-set formatoptions+=m
-set formatoptions+=M
 
 " grepソース
 " let g:unite_source_grep_default_opts = '-Hn --include="*.vim" --include="*.txt" --include="*.php" --include="*.xml" --include="*.mkd" --include="*.hs" --include="*.js" --include="*.log" --include="*.sql" --include="*.coffee"'
@@ -1637,8 +1443,6 @@ let g:unite_source_grep_default_opts = "--nogroup --nocolor"
 
 let g:unite_source_grep_max_candidates = 100
 " let g:unite_source_session_enable_auto_save = 1     " セッション保存
-
-nnoremap <silent> <Leader>u<space> :<C-u>UniteResume<CR>
 
 if 0
 
@@ -1664,24 +1468,6 @@ let g:neobundle#default_options['java'] = {
 NeoBundle 'yuratomo/dbg.vim.git'
 
 NeoBundleLazy 'teramako/jscomplete-vim.git', '', 'javascript'
-
-NeoBundleLazy 'yuratomo/cpp-api-complete.git',  '', 'java'
-NeoBundleLazy 'yuratomo/java-api-complete.git', '', 'java'
-NeoBundleLazy 'yuratomo/java-api-javax.git',    '', 'java'
-NeoBundleLazy 'yuratomo/java-api-org.git',      '', 'java'
-NeoBundleLazy 'yuratomo/java-api-sun.git',      '', 'java'
-NeoBundleLazy 'yuratomo/java-api-android.git',  '', 'java'
-
-" java-api-complete
-let g:javaapi#delay_dirs = [
-  \ 'java-api-javax',
-  \ 'java-api-org',
-  \ 'java-api-sun',
-  \ 'java-api-android',
-  \ ]
-
-set complete=.,w,b,u
-set foldcolumn=2
 
 augroup VimrcGlobal
     autocmd FileType java       set foldmarker={,} foldmethod=marker
@@ -1729,32 +1515,22 @@ nnoremap <silent>gm :Gcommit<CR>
 
 autocmd FileType gitcommit,git-diff nnoremap <buffer>q :q<CR>
 
+" Enable blocked I in non-visual-block mode
 NeoBundle 'kana/vim-niceblock'
 xmap I  <Plug>(niceblock-I)
 xmap A  <Plug>(niceblock-A)
 
 let bundle = neobundle#get('neocomplete')
 function! bundle.hooks.on_source(bundle)
+    if !exists("g:neocomplete#sources#omni#functions")
+        let g:neocomplete#sources#omni#functions = {}
+    endif
     let g:neocomplete#sources#omni#functions.java = 'eclim#java#complete#CodeComplete'
 
     let g:neocomplete#keyword_patterns = {
     \   '_' : '[0-9a-zA-Z:#_]\+',
     \   'c' : '[^.[:digit:]*\t]\%(\.\|->\)',
     \}
-
-    let g:neocomplete#sources#omni#input_patterns.c =
-    \   '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
-    let g:neocomplete#sources#omni#input_patterns.cpp =
-    \   '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-
-    let g:neocomplete#force_omni_input_patterns.c =
-    \   '[^.[:digit:] *\t]\%(\.\|->\)'
-    let g:neocomplete#force_omni_input_patterns.cpp =
-    \   '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-    let g:neocomplete#force_omni_input_patterns.objc =
-    \   '[^.[:digit:] *\t]\%(\.\|->\)'
-    let g:neocomplete#force_omni_input_patterns.objcpp =
-    \   '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 endfunction
 
 let g:surround_no_imappings = 1
@@ -1794,7 +1570,7 @@ if has('gui_running')
         set macmeta " Use alt as meta on MacVim like on terminal
         set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h12
         " set guifontwide=
-        set transparency=10
+        set transparency=5
         set fuoptions=maxvert,maxhorz
         NeoBundleSource 'thinca/vim-fontzoom'
     elseif has('gui_gtk2')
