@@ -1263,6 +1263,11 @@ nnoremap <Leader>R R
 
 NeoBundle 'vim-scripts/argtextobj.vim'
 
+NeoBundle 'ypresto/alpaca_powertabline', 'align_center_or_not'
+let g:alpaca_powertabline_align_center = 0
+let g:alpaca_powertabline_sep1 = ' > '
+let g:alpaca_powertabline_sep2 = ': '
+
 " HERE
 
 " ** vimrc reading @ 2012/11/03 {{{
