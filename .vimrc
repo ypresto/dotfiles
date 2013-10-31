@@ -818,14 +818,16 @@ autocmd VimrcGlobal BufNewFile,BufRead *.json setf json
 
 NeoBundleLazy 'jelera/vim-javascript-syntax',         '', 'javascript'
 NeoBundleLazy 'jiangmiao/simple-javascript-indenter', '', 'javascript'
-NeoBundleLazy 'nono/jquery.vim',                      '', 'javascript'
+" NeoBundleLazy 'nono/jquery.vim',                      '', 'javascript' "
 
 " NeoBundleLazy 'mklabs/grunt.vim', '', 'javascript'
 " NeoBundleLazy 'pangloss/vim-javascript', '', 'javascript' " indent, conflicts with lazyloaded vim-javascript-syntax
 
-autocmd VimrcGlobal FileType javascript call DelayedExecute('set syntax=jquery')
+" syntax conflicts with something...
+" autocmd VimrcGlobal FileType javascript call DelayedExecute('set syntax=jquery')
 
-NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript'
+NeoBundleLazy 'marijnh/tern_for_vim', '0.3.0', 'javascript'
+" Use below instead to use tern.js bundled in vim plugin
 " NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript', {
 " \   'build' : {
 " \       'windows' : 'npm install',
@@ -837,6 +839,20 @@ NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript'
 
 let g:tern#command = ['node', $HOME.'/dotfiles/node_modules/.bin/tern']
 " let g:tern#is_show_argument_hints_enabled = 0
+
+function! s:MapTernForVim()
+    nmap <buffer> <Leader>jf :<C-U>TernDef<CR>
+    nmap <buffer> <Leader>js :<C-U>TernDefSplit<CR>
+    nmap <buffer> <Leader>jv :vertical <C-U>TernDefSplit<CR>
+    nmap <buffer> <Leader>jt :<C-U>TernDefTab<CR>
+    nmap <buffer> <Leader>jp :<C-U>TernDefPreview<CR>
+    nmap <buffer> <Leader>jt :<C-U>TernType<CR>
+    nmap <buffer> <Leader>jr :<C-U>TernRefs<CR>
+    nmap <buffer> <Leader>jd :<C-U>TernDoc<CR>
+    nmap <buffer> <Leader>jb :<C-U>TernDocBrowse<CR>
+    nmap <buffer> <Leader>jR :<C-U>TernRename<CR>
+endfunction
+autocmd VimrcGlobal FileType javascript call s:MapTernForVim()
 
 " http://wozozo.hatenablog.com/entry/2012/02/08/121504
 map <Leader>FJ !python -m json.tool<CR>
@@ -1477,8 +1493,7 @@ let g:neobundle#default_options['java'] = {
 
 NeoBundle 'yuratomo/dbg.vim.git'
 
-NeoBundleLazy 'teramako/jscomplete-vim.git', '', 'javascript'
-
+" TODO
 augroup VimrcGlobal
     autocmd FileType java       set foldmarker={,} foldmethod=marker
     autocmd FileType cpp        set foldmarker={,} foldmethod=marker
@@ -1530,18 +1545,20 @@ NeoBundle 'kana/vim-niceblock'
 xmap I  <Plug>(niceblock-I)
 xmap A  <Plug>(niceblock-A)
 
-let bundle = neobundle#get('neocomplete')
-function! bundle.hooks.on_source(bundle)
-    if !exists("g:neocomplete#sources#omni#functions")
-        let g:neocomplete#sources#omni#functions = {}
-    endif
-    let g:neocomplete#sources#omni#functions.java = 'eclim#java#complete#CodeComplete'
+let s:bundle = neobundle#get('neocomplete')
+if !empty(s:bundle)
+    function! s:bundle.hooks.on_source(bundle)
+        if !exists("g:neocomplete#sources#omni#functions")
+            let g:neocomplete#sources#omni#functions = {}
+        endif
+        let g:neocomplete#sources#omni#functions.java = 'eclim#java#complete#CodeComplete'
 
-    let g:neocomplete#keyword_patterns = {
-    \   '_' : '[0-9a-zA-Z:#_]\+',
-    \   'c' : '[^.[:digit:]*\t]\%(\.\|->\)',
-    \}
-endfunction
+        let g:neocomplete#keyword_patterns = {
+        \   '_' : '[0-9a-zA-Z:#_]\+',
+        \   'c' : '[^.[:digit:]*\t]\%(\.\|->\)',
+        \}
+    endfunction
+endif
 
 let g:surround_no_imappings = 1
 imap <expr><C-G> pumvisible() ? neocomplete#undo_completion() : "\<Esc>"
