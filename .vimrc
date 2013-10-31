@@ -564,6 +564,8 @@ let g:airline_mode_map = {
 \   '' : 'S',
 \}
 
+" let g:airline_powerline_fonts = 1
+
 " Fast file selector
 NeoBundle 'kien/ctrlp.vim'
 let g:ctrlp_map = '<Leader><C-p>'
@@ -1168,6 +1170,9 @@ call s:NeoBundleAutoloadFiletypes('ruby', ['ruby'])
 NeoBundleLazy 'vim-ruby/vim-ruby',           '', 'ruby'
 NeoBundleLazy 'ecomba/vim-ruby-refactoring', '', 'ruby'
 NeoBundleLazy 'taichouchou2/vim-rsense',     '', 'ruby'
+
+" https://github.com/CocoaPods/CocoaPods/wiki/Make-your-text-editor-recognize-the-CocoaPods-files
+autocmd VimrcGlobal BufNewFile,BufRead Podfile,*.podspec setf ruby
 
 NeoBundleLazy 'dbext.vim' " TODO
 NeoBundleLazy 'mattn/qiita-vim' " TODO
