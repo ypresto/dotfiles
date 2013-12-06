@@ -793,7 +793,7 @@ call s:NeoBundleAutoloadFiletypes('htmlcss', ['html', 'css', 'xml', 'htmlcheetah
 
 NeoBundleLazy 'othree/html5.vim',       '', 'htmlcss'
 NeoBundleLazy 'hail2u/vim-css3-syntax', '', 'htmlcss'
-NeoBundleLazy 'skammer/vim-css-color',  '', 'htmlcss'
+" NeoBundleLazy 'skammer/vim-css-color',  '', 'htmlcss' " too heavy
 NeoBundleLazy 'mattn/zencoding-vim',    '', 'htmlcss'
 let g:user_zen_settings = {
 \   'lang': "ja"
@@ -818,6 +818,8 @@ autocmd VimrcGlobal BufNewFile,BufRead *.json setf json
 
 NeoBundleLazy 'jelera/vim-javascript-syntax',         '', 'javascript'
 NeoBundleLazy 'jiangmiao/simple-javascript-indenter', '', 'javascript'
+let g:SimpleJsIndenter_BriefMode = 1 " one indent per any number of parentheses
+
 " NeoBundleLazy 'nono/jquery.vim',                      '', 'javascript' "
 
 " NeoBundleLazy 'mklabs/grunt.vim', '', 'javascript'
@@ -1177,7 +1179,7 @@ elseif has('linux')
 endif
 
 
-NeoBundle 'AndrewRadev/splitjoin.vim' " improve gS and gJ mappings
+NeoBundle 'AndrewRadev/splitjoin.vim' " gS and gJ
 
 NeoBundleLazy 'reinh/vim-makegreen', '', 'python'
 NeoBundleLazy 'sontek/rope-vim', '', 'python'

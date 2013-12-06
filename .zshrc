@@ -210,6 +210,19 @@ alias :by='v ~/dotfiles/byobu_keybindings'
 #alias snip='open ~/.vim/bundle/snipMate/snippets'
 a() { 1=${1:--A}; git add $*; git status --short }
 m() { git commit -m "$*" }
+submit() {
+    local remote=$1
+    shift 1
+    local branch=`git rev-parse --abbrev-ref HEAD`
+    git push "$@" $remote HEAD:$branch
+}
+submit-to() {
+    local remote=$1
+    local branch=$2
+    shift 2
+    git push "$@" $remote HEAD:$branch
+}
+checkin() { git push gerrit HEAD:refs/for/$1 }
 
 copy-line() { print -rn $BUFFER | pbcopy; zle -M "Copied: ${BUFFER}" }
 zle -N copy-line
