@@ -359,6 +359,7 @@ nnoremap <Leader>G :GundoToggle<CR>
 
 " ** neocomplcache ** {{{2
 
+imap <Esc><Space> <C-n>
 inoremap <expr> <C-x><C-f>  neocomplcache#manual_filename_complete()
 " C-nでneocomplcache補完
 inoremap <expr> <C-n>  pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
