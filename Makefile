@@ -3,7 +3,8 @@ UNAME := $(shell uname)
 all:
 	echo "call 'make install' or 'make update'"
 
-.PHONY: install update _up vimproc skkdict perldict gitsubmodules completions cleanlinks install_rbenv
+.PHONY: install update _up vimproc skkdict perldict gitsubmodules completions cleanlinks \
+	install_rbenv install_xcode_themes install_xcode_plugins
 
 install:
 	./mksymlinks
@@ -78,3 +79,11 @@ install_rbenv:
 	git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
 	echo 'export PATH="$$HOME/.rbenv/bin:$$PATH"' >> ~/.zshrc_local_init
 	echo 'eval "$$(rbenv init -)"' >> ~/.zshrc_local
+
+install_xcode_themes:
+	cd ~/Library/Developer/Xcode/UserData && \
+		git clone https://github.com/hdoria/xcode-themes.git FontAndColorThemes
+
+install_xcode_plugins:
+	mkdir -p ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins && \
+		curl -L http://goo.gl/xfmmt | tar xv -C ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins -
