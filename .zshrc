@@ -13,6 +13,8 @@ if [ "$TERM" = "xterm" ]; then
     export TERM=xterm-256color
 fi
 
+export LANG
+
 #bindkey -v
 bindkey -e
 
@@ -397,6 +399,11 @@ alias staged='git diff --name-only --cached'
 if [ -f "$HOME/.zshrc_local" ]; then
     source $HOME/.zshrc_local
 fi
+
+ranking () {
+    history 1 | awk '{print $2}' | sort | uniq -c | sort -nr | head -n30
+}
+
 
 [ -n "$_missing_commands" ] && echo "Command not available:$_missing_commands"
 

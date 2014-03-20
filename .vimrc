@@ -57,7 +57,7 @@ endtry
 set helplang=ja
 
 set encoding=utf-8
-set fileencodings=iso-2022-jp-3,iso-2022-jp,euc-jisx0213,euc-jp,utf-8,ucs-bom,euc-jp,eucjp-ms,cp932
+set fileencodings=iso-2022-jp-3,iso-2022-jp,utf-8,euc-jisx0213,euc-jp,ucs-bom,euc-jp,eucjp-ms,cp932
 set fileformats=unix,dos,mac
 autocmd VimrcGlobal BufReadPost *
 \   if &modifiable && !search('[^\x00-\x7F]', 'cnw')
@@ -289,10 +289,19 @@ inoremap <silent> <C-[> <Esc>
 " Note: 'map!' maps both insert and command-line mode
 noremap! <C-f> <Right>
 noremap! <C-b> <Left>
+"" Ctrl-a Ctrl-eで移動できるようにする
+function! MoveCursorToHome()
+    let c = col(".")
+    exec "normal! ^"
+    if col(".") == c
+        exec "normal! 0"
+    endif
+endfunction
+inoremap <silent> <C-a> <C-o>:call MoveCursorToHome()<CR>
 " <C-o> and <Home> is different on indented line
-inoremap <C-a> <C-o>^
-cnoremap <C-a> <Home>
-snoremap <C-a> <Home>
+inoremap <C-a> <C-o>:call MoveCursorToHome()<CR>
+cnoremap <C-a> <C-o>:call MoveCursorToHome()<CR>
+snoremap <C-a> <C-o>:call MoveCursorToHome()<CR>
 noremap! <C-e> <End>
 snoremap <C-e> <End>
 noremap! <C-d> <Del>
@@ -486,6 +495,7 @@ let g:syntastic_warning_symbol='W>' " ⚠
 let g:syntastic_always_populate_loc_list=1
 let g:syntastic_perl_checkers = ['perl', 'perlcritic', 'podchecker']
 let g:syntastic_perl_perlcritic_thres = 4
+let g:syntastic_enable_perl_checker = 1
 nmap <Leader>s :SyntasticCheck<CR>
 
 " rich-formatted undo history
@@ -621,6 +631,7 @@ if has('lua')
     let s:is_neocomplete_available = 1
     let s:neocompl_config_prefix   = 'neocomplete#'
     let s:neocompl_function_prefix = 'neocomplete#'
+    let g:neocomplete#ctags_command = ''
 else
     NeoBundleLazy 'Shougo/neocomplcache', {
     \   'autoload' : {
@@ -661,7 +672,6 @@ endfor
 
 " ** unite ** {{{2
 
-" Cannot make it lazy: vim path/to/file.txt doesn't update file_mru list
 NeoBundle 'Shougo/unite.vim', {
 \   'autoload' : {
 \       'commands' : ['Unite', 'UniteSessionLoad', 'UniteSessionSave']
@@ -670,6 +680,9 @@ NeoBundle 'Shougo/unite.vim', {
 let g:unite_enable_start_insert=1
 let g:unite_split_rule="botright"
 let g:unite_winheight="10"
+
+" Cannot make it lazy: vim path/to/file.txt doesn't update file_mru list
+NeoBundle 'Shougo/neomru.vim'
 
 NeoBundle 'kmnk/vim-unite-giti.git'
 NeoBundle 'Shougo/unite-session'
@@ -829,7 +842,7 @@ let g:SimpleJsIndenter_BriefMode = 1 " one indent per any number of parentheses
 " syntax conflicts with something...
 " autocmd VimrcGlobal FileType javascript call DelayedExecute('set syntax=jquery')
 
-NeoBundleLazy 'marijnh/tern_for_vim', '0.3.0', 'javascript'
+NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript'
 " Use below instead to use tern.js bundled in vim plugin
 " NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript', {
 " \   'build' : {
@@ -844,9 +857,10 @@ let g:tern#command = ['node', $HOME.'/dotfiles/node_modules/.bin/tern']
 " let g:tern#is_show_argument_hints_enabled = 0
 
 function! s:MapTernForVim()
+    command! -buffer TernDefVSplitLocal py tern_lookupDefinition("vsplit")
     nmap <buffer> <Leader>jf :<C-U>TernDef<CR>
     nmap <buffer> <Leader>js :<C-U>TernDefSplit<CR>
-    nmap <buffer> <Leader>jv :vertical <C-U>TernDefSplit<CR>
+    nmap <buffer> <Leader>jv :<C-U>TernDefVSplitLocal<CR>
     nmap <buffer> <Leader>jt :<C-U>TernDefTab<CR>
     nmap <buffer> <Leader>jp :<C-U>TernDefPreview<CR>
     nmap <buffer> <Leader>jt :<C-U>TernType<CR>
@@ -1291,6 +1305,8 @@ NeoBundle 'ypresto/alpaca_powertabline', 'align_center_or_not'
 let g:alpaca_powertabline_align_center = 0
 let g:alpaca_powertabline_sep1 = ' > '
 let g:alpaca_powertabline_sep2 = ': '
+
+NeoBundle 'haya14busa/vim-migemo'
 
 " HERE
 
