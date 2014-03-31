@@ -19,10 +19,10 @@
 	cma = commit --amend
 	st = status
 	br = branch
-	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+	hist = log --pretty=format:\"%C(auto)%h %ad | %s%d [%an]\" --graph --date=short
 	g = log --graph --decorate --stat
 	go = log --graph --decorate --stat --oneline
-	gog = log --graph --decorate --oneline
+	gog = log --graph --decorate --pretty=format:\"%h %ad | %s%d [%an]\" --date=short
 	rs = reset
 	rsh = reset --hard
 	dw = diff --color-words

@@ -9,6 +9,7 @@ bind main    B !git rebase -i %(commit)
 bind main    > !git push
 bind main    < !git pull
 bind status  P !git add -p %(file)
+bind status  _ !?rm %(file)
 
 bind generic R !git revert %(commit)
 bind generic r refresh

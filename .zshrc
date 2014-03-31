@@ -15,6 +15,12 @@ fi
 
 export LANG
 
+# setup anyenv if exists
+if [ -d "$HOME/.anyenv" ]; then
+    export PATH="$HOME/.anyenv/bin:$PATH"
+    eval "$(anyenv init -)"
+fi
+
 #bindkey -v
 bindkey -e
 
@@ -390,8 +396,8 @@ EOS
 
 unalias ag 2> /dev/null
 orig_ag=`which ag`
-alias agnb="$orig_ag --pager='less -RS'"
-alias ag="$orig_ag --search-binary --pager='less -RS'"
+alias agnb="$orig_ag --pager='less -RSi'"
+alias ag="$orig_ag --search-binary --pager='less -RSi'"
 
 alias modified='git diff --name-only'
 alias staged='git diff --name-only --cached'
@@ -424,3 +430,6 @@ function _not_available () {
 
 unfunction _is_available _should_available _not_available
 unset _missing_commands
+
+typeset -U path
+path+=(.)

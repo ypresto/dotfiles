@@ -1203,6 +1203,7 @@ call s:NeoBundleAutoloadFiletypes('ruby', ['ruby'])
 NeoBundleLazy 'vim-ruby/vim-ruby',           '', 'ruby'
 NeoBundleLazy 'ecomba/vim-ruby-refactoring', '', 'ruby'
 NeoBundleLazy 'taichouchou2/vim-rsense',     '', 'ruby'
+NeoBundleLazy 'tpope/vim-rails',             '', 'ruby' 
 
 " https://github.com/CocoaPods/CocoaPods/wiki/Make-your-text-editor-recognize-the-CocoaPods-files
 autocmd VimrcGlobal BufNewFile,BufRead Podfile,*.podspec setf ruby
@@ -1307,6 +1308,9 @@ let g:alpaca_powertabline_sep1 = ' > '
 let g:alpaca_powertabline_sep2 = ': '
 
 NeoBundle 'haya14busa/vim-migemo'
+
+NeoBundle 'koron/codic-vim'
+NeoBundle 'rhysd/unite-codic.vim'
 
 " HERE
 

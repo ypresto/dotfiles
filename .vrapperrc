@@ -68,6 +68,8 @@ inoremap <C-e> <Esc>:LineEnd<CR>a
 inoremap <C-f> <Esc><Right>a
 inoremap <C-b> <Esc>i
 inoremap <C-d> <Esc><Right>xi
+inoremap <C-n> <Down>
+inoremap <C-p> <Up>
 
 "Action definition ID of the source -> add block comment action 
 eclipseaction AddBlockComment org.eclipse.jdt.ui.edit.text.java.add.block.comment
