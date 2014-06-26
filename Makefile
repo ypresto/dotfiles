@@ -4,7 +4,7 @@ all:
 	echo "call 'make install' or 'make update'"
 
 .PHONY: install update _up vimproc skkdict perldict gitsubmodules completions cleanlinks \
-	install_rbenv install_xcode_themes install_xcode_plugins
+	install_anyenv install_xcode_themes install_xcode_plugins
 
 install:
 	./mksymlinks
@@ -74,11 +74,8 @@ cleanlinks:
 # below also works with BSD find
 	find -L ~ -maxdepth 5 -type l 2>/dev/null | xargs -L5000 -I"{}" sh -c 'rm -i "{}" < /dev/tty'
 
-install_rbenv:
-	git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
-	git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
-	echo 'export PATH="$$HOME/.rbenv/bin:$$PATH"' >> ~/.zshrc_local_init
-	echo 'eval "$$(rbenv init -)"' >> ~/.zshrc_local
+install_anyenv:
+	git clone https://github.com/riywo/anyenv ~/.anyenv
 
 install_xcode_themes:
 	cd ~/Library/Developer/Xcode/UserData && \
