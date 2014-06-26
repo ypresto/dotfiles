@@ -4,6 +4,7 @@
 *.hpp diff=cpp
 *.m diff=objc
 *.java diff=java
+*.xml diff=html
 *.html diff=html
 *.tmpl diff=html
 *.pl diff=perl
