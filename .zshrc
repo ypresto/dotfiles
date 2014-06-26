@@ -91,9 +91,10 @@ else
     eval `dircolors ~/dotfiles/dircolors-solarized/dircolors.ansi-dark`
 fi
 
-if _is_available 'gfind'; then
-    alias find='gfind'
-fi
+# for homebrew
+_is_available 'gfind'  && function find  () { gfind  "$@" }
+_is_available 'ggrep'  && function grep  () { ggrep  "$@" }
+_is_available 'gegrep' && function egrep () { gegrep "$@" }
 
 # color / ignore case
 alias less='less -Ri'
@@ -188,10 +189,10 @@ bindkey ";5D" backward-word
 alias g="git"
 alias v='vim "$@"'
 alias V='gvi "$@"'
-alias d='git diff'
-alias D='git diff --color-words'
-alias c='git diff --cached'
-alias C='git diff --cached --color-words'
+alias d='git d'
+alias D='git dw'
+alias c='git c'
+alias C='git cw'
 alias s='git status --short --branch'
 alias t='tig'
 alias p='popd'
@@ -402,6 +403,15 @@ alias ag="$orig_ag --search-binary --pager='less -RSi'"
 alias modified='git diff --name-only'
 alias staged='git diff --name-only --cached'
 
+git-prune-branches-dry-run() {
+    git fetch --dry-run --prune origin
+    git fetch origin && git branch --merged origin/master | grep -vE ' master$|^\*' | xargs echo git branch -d
+}
+
+git-prune-branches() {
+    git fetch --prune origin && git branch --merged origin/master | grep -vE ' master$|^\*' | xargs git branch -d
+}
+
 if [ -f "$HOME/.zshrc_local" ]; then
     source $HOME/.zshrc_local
 fi
@@ -430,6 +440,10 @@ function _not_available () {
 
 unfunction _is_available _should_available _not_available
 unset _missing_commands
+
+GRADLE_OPTS="-Dorg.gradle.daemon=true"
+
+# HERE
 
 typeset -U path
 path+=(.)

@@ -3,11 +3,11 @@
   "version"      : "0.0.1",
   "private"      : true,
   "dependencies" : {
-    "jshint"   : "*",
-    "csslint"  : "*",
-    "grunt"    : "*",
-    "jsonlint" : "*",
-    "tern"     : "*",
-    "jsgrep"   : "*"
+    "jshint"         : "*",
+    "csslint"        : "*",
+    "grunt-cli"      : "*",
+    "jsonlint"       : "*",
+    "tern"           : "*",
+    "jsgrep-toolkit" : "*"
   }
 }

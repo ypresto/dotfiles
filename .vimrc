@@ -199,8 +199,8 @@ function! s:HighlightSetup()
     highlight CursorLine ctermbg=black guibg=black
     highlight SignColumn ctermfg=white ctermbg=black cterm=none
 
-    highlight SpecialKey   ctermbg=darkyellow guibg=darkyellow
-    highlight ZenkakuSpace ctermbg=darkgray   guibg=darkgray
+    highlight SpecialKey   ctermbg=black      guibg=black
+    highlight ZenkakuSpace ctermbg=darkyellow guibg=darkyellow
 endfunction
 
 augroup VimrcGlobal
@@ -355,12 +355,12 @@ nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
 nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 
 " ZenCoding
-let g:user_zen_leader_key = '<Esc>y'
+let g:user_emmet_leader_key = '<Esc>y'
 if has('gui_running')
     " Workaround for gui meta
-    let g:user_zen_expandabbr_key = '<M-y><M-y>'
+    let g:user_emmet_expandabbr_key = '<M-y><M-y>'
 else
-    let g:user_zen_expandabbr_key = '<Esc>y<Esc>y'
+    let g:user_emmet_expandabbr_key = '<Esc>y<Esc>y'
 endif
 
 " Gundo
@@ -575,7 +575,9 @@ let g:airline_mode_map = {
 \   '' : 'S',
 \}
 
-" let g:airline_powerline_fonts = 1
+if has('gui_running') && has('gui_macvim')
+    let g:airline_powerline_fonts = 1
+endif
 
 " Fast file selector
 NeoBundle 'kien/ctrlp.vim'
@@ -643,7 +645,7 @@ else
     let s:neocompl_function_prefix = 'neocomplcache#'
 endif
 NeoBundle 'Shougo/neosnippet'
-NeoBundle 'honza/vim-snippets'
+NeoBundle 'Shougo/neosnippet-snippets'
 " English spell completion with 'look' command
 NeoBundle 'ujihisa/neco-look'
 
@@ -808,8 +810,10 @@ call s:NeoBundleAutoloadFiletypes('htmlcss', ['html', 'css', 'xml', 'htmlcheetah
 NeoBundleLazy 'othree/html5.vim',       '', 'htmlcss'
 NeoBundleLazy 'hail2u/vim-css3-syntax', '', 'htmlcss'
 " NeoBundleLazy 'skammer/vim-css-color',  '', 'htmlcss' " too heavy
-NeoBundleLazy 'mattn/zencoding-vim',    '', 'htmlcss'
-let g:user_zen_settings = {
+
+" zencoding
+NeoBundleLazy 'mattn/emmet-vim',        '', 'htmlcss'
+let g:user_emmet_settings = {
 \   'lang': "ja"
 \}
 let g:use_zen_complete_tag = 1
@@ -1574,7 +1578,7 @@ if !empty(s:bundle)
         if !exists("g:neocomplete#sources#omni#functions")
             let g:neocomplete#sources#omni#functions = {}
         endif
-        let g:neocomplete#sources#omni#functions.java = 'eclim#java#complete#CodeComplete'
+        " let g:neocomplete#sources#omni#functions.java = 'eclim#java#complete#CodeComplete'
 
         let g:neocomplete#keyword_patterns = {
         \   '_' : '[0-9a-zA-Z:#_]\+',
