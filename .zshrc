@@ -289,6 +289,13 @@ zstyle ':chpwd:*' recent-dirs-max 5000
 zstyle ':chpwd:*' recent-dirs-default yes
 zstyle ':completion:*' recent-dirs-insert both
 
+# source zsh-notify
+if [ "`uname`" = "Darwin" ] && _should_available 'terminal-notifier'; then
+    export NOTIFY_COMMAND_COMPLETE_TIMEOUT=5
+    export SYS_NOTIFIER="`which terminal-notifier`"
+    source $HOME/dotfiles/zsh-notify/notify.plugin.zsh
+fi
+
 #=============================
 # source auto-fu.zsh
 #=============================

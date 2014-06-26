@@ -13,3 +13,6 @@
 [submodule "guake-colors-solarized"]
 	path = guake-colors-solarized
 	url = https://github.com/coolwanglu/guake-colors-solarized.git
+[submodule "zsh-notify"]
+	path = zsh-notify
+	url = https://github.com/marzocchi/zsh-notify.git
