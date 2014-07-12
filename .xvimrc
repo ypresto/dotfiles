@@ -2,6 +2,17 @@ set incsearch
 set ignorecase
 set smartcase
 
+" Meta to Esc map
+for c in ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+    execute 'map <M-'.c.'> <Esc>'.c
+    execute 'map! <M-'.c.'> <Esc>'.c
+endfor
+for c in ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+    execute 'map <M-S-'.c.'> <Esc>'.c
+    execute 'map! <M-S-'.c.'> <Esc>'.c
+endfor
+unlet c
+
 " Fast saving
 noremap ZJ :update<CR>
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>

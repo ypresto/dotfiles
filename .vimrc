@@ -144,6 +144,7 @@ set scrolloff=1       " show N more next line when scrolling
 set complete=.,w,b,u,U,s,i,d,t
 set completeopt=menu,menuone
 set pumheight=10
+set infercase         " Ignore case on insert completion.
 
 " Format
 " 自動整形の実行方法 (see also :help fo-table)
@@ -161,7 +162,6 @@ set incsearch         " Use 'incremental search'
 set hlsearch          " Highlight search result
 set ignorecase        " Ignore case when searching
 set smartcase         " Do not ignorecase if keyword contains uppercase
-set infercase         " Ignore case on insert completion.
 
 " Misc
 set nrformats-=octal  " <c-a> や <c-x> で数値を増減させるときに8進数を無効にする
@@ -517,10 +517,12 @@ let g:quickrun_config._ = {
 
 let g:quickrun_config.perl = {'command': 'prove'}
 
-" Highlight indent by its levels, must have for pythonist
-NeoBundle 'nathanaelkane/vim-indent-guides'
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_guide_size = 1
+" " Highlight indent by its levels, must have for pythonist
+" NeoBundle 'nathanaelkane/vim-indent-guides'
+" let g:indent_guides_enable_on_vim_startup = 1
+" let g:indent_guides_guide_size = 1
+
+NeoBundle 'Yggdroot/indentLine'
 
 " Search word with * and # also on Visual Mode
 NeoBundle 'thinca/vim-visualstar'
@@ -1643,16 +1645,17 @@ endif
 " Fix meta-keys to MAKE SURE to generate <Esc>a .. <Esc>z
 " This is almost for gvim which does not translate meta to esc
 " refer: http://vim.wikia.com/wiki/Fix_meta-keys_that_break_out_of_Insert_mode
-let nr=0x21 " ASCII Space
-while nr <= 0x7E
+" refer: http://blog.remora.cx/2012/07/using-alt-as-meta-in-vim.html
+let nr=0x21 " ASCII exclamation
+while nr <= 0x7E " ASCII tilde
     let c = nr2char(nr)
     if c == '|' | let nr += 1 | continue | endif
-    exec "map <M-".tolower(c)."> <Esc>".tolower(c)
-    exec "map! <M-".tolower(c)."> <Esc>".tolower(c)
+    exec printf('map <M-%s> <Esc>%s', tolower(c), tolower(c))
+    exec printf('map! <M-%s> <Esc>%s', tolower(c), tolower(c))
     if (0x41 <= nr && nr <= 0x5A) || (0x61 <= nr && nr <= 0x7A)
         " ascii; uppercases are required for at least on linux
-        exec "map <M-".toupper(c)."> <Esc>".toupper(c)
-        exec "map! <M-".toupper(c)."> <Esc>".toupper(c)
+        exec printf('map <M-S-%s> <Esc>%s', tolower(c), toupper(c))
+        exec printf('map! <M-S-%s> <Esc>%s', tolower(c), toupper(c))
     endif
     let nr += 1
 endwhile
