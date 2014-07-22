@@ -19,6 +19,7 @@ install:
 	make vimproc
 	vim -c ":Unite -here neobundle/install"
 	npm install
+	bundle install
 	make _up
 	clear
 
@@ -28,6 +29,7 @@ update:
 	vim -c ":Unite -here neobundle/update"
 	vim -c ":NeoBundleClean"
 	npm update
+	bundle update
 	make _up
 	./mksymlinks
 
@@ -63,12 +65,12 @@ gitsubmodules:
 
 completions:
 	cd .zsh/functions && \
-		curl -O https://raw.github.com/git/git/master/contrib/completion/git-completion.bash && \
-		curl -o _git https://raw.github.com/git/git/master/contrib/completion/git-completion.zsh && \
-		curl -o _hub https://raw.github.com/github/hub/master/etc/hub.zsh_completion && \
-		curl -o _brew https://raw.github.com/mxcl/homebrew/master/Library/Contributions/brew_zsh_completion.zsh
+		curl -LkO https://raw.github.com/git/git/master/contrib/completion/git-completion.bash && \
+		curl -Lko _git https://raw.github.com/git/git/master/contrib/completion/git-completion.zsh && \
+		curl -Lko _hub https://raw.github.com/github/hub/master/etc/hub.zsh_completion && \
+		curl -Lko _brew https://raw.github.com/mxcl/homebrew/master/Library/Contributions/brew_zsh_completion.zsh
 	cd bashcomp && \
-		curl -O https://raw.github.com/jonas/tig/master/contrib/tig-completion.bash
+		curl -LkO https://raw.github.com/jonas/tig/master/contrib/tig-completion.bash
 
 cleanlinks:
 # below also works with BSD find

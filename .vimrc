@@ -493,6 +493,7 @@ let g:syntastic_mode_map = {
 let g:syntastic_error_symbol='E>' " ✗
 let g:syntastic_warning_symbol='W>' " ⚠
 let g:syntastic_always_populate_loc_list=1
+let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 let g:syntastic_perl_checkers = ['perl', 'perlcritic', 'podchecker']
 let g:syntastic_perl_perlcritic_thres = 4
 let g:syntastic_enable_perl_checker = 1
@@ -684,6 +685,8 @@ NeoBundle 'Shougo/unite.vim', {
 let g:unite_enable_start_insert=1
 let g:unite_split_rule="botright"
 let g:unite_winheight="10"
+
+call unite#custom#source('outline,outline:folding', 'sorters', 'sorter_reverse')
 
 " Cannot make it lazy: vim path/to/file.txt doesn't update file_mru list
 NeoBundle 'Shougo/neomru.vim'
@@ -1119,6 +1122,12 @@ NeoBundle 'kana/vim-altr'
 nmap ]r <Plug>(altr-forward)
 nmap [r <Plug>(altr-back)
 
+" rails
+call altr#define('app/models/%.rb', 'spec/models/%_spec.rb', 'spec/factories/%s.rb')
+call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
+call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
+call altr#define('spec/routing/%_spec.rb', 'config/routes.rb')
+
 " Bundle 'jpalardy/vim-slime' " TODO
 
 if has('mac')
@@ -1207,9 +1216,17 @@ NeoBundleLazy 'sontek/rope-vim', '', 'python'
 
 call s:NeoBundleAutoloadFiletypes('ruby', ['ruby'])
 NeoBundleLazy 'vim-ruby/vim-ruby',           '', 'ruby'
-NeoBundleLazy 'ecomba/vim-ruby-refactoring', '', 'ruby'
-NeoBundleLazy 'taichouchou2/vim-rsense',     '', 'ruby'
-NeoBundleLazy 'tpope/vim-rails',             '', 'ruby' 
+" NeoBundleLazy 'ecomba/vim-ruby-refactoring', '', 'ruby'
+" NeoBundleLazy 'tpope/vim-rails',             '', 'ruby'
+NeoBundleLazy 'basyura/unite-rails',         '', 'ruby'
+NeoBundleLazy 'ruby-matchit',                '', 'ruby'
+
+" currently not available for newer rsense
+" if s:is_neocomplete_available
+"     NeoBundleLazy 'supermomonga/neocomplete-rsense.vim', '', 'ruby'
+" else
+"     NeoBundleLazy 'Shougo/neocomplcache-rsense.vim', '', 'ruby'
+" endif
 
 " https://github.com/CocoaPods/CocoaPods/wiki/Make-your-text-editor-recognize-the-CocoaPods-files
 autocmd VimrcGlobal BufNewFile,BufRead Podfile,*.podspec setf ruby
@@ -1279,9 +1296,10 @@ NeoBundleLazy 'mattn/mkdpreview-vim', {
 \   }
 \}
 
-" highlight matching open and close parentheses pair
-let g:loaded_matchparen = 1
-NeoBundle 'haruyama/vim-matchopen'
+" " highlight matching open and close parentheses pair
+" let g:loaded_matchparen = 1
+" NeoBundle 'haruyama/vim-matchopen'
+" above is good but too slow on large file...
 
 noremap <C-w><C-f> :vertical wincmd f<CR>
 
@@ -1318,6 +1336,35 @@ NeoBundle 'haya14busa/vim-migemo'
 NeoBundle 'koron/codic-vim'
 NeoBundle 'rhysd/unite-codic.vim'
 
+" http://d.hatena.ne.jp/joker1007/20111208/1323324569
+let g:quickrun_config = {}
+let g:quickrun_config._ = {'runner' : 'vimproc'}
+let g:quickrun_config['rspec/bundle/cwd'] = {
+  \ 'type': 'rspec/bundle/cwd',
+  \ 'command': 'rspec',
+  \ 'exec': 'bundle exec bin/rspec %s'
+  \}
+let g:quickrun_config['rspec/bundle'] = {
+  \ 'type': 'rspec/bundle',
+  \ 'command': 'rspec',
+  \ 'exec': 'bundle exec %c %s'
+  \}
+let g:quickrun_config['rspec/normal'] = {
+  \ 'type': 'rspec/normal',
+  \ 'command': 'rspec',
+  \ 'exec': '%c %s'
+  \}
+function! RSpecQuickrun()
+  let b:quickrun_config = {'type' : 'rspec/bundle/cwd'}
+endfunction
+autocmd BufReadPost *_spec.rb call RSpecQuickrun()
+
+NeoBundle 'alpaca-tc/alpaca_tags'
+let g:alpaca_tags#config = {
+            \ '_' : '-R --sort=yes --languages=+Ruby',
+            \ }
+autocmd VimrcGlobal BufReadPost * AlpacaTagsSet
+
 " HERE
 
 " ** vimrc reading @ 2012/11/03 {{{
@@ -1340,7 +1387,11 @@ NeoBundle 'rhysd/unite-codic.vim'
 
 " https://github.com/kazuph/dotfiles/blob/master/_vimrc
 
-let &grepprg='ag --search-binary'
+if executable("ag")
+    let &grepprg='ag --search-binary'
+elseif executable("ack")
+    let &grepprg='ack'
+endif
 
 let g:neocomplcache_min_syntax_length = 3
 if !exists('g:neocomplcache_keyword_patterns')
@@ -1464,9 +1515,9 @@ let g:gmail_user_name = 'yuya.presto@gmail.com'
 "UUB NeoBundle 'itchyny/thumbnail.vim'
 
 " @see http://d.hatena.ne.jp/itchyny/20130319/1363690268
-augroup VimrcGlobal
-    autocmd VimEnter * NeoBundleCheck
-augroup END
+" augroup VimrcGlobal
+"     autocmd VimEnter * NeoBundleCheck
+" augroup END
 
 " fugitive
 nnoremap <Space>ge  :<C-u>Gedit<CR>

@@ -8,7 +8,7 @@ use File::Basename qw//;
 use File::Path qw//;
 
 sub filter_ignore {
-    grep { !/(^|\/)(\.{1,2}|\.git|\.gitmodules|.*\.sw[po]|\.Apple.*)$/ } @_
+    grep { !/(^|\/)(\.{1,2}|\.git|\.gitmodules|\.bundle|.*\.sw[po]|\.Apple.*)$/ } @_
 }
 
 my $HOME = $ENV{'HOME'} || die "Environment variable HOME isn't set";

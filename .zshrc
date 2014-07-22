@@ -106,7 +106,10 @@ fi
 export PAGER='less -Ri'
 
 # ENV
-export PATH="$HOME/dotfiles/bin:$HOME/dotfiles/node_modules/.bin:$HOME/node_modules/.bin:$PATH"
+_gem_paths=( $HOME/dotfiles/gems/ruby/*/bin )
+((${#_gem_paths[@]} > 1)) && echo "There are multiple ruby version for ./gems, using first one ($_gem_path)."
+export GEM_HOME="${_gem_paths[1]%/bin}" # NOTE: this is "first element" of array, different from bash
+export PATH="$HOME/dotfiles/bin:$HOME/dotfiles/node_modules/.bin:$GEM_HOME/bin:$PATH"
 export EDITOR=vim
 export CLICOLOR=YES
 
@@ -402,10 +405,12 @@ ruby -rwebrick <<EOS
 EOS
 }
 
-unalias ag 2> /dev/null
-orig_ag=`which ag`
-alias agnb="$orig_ag --pager='less -RSi'"
-alias ag="$orig_ag --search-binary --pager='less -RSi'"
+if _should_available 'ag'; then
+    unalias ag 2> /dev/null
+    orig_ag=`which ag`
+    alias agnb="$orig_ag --pager='less -RSi'"
+    alias ag="$orig_ag --search-binary --pager='less -RSi'"
+fi
 
 alias modified='git diff --name-only'
 alias staged='git diff --name-only --cached'
@@ -448,7 +453,8 @@ function _not_available () {
 unfunction _is_available _should_available _not_available
 unset _missing_commands
 
-GRADLE_OPTS="-Dorg.gradle.daemon=true"
+export RSENSE_HOME="$GEM_HOME"
+export GRADLE_OPTS="-Dorg.gradle.daemon=true"
 
 # HERE
 
