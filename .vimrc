@@ -69,8 +69,8 @@ autocmd VimrcGlobal BufReadPost *
 " ** Indent / Tab ** {{{2
 
 set tabstop=8     " <Tab>s are shown with this num of <Space>s
-set softtabstop=4 " Use this num of spaces as <Tab> on insert and delete
-set shiftwidth=4  " Use this num of spaces for auto indent
+set softtabstop=2 " Use this num of spaces as <Tab> on insert and delete
+set shiftwidth=2  " Use this num of spaces for auto indent
 set shiftround    " round indent with < and >
 set expandtab     " Always use <Tab> for indent and insert
 set smarttab      " Use shiftwidth on beginning of line when <Tab> key
@@ -81,13 +81,9 @@ set shiftround    " Round indent when < or > is used
 " * Filetype specific indent * {{{
 
 augroup VimrcGlobal
-    " Force using <Tab>, not <Space>s
     autocmd FileType make setlocal softtabstop=8 shiftwidth=8 noexpandtab
-    " 2-space indent
-    autocmd FileType
-        \ html,scss,javascript,json,ruby,tex,xml
-        \ setlocal shiftwidth=2 softtabstop=2 nosmartindent
-    autocmd FileType python     setlocal nosmartindent
+    autocmd FileType perl,python setlocal softtabstop=4 shiftwidth=4
+    autocmd FileType python setlocal nosmartindent
     " Use smarter auto indent for C-languages
     autocmd FileType c,cpp,java setlocal cindent
 augroup END
@@ -834,14 +830,16 @@ NeoBundleLazy 'tpope/vim-haml', '', 'hamlsass'
 
 " ** JavaScript ** {{{2
 
-call s:NeoBundleAutoloadFiletypes('javascript', ['javascript', 'json'])
+call s:NeoBundleAutoloadFiletypes('javascript', ['javascript', 'json', 'coffeescript'])
 
-autocmd VimrcGlobal FileType json call DelayedExecute('set syntax=javascript')
 autocmd VimrcGlobal BufNewFile,BufRead *.json setf json
 
 NeoBundleLazy 'jelera/vim-javascript-syntax',         '', 'javascript'
 NeoBundleLazy 'jiangmiao/simple-javascript-indenter', '', 'javascript'
 let g:SimpleJsIndenter_BriefMode = 1 " one indent per any number of parentheses
+NeoBundleLazy 'elzr/vim-json', '', 'javascript'
+
+NeoBundleLazy 'kchmck/vim-coffee-script', '', 'javascript'
 
 " NeoBundleLazy 'nono/jquery.vim',                      '', 'javascript' "
 
@@ -1127,6 +1125,7 @@ call altr#define('app/models/%.rb', 'spec/models/%_spec.rb', 'spec/factories/%s.
 call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
 call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
 call altr#define('spec/routing/%_spec.rb', 'config/routes.rb')
+call altr#define('lib/%.rb', 'spec/lib/%_spec.rb')
 
 " Bundle 'jpalardy/vim-slime' " TODO
 

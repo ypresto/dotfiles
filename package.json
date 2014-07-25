@@ -8,6 +8,7 @@
     "grunt-cli"      : "*",
     "jsonlint"       : "*",
     "tern"           : "*",
-    "jsgrep-toolkit" : "*"
+    "jsgrep-toolkit" : "*",
+    "coffeelint"
   }
 }

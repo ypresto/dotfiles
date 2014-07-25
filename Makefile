@@ -4,7 +4,7 @@ all:
 	echo "call 'make install' or 'make update'"
 
 .PHONY: install update _up vimproc skkdict perldict gitsubmodules completions cleanlinks \
-	install_anyenv install_xcode_themes install_xcode_plugins
+	install_anyenv install_gom install_xcode_themes install_xcode_plugins
 
 install:
 	./mksymlinks
@@ -78,6 +78,10 @@ cleanlinks:
 
 install_anyenv:
 	git clone https://github.com/riywo/anyenv ~/.anyenv
+
+install_gom:
+	mkdir -p ~/go
+	go get github.com/mattn/gom
 
 install_xcode_themes:
 	cd ~/Library/Developer/Xcode/UserData && \
