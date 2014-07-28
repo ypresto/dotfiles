@@ -456,7 +456,7 @@ unfunction _is_available _should_available _not_available
 unset _missing_commands
 
 export RSENSE_HOME="$GEM_HOME"
-export GRADLE_OPTS="-Dorg.gradle.daemon=true"
+export GRADLE_OPTS="-Xmx3072m"
 
 # HERE
 

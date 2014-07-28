@@ -4,7 +4,7 @@ all:
 	echo "call 'make install' or 'make update'"
 
 .PHONY: install update _up vimproc skkdict perldict gitsubmodules completions cleanlinks \
-	install_anyenv install_gom install_xcode_themes install_xcode_plugins
+	install_anyenv install_gom install_xcode_themes install_xcode_plugins install_scripts
 
 install:
 	./mksymlinks
@@ -33,7 +33,7 @@ update:
 	make _up
 	./mksymlinks
 
-_up: skkdict perldict gitsubmodules completions
+_up: skkdict perldict gitsubmodules completions install_scripts
 
 vimproc:
 # build automatically by NeoBundle when vimproc updated
@@ -90,3 +90,6 @@ install_xcode_themes:
 install_xcode_plugins:
 	mkdir -p ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins && \
 		curl -L http://goo.gl/xfmmt | tar xv -C ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins - # Alcatraz
+
+install_scripts:
+	curl -Lo bin/git-getpull https://github.com/RapGenius/git-getpull/raw/master/git-getpull && chmod +x bin/git-getpull
