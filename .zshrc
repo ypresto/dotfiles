@@ -106,7 +106,7 @@ fi
 export PAGER='less -Ri'
 
 # ENV
-_gem_paths=( $HOME/dotfiles/gems/ruby/*/bin )
+_gem_paths=( $HOME/dotfiles/gems/ruby/*/bin(N) )
 ((${#_gem_paths[@]} > 1)) && echo "There are multiple ruby version for ./gems, using first one ($_gem_path)."
 export GEM_HOME="${_gem_paths[1]%/bin}" # NOTE: this is "first element" of array, different from bash
 export GOPATH="$HOME/go"
@@ -383,7 +383,7 @@ if [ "$BYOBU_BACKEND" = "tmux" ]; then
     tmux set-window-option -u automatic-rename
 fi
 
-git_new_workdir=( /usr/share/doc/git-*/contrib/workdir/git-new-workdir )
+git_new_workdir=( /usr/share/doc/git-*/contrib/workdir/git-new-workdir(N) )
 # bleeding edge
 if [ -e "$HOME/homebrew/share/git-core/contrib/workdir/git-new-workdir" ]; then
     alias git-new-workdir="sh $HOME/homebrew/share/git-core/contrib/workdir/git-new-workdir"
