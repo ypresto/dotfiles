@@ -830,7 +830,7 @@ NeoBundleLazy 'tpope/vim-haml', '', 'hamlsass'
 
 " ** JavaScript ** {{{2
 
-call s:NeoBundleAutoloadFiletypes('javascript', ['javascript', 'json', 'coffeescript'])
+call s:NeoBundleAutoloadFiletypes('javascript', ['javascript', 'json', 'coffee'])
 
 autocmd VimrcGlobal BufNewFile,BufRead *.json setf json
 
