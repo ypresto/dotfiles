@@ -7,6 +7,8 @@
 set nocompatible
 let mapleader=" "
 
+let s:use_neocon = 0
+
 " *** Make This Reloadable *** {{{1
 " reset global autocmd
 augroup VimrcGlobal
@@ -364,6 +366,8 @@ nnoremap <Leader>G :GundoToggle<CR>
 
 " ** neocomplcache ** {{{2
 
+if s:use_neocon
+
 imap <Esc><Space> <C-n>
 inoremap <expr> <C-x><C-f>  neocomplcache#manual_filename_complete()
 " C-nでneocomplcache補完
@@ -376,6 +380,8 @@ inoremap <expr> <C-p> pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
 " inoremap <expr> <C-e>  pumvisible() ? neocomplcache#close_popup() : "\<End>"
 " 補完候補が表示されている場合は確定。そうでない場合は改行
 imap <expr> <C-j>  pumvisible() ? neocomplete#close_popup() : "\<CR>"
+
+endif
 
 " ** }}}
 
@@ -445,6 +451,9 @@ NeoBundle 'kana/vim-smartinput'
 "call smartinput#define_rule({ 'at': '\[\_s*\%#\_s*\]', 'char': '<Enter>', 'input': '<Enter><C-o>O' })
 "call smartinput#define_rule({ 'at': '{\_s*\%#\_s*}'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
 "call smartinput#define_rule({ 'at': '(\_s*\%#\_s*)'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
+
+if s:use_neocon
+
 " To avoid conflict with neocomplcache; refer :help neocomplcache-faq
 autocmd VimrcGlobal VimEnter * call s:SetupCRMapping()
 function! s:SetupCRMapping()
@@ -453,6 +462,8 @@ function! s:SetupCRMapping()
     endif
     call smartinput#map_to_trigger('i', '<Plug>my_cr_function_smartinput', '<Enter>', '<CR>')
 endfunction
+
+endif
 
 " surrounding with braces or quotes with s and S key
 NeoBundle 'tpope/vim-surround'
@@ -514,12 +525,13 @@ let g:quickrun_config._ = {
 
 let g:quickrun_config.perl = {'command': 'prove'}
 
-" " Highlight indent by its levels, must have for pythonist
-" NeoBundle 'nathanaelkane/vim-indent-guides'
-" let g:indent_guides_enable_on_vim_startup = 1
-" let g:indent_guides_guide_size = 1
+" Highlight indent by its levels, must have for pythonist
+NeoBundle 'nathanaelkane/vim-indent-guides'
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_guide_size = 1
 
-NeoBundle 'Yggdroot/indentLine'
+" interferes with other plugins use conceal feature
+" NeoBundle 'Yggdroot/indentLine'
 
 " Search word with * and # also on Visual Mode
 NeoBundle 'thinca/vim-visualstar'
@@ -623,6 +635,8 @@ NeoBundle 'rking/ag.vim'
 
 " ** neocomplcache ** {{{2
 
+if s:use_neocon
+
 if has('lua')
     NeoBundleLazy 'Shougo/neocomplete', {
     \   'autoload' : {
@@ -668,6 +682,8 @@ let s:neocompl_options = {
 for s:k in keys(s:neocompl_options)
     execute printf('let g:%s%s = s:neocompl_options[s:k]', s:neocompl_config_prefix, s:k)
 endfor
+
+endif
 
 " ** }}}
 
@@ -841,6 +857,7 @@ autocmd VimrcGlobal BufNewFile,BufRead *.json setf json
 NeoBundleLazy 'jelera/vim-javascript-syntax',         '', 'javascript'
 NeoBundleLazy 'jiangmiao/simple-javascript-indenter', '', 'javascript'
 let g:SimpleJsIndenter_BriefMode = 1 " one indent per any number of parentheses
+let g:vim_json_syntax_conceal = 0
 NeoBundleLazy 'elzr/vim-json', '', 'javascript'
 
 NeoBundleLazy 'kchmck/vim-coffee-script', '', 'javascript'
@@ -926,6 +943,9 @@ call s:NeoBundleAutoloadFiletypes('python', ['python'])
 
 NeoBundleLazy 'tmhedberg/SimpylFold', '', 'python'
 NeoBundleLazy 'yuroyoro/vim-python',  '', 'python'
+
+if s:use_neocon
+
 NeoBundleLazy 'davidhalter/jedi-vim', '', 'python', {
 \   'build' : {
 \       'windows' : 'git submodule update --init',
@@ -933,6 +953,8 @@ NeoBundleLazy 'davidhalter/jedi-vim', '', 'python', {
 \       'unix'    : 'git submodule update --init',
 \      },
 \   }
+
+endif
 
 " ** }}}
 
@@ -1260,12 +1282,16 @@ let g:quickrun_config.markdown = {
 autocmd VimrcGlobal FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd VimrcGlobal FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 
+if s:use_neocon
+
 if !exists('g:neocomplete#sources#omni#input_patterns')
     let g:neocomplete#sources#omni#input_patterns = {}
 endif
 let g:neocomplete#sources#omni#input_patterns.perl =
 \   '[^. \t]->\%(\h\w*\)\?'
 " \   '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+
+endif
 
 NeoBundle 'MultipleSearch' " TODO
 " NeoBundle 'airblade/vim-rooter'
@@ -1368,6 +1394,31 @@ let g:alpaca_tags#config = {
             \ }
 autocmd VimrcGlobal BufReadPost * AlpacaTagsSet
 
+if !s:use_neocon
+  NeoBundle 'Valloric/YouCompleteMe', {
+        \   'build' : {
+        \       'windows' : 'echo "Sorry, cannot update vimproc binary file in Windows."',
+        \       'cygwin'  : 'install.sh --clang-completer',
+        \       'mac'     : 'install.sh --clang-completer',
+        \       'unix'    : 'install.sh --clang-completer',
+        \      },
+        \   }
+endif
+
+" Track the engine.
+NeoBundle 'SirVer/ultisnips'
+
+" Snippets are separated from the engine. Add this if you want them:
+NeoBundle 'honza/vim-snippets'
+
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<Esc>j"
+let g:UltiSnipsJumpForwardTrigger="<Esc>f"
+let g:UltiSnipsJumpBackwardTrigger="<Esc>b"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+
 " HERE
 
 " ** vimrc reading @ 2012/11/03 {{{
@@ -1396,11 +1447,15 @@ elseif executable("ack")
     let &grepprg='ack'
 endif
 
+if s:use_neocon
+
 let g:neocomplcache_min_syntax_length = 3
 if !exists('g:neocomplcache_keyword_patterns')
     let g:neocomplcache_keyword_patterns = {}
 endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+
+endif
 
 set autoread
 " set modelines=0
@@ -1628,6 +1683,8 @@ NeoBundle 'kana/vim-niceblock'
 xmap I  <Plug>(niceblock-I)
 xmap A  <Plug>(niceblock-A)
 
+if s:use_neocon
+
 let s:bundle = neobundle#get('neocomplete')
 if !empty(s:bundle)
     function! s:bundle.hooks.on_source(bundle)
@@ -1641,6 +1698,8 @@ if !empty(s:bundle)
         \   'c' : '[^.[:digit:]*\t]\%(\.\|->\)',
         \}
     endfunction
+endif
+
 endif
 
 let g:surround_no_imappings = 1
