@@ -826,6 +826,10 @@ NeoBundleLazy 'sukima/xmledit', '', 'htmlcss'
 call s:NeoBundleAutoloadFiletypes('hamlsass', ['haml', 'sass', 'scss'])
 NeoBundleLazy 'tpope/vim-haml', '', 'hamlsass'
 
+" slim
+call s:NeoBundleAutoloadFiletypes('slim', ['slim'])
+NeoBundleLazy 'slim-template/vim-slim', '', 'slim'
+
 " ** }}}
 
 " ** JavaScript ** {{{2
@@ -1211,7 +1215,7 @@ endif
 NeoBundle 'AndrewRadev/splitjoin.vim' " gS and gJ
 
 NeoBundleLazy 'reinh/vim-makegreen', '', 'python'
-NeoBundleLazy 'sontek/rope-vim', '', 'python'
+NeoBundleLazy 'python-rope/ropevim', '', 'python'
 
 call s:NeoBundleAutoloadFiletypes('ruby', ['ruby'])
 NeoBundleLazy 'vim-ruby/vim-ruby',           '', 'ruby'
@@ -1219,8 +1223,8 @@ NeoBundleLazy 'vim-ruby/vim-ruby',           '', 'ruby'
 " NeoBundleLazy 'tpope/vim-rails',             '', 'ruby'
 NeoBundleLazy 'basyura/unite-rails',         '', 'ruby'
 NeoBundleLazy 'ruby-matchit',                '', 'ruby'
+NeoBundleLazy 'thoughtbot/vim-rspec',        '', 'ruby'
 
-" currently not available for newer rsense
 " if s:is_neocomplete_available
 "     NeoBundleLazy 'supermomonga/neocomplete-rsense.vim', '', 'ruby'
 " else

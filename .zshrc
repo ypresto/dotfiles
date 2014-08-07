@@ -110,7 +110,7 @@ _gem_paths=( $HOME/dotfiles/gems/ruby/*/bin(N) )
 ((${#_gem_paths[@]} > 1)) && echo "There are multiple ruby version for ./gems, using first one ($_gem_path)."
 export GEM_HOME="${_gem_paths[1]%/bin}" # NOTE: this is "first element" of array, different from bash
 export GOPATH="$HOME/go"
-export PATH="$HOME/dotfiles/bin:$HOME/dotfiles/node_modules/.bin:$GEM_HOME/bin:$GOPATH/bin:$PATH"
+export PATH="bin/:$HOME/dotfiles/bin:$HOME/dotfiles/node_modules/.bin:$GEM_HOME/bin:$GOPATH/bin:$PATH"
 export EDITOR=vim
 export CLICOLOR=YES
 
