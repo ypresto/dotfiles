@@ -9,6 +9,6 @@
     "jsonlint"       : "*",
     "tern"           : "*",
     "jsgrep-toolkit" : "*",
-    "coffeelint"
+    "coffeelint"     : "*"
   }
 }
