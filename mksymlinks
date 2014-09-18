@@ -16,6 +16,7 @@ my $HOME = $ENV{'HOME'} || die "Environment variable HOME isn't set";
 my %TARGET_DIR_TO_FILES = (
     $HOME          => [ grep { !/^\.byobu|\.config$/ } filter_ignore glob(".*") ],
     "$HOME/.byobu" => [ filter_ignore glob(".byobu/{.*,*}") ],
+    "$HOME/Library/Developer/Xcode/UserData" => [ filter_ignore qw{ Xcode/KeyBindings } ],
 );
 
 for my $dir (keys %TARGET_DIR_TO_FILES) {
