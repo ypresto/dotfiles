@@ -88,8 +88,7 @@ install_xcode_themes:
 		git clone https://github.com/hdoria/xcode-themes.git FontAndColorThemes
 
 install_xcode_plugins:
-	mkdir -p ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins && \
-		curl -L http://goo.gl/xfmmt | tar xv -C ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins - # Alcatraz
+	curl -fsSL https://raw.github.com/supermarin/Alcatraz/master/Scripts/install.sh | sh
 
 install_scripts:
 	curl -Lo bin/git-getpull https://github.com/RapGenius/git-getpull/raw/master/git-getpull && chmod +x bin/git-getpull
