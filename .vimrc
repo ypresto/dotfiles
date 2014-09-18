@@ -1392,12 +1392,12 @@ NeoBundle 'alpaca-tc/alpaca_tags'
 let g:alpaca_tags#config = {
             \ '_' : '-R --sort=yes --languages=+Ruby',
             \ }
-autocmd VimrcGlobal BufReadPost * AlpacaTagsSet
+autocmd VimrcGlobal BufReadPost * call DelayedExecute('normal :AlpacaTagsSet')
 
 if !s:use_neocon
   NeoBundle 'Valloric/YouCompleteMe', {
         \   'build' : {
-        \       'windows' : 'echo "Sorry, cannot update vimproc binary file in Windows."',
+        \       'windows' : 'echo "Sorry, cannot compile YouCompleteMe binary file in Windows."',
         \       'cygwin'  : 'install.sh --clang-completer',
         \       'mac'     : 'install.sh --clang-completer',
         \       'unix'    : 'install.sh --clang-completer',
