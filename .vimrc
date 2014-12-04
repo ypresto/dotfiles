@@ -841,6 +841,7 @@ NeoBundleLazy 'sukima/xmledit', '', 'htmlcss'
 " haml / sass / scss
 call s:NeoBundleAutoloadFiletypes('hamlsass', ['haml', 'sass', 'scss'])
 NeoBundleLazy 'tpope/vim-haml', '', 'hamlsass'
+let g:syntastic_sass_check_partials=1
 
 " slim
 call s:NeoBundleAutoloadFiletypes('slim', ['slim'])
@@ -1261,6 +1262,17 @@ NeoBundleLazy 'mattn/qiita-vim' " TODO
 NeoBundleLazy 'thinca/vim-prettyprint'
 NeoBundleLazy 'benmills/vimux' " TODO
 
+let g:quickrun_config.markdown = {
+    \ 'type': 'markdown/pandoc',
+    \ 'cmdopt': '-s',
+    \ 'outputter': 'browser'
+    \ }
+
+autocmd VimrcGlobal FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd VimrcGlobal FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+
+if s:use_neocon
+
 nmap <expr><TAB> neosnippet#jumpable() ?
  \ "i<TAB>" : "\<TAB>"
 " SuperTab like snippets behavior.
@@ -1272,17 +1284,6 @@ smap <expr><TAB> neosnippet#expandable() ?
  \: "\<TAB>"
 nmap <Esc>s i_<Plug>(neosnippet_start_unite_snippet)
 imap <Esc>s i_<Plug>(neosnippet_start_unite_snippet)
-
-let g:quickrun_config.markdown = {
-    \ 'type': 'markdown/pandoc',
-    \ 'cmdopt': '-s',
-    \ 'outputter': 'browser'
-    \ }
-
-autocmd VimrcGlobal FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd VimrcGlobal FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-
-if s:use_neocon
 
 if !exists('g:neocomplete#sources#omni#input_patterns')
     let g:neocomplete#sources#omni#input_patterns = {}
@@ -1412,12 +1413,14 @@ NeoBundle 'SirVer/ultisnips'
 NeoBundle 'honza/vim-snippets'
 
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<Esc>j"
+let g:UltiSnipsExpandTrigger="<C-j>"
 let g:UltiSnipsJumpForwardTrigger="<Esc>f"
 let g:UltiSnipsJumpBackwardTrigger="<Esc>b"
 
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
+
+let $LANG = 'en_US.UTF-8'
 
 " HERE
 

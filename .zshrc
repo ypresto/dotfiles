@@ -227,6 +227,10 @@ submit() {
     local remote=$1
     shift 1
     local branch=`git rev-parse --abbrev-ref HEAD`
+    if [ "$branch" = "master" ]; then
+      print "Oops, current branch is master."
+      return 1
+    fi
     git push "$@" $remote HEAD:$branch
 }
 submit-to() {
@@ -235,7 +239,9 @@ submit-to() {
     shift 2
     git push "$@" $remote HEAD:$branch
 }
-checkin() { git push gerrit HEAD:refs/for/$1 }
+alias ts='tig status'
+alias fo='git fetch origin'
+alias be='bundle exec'
 
 copy-line() { print -rn $BUFFER | pbcopy; zle -M "Copied: ${BUFFER}" }
 zle -N copy-line

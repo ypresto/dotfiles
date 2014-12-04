@@ -54,7 +54,7 @@
 [github]
 	user = ypresto
 [push]
-	default = upstream
+	default = simple
 [rerere]
 	enabled = true
 

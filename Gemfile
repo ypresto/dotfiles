@@ -1,4 +1,4 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-gem "rubocop"
-gem "rsense"
+gem 'rubocop', '~> 0.24.1'
+gem 'rsense'
