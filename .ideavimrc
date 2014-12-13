@@ -1,0 +1,70 @@
+set incsearch
+set ignorecase
+set smartcase
+
+" Meta to Esc map
+" for c in ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+"     execute 'map <A-'.c.'> <Esc>'.c
+"     execute 'map! <A-'.c.'> <Esc>'.c
+" endfor
+" for c in ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+"     execute 'map <A-S-'.c.'> <Esc>'.c
+"     execute 'map! <A-S-'.c.'> <Esc>'.c
+" endfor
+" unlet c
+
+" Fast saving
+noremap ZJ :update<CR>
+" nnoremap <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>
+
+" swap g[jk] (move displayed line) and [jk] (move original line)
+" noremap <silent> j gj
+" noremap <silent> gj j
+" noremap <silent> k gk
+" noremap <silent> gk k
+inoremap <C-[> <Esc>
+
+" ** Partial Emacs Keybind in Insert Mode ** {{{2
+" Refer: :help tcsh-style
+" Note: 'map!' maps both insert and command-line mode
+noremap! <C-f> <Right>
+noremap! <C-b> <Left>
+" <C-o> and <Home> is different on indented line
+inoremap <C-a> <C-o>^
+cnoremap <C-a> <Home>
+snoremap <C-a> <Home>
+" End-key in insert results end-of-page
+inoremap <C-e> <C-o>A
+cnoremap <C-e> <End>
+snoremap <C-e> <End>
+" Del-key in insert results backspace
+inoremap <C-d> <Right><BS>
+cnoremap <C-d> <Del>
+snoremap <C-d> <Del>
+inoremap <A-f> <S-Right>
+cnoremap <A-f> <S-Right>
+snoremap <A-f> <S-Right>
+inoremap <A-b> <S-Left>
+cnoremap <A-b> <S-Left>
+snoremap <A-b> <S-Left>
+inoremap <A-d> <C-o>de
+" Degraded map for commandline / select mode
+cnoremap <A-d> <Del>
+snoremap <A-d> <Del>
+" Remap <C-d> de-indentation to Alt-t
+inoremap <A-t> <C-d>
+inoremap <C-k> <C-o>D
+" ** }}}
+
+" Move lines up and down (bubbling) left and right (indent)
+nmap <A-K> [e
+nmap <A-J> ]e,
+vmap <A-K> [egv
+vmap <A-J> ]egv
+nnoremap <A-L> >>
+nnoremap <A-H> <<
+vnoremap <A-L> >gv
+vnoremap <A-H> <gv
+" visualmodeでインテントを＞＜の連打で変更できるようにする
+vnoremap < <gv
+vnoremap > >gv

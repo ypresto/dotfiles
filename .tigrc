@@ -6,8 +6,6 @@ bind main    F !?git commit --fixup %(commit)
 bind main    Q !git commit --squash %(commit)
 bind status  * !?git clean -df
 bind main    B !git rebase -i %(commit)
-bind main    > !git push
-bind main    < !git pull
 bind status  P !git add -p %(file)
 bind status  _ !?rm %(file)
 
