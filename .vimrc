@@ -33,8 +33,9 @@ if has('vim_starting')
     set nocompatible
     set rtp+=~/.vim/bundle/neobundle.vim/
 endif
-call neobundle#rc(expand('~/.vim/bundle'))
-NeoBundle 'Shougo/neobundle.vim'
+call neobundle#begin(expand('~/.vim/bundle'))
+let g:neobundle#types#git#enable_submodule = 1
+NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc', {
 \   'build' : {
 \       'windows' : 'echo "Sorry, cannot update vimproc binary file in Windows."',
@@ -84,7 +85,7 @@ set shiftround    " Round indent when < or > is used
 
 augroup VimrcGlobal
     autocmd FileType make setlocal softtabstop=8 shiftwidth=8 noexpandtab
-    autocmd FileType perl,python setlocal softtabstop=4 shiftwidth=4
+    autocmd FileType perl,python,groovy setlocal softtabstop=4 shiftwidth=4
     autocmd FileType python setlocal nosmartindent
     " Use smarter auto indent for C-languages
     autocmd FileType c,cpp,java setlocal cindent
@@ -207,7 +208,7 @@ augroup VimrcGlobal
     autocmd WinEnter,BufRead * set cursorline
 
     " activates custom highlight settings
-    autocmd ColorScheme * call s:HighlightSetup()
+    autocmd VimEnter,WinEnter,ColorScheme * call s:HighlightSetup()
     autocmd VimEnter,WinEnter * call matchadd('ZenkakuSpace', '　')
 augroup END
 
@@ -443,6 +444,12 @@ command! -nargs=? SL UniteSessionLoad <args>
 " ** Recommended: YOU SHOULD USE THESE AND BE IMproved! *** {{{2
 
 NeoBundle 'maxbrunsfeld/vim-yankstack'
+let s:yankstack_bundle = neobundle#get('vim-yankstack')
+function! s:yankstack_bundle.hooks.on_post_source(bundle)
+  call yankstack#setup()
+  nmap Y y$
+endfunction
+
 nmap <C-p> <Plug>yankstack_substitute_older_paste
 nmap <C-n> <Plug>yankstack_substitute_newer_paste
 
@@ -551,6 +558,7 @@ let g:accelerated_jk_anable_deceleration = 1
 let g:accelerated_jk_acceleration_table = [10,20,15,15]
 
 NeoBundle 'bling/vim-airline'
+let s:airline_bundle = neobundle#get('vim-airline')
 " patch airline solarized theme, make blue
 let g:airline_theme_patch_func = 'AirlineThemePatch'
 function! AirlineThemePatch(palette)
@@ -698,7 +706,10 @@ let g:unite_enable_start_insert=1
 let g:unite_split_rule="botright"
 let g:unite_winheight="10"
 
-call unite#custom#source('outline,outline:folding', 'sorters', 'sorter_reverse')
+let s:unite_bundle = neobundle#get('unite.vim')
+function! s:unite_bundle.hooks.on_post_source(bundle)
+  call unite#custom#source('outline,outline:folding', 'sorters', 'sorter_reverse')
+endfunction
 
 " Cannot make it lazy: vim path/to/file.txt doesn't update file_mru list
 NeoBundle 'Shougo/neomru.vim'
@@ -803,8 +814,6 @@ let g:solarized_termtrans=1
 let g:solarized_bold=1
 let g:solarized_underline=1
 let g:solarized_italic=1
-colorscheme solarized
-set background=dark
 
 " ** }}}
 
@@ -1147,12 +1156,15 @@ NeoBundle 'kana/vim-altr'
 nmap ]r <Plug>(altr-forward)
 nmap [r <Plug>(altr-back)
 
-" rails
-call altr#define('app/models/%.rb', 'spec/models/%_spec.rb', 'spec/factories/%s.rb')
-call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
-call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
-call altr#define('spec/routing/%_spec.rb', 'config/routes.rb')
-call altr#define('lib/%.rb', 'spec/lib/%_spec.rb')
+let s:altr_bundle = neobundle#get('vim-altr')
+function! s:altr_bundle.hooks.on_post_source(bundle)
+  " rails
+  call altr#define('app/models/%.rb', 'spec/models/%_spec.rb', 'spec/factories/%s.rb')
+  call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
+  call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
+  call altr#define('spec/routing/%_spec.rb', 'config/routes.rb')
+  call altr#define('lib/%.rb', 'spec/lib/%_spec.rb')
+endfunction
 
 " Bundle 'jpalardy/vim-slime' " TODO
 
@@ -1422,6 +1434,8 @@ let g:UltiSnipsEditSplit="vertical"
 
 let $LANG = 'en_US.UTF-8'
 
+autocmd VimrcGlobal BufNewFile,BufRead *.gradle setf groovy
+
 " HERE
 
 " ** vimrc reading @ 2012/11/03 {{{
@@ -1500,9 +1514,6 @@ nmap Ss <Plug>YSsurround
 nmap SS <Plug>YSsurround
 
 " set directory-=. " don't save tmp swap file in current directory
-
-call yankstack#setup()
-nmap Y y$
 
 " ** }}}
 
@@ -1790,6 +1801,11 @@ if filereadable(expand('~/.vimlocal/.vimrc'))
     source $HOME/.vimlocal/.vimrc
 endif
 " *** }}}
+
+call neobundle#end()
+
+colorscheme solarized
+set background=dark
 
 " *** Enable Filetype Plugins *** {{{1
 " for neobundle, these are disabled in start up section
