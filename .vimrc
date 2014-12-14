@@ -83,7 +83,7 @@ set shiftround    " Round indent when < or > is used
 
 augroup VimrcGlobal
     autocmd FileType make setlocal softtabstop=8 shiftwidth=8 noexpandtab
-    autocmd FileType perl,python,groovy setlocal softtabstop=4 shiftwidth=4
+    autocmd FileType perl,python,groovy,vim setlocal softtabstop=4 shiftwidth=4
     autocmd FileType python setlocal nosmartindent
     " Use smarter auto indent for C-languages
     autocmd FileType c,cpp,java setlocal cindent
@@ -423,8 +423,8 @@ command! -nargs=? SL UniteSessionLoad <args>
 NeoBundle 'maxbrunsfeld/vim-yankstack'
 let s:yankstack_bundle = neobundle#get('vim-yankstack')
 function! s:yankstack_bundle.hooks.on_post_source(bundle)
-  call yankstack#setup()
-  nmap Y y$
+    call yankstack#setup()
+    nmap Y y$
 endfunction
 
 nmap <C-p> <Plug>yankstack_substitute_older_paste
@@ -618,7 +618,7 @@ let g:unite_winheight="10"
 
 let s:unite_bundle = neobundle#get('unite.vim')
 function! s:unite_bundle.hooks.on_post_source(bundle)
-  call unite#custom#source('outline,outline:folding', 'sorters', 'sorter_reverse')
+    call unite#custom#source('outline,outline:folding', 'sorters', 'sorter_reverse')
 endfunction
 
 " Cannot make it lazy: vim path/to/file.txt doesn't update file_mru list
@@ -1051,12 +1051,12 @@ nmap [r <Plug>(altr-back)
 
 let s:altr_bundle = neobundle#get('vim-altr')
 function! s:altr_bundle.hooks.on_post_source(bundle)
-  " rails
-  call altr#define('app/models/%.rb', 'spec/models/%_spec.rb', 'spec/factories/%s.rb')
-  call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
-  call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
-  call altr#define('spec/routing/%_spec.rb', 'config/routes.rb')
-  call altr#define('lib/%.rb', 'spec/lib/%_spec.rb')
+    " rails
+    call altr#define('app/models/%.rb', 'spec/models/%_spec.rb', 'spec/factories/%s.rb')
+    call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
+    call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
+    call altr#define('spec/routing/%_spec.rb', 'config/routes.rb')
+    call altr#define('lib/%.rb', 'spec/lib/%_spec.rb')
 endfunction
 
 " Bundle 'jpalardy/vim-slime' " TODO
@@ -1274,9 +1274,9 @@ autocmd VimrcGlobal BufReadPost * call DelayedExecute('normal :AlpacaTagsSet')
 NeoBundle 'Valloric/YouCompleteMe', {
     \   'build' : {
     \       'windows' : 'echo "Sorry, cannot compile YouCompleteMe binary file in Windows."',
-    \       'cygwin'  : 'install.sh --clang-completer',
-    \       'mac'     : 'install.sh --clang-completer',
-    \       'unix'    : 'install.sh --clang-completer',
+    \       'cygwin'  : 'git submodule update --init --recursive && ./install.sh --clang-completer',
+    \       'mac'     : 'git submodule update --init --recursive && ./install.sh --clang-completer',
+    \       'unix'    : 'git submodule update --init --recursive && ./install.sh --clang-completer',
     \      },
     \   }
 
