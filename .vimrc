@@ -7,8 +7,6 @@
 set nocompatible
 let mapleader=" "
 
-let s:use_neocon = 0
-
 " *** Make This Reloadable *** {{{1
 " reset global autocmd
 augroup VimrcGlobal
@@ -365,27 +363,6 @@ endif
 " Gundo
 nnoremap <Leader>G :GundoToggle<CR>
 
-" ** neocomplcache ** {{{2
-
-if s:use_neocon
-
-imap <Esc><Space> <C-n>
-inoremap <expr> <C-x><C-f>  neocomplcache#manual_filename_complete()
-" C-nでneocomplcache補完
-inoremap <expr> <C-n>  pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
-" C-pでkeyword補完
-inoremap <expr> <C-p> pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
-" 補完候補が表示されている場合は確定。そうでない場合は改行
-" inoremap <expr> <CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
-" 補完をキャンセル＋End
-" inoremap <expr> <C-e>  pumvisible() ? neocomplcache#close_popup() : "\<End>"
-" 補完候補が表示されている場合は確定。そうでない場合は改行
-imap <expr> <C-j>  pumvisible() ? neocomplete#close_popup() : "\<CR>"
-
-endif
-
-" ** }}}
-
 " ** unite ** {{{2
 
 nnoremap <Leader>u: :<C-u>Unite<Space>
@@ -458,19 +435,6 @@ NeoBundle 'kana/vim-smartinput'
 "call smartinput#define_rule({ 'at': '\[\_s*\%#\_s*\]', 'char': '<Enter>', 'input': '<Enter><C-o>O' })
 "call smartinput#define_rule({ 'at': '{\_s*\%#\_s*}'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
 "call smartinput#define_rule({ 'at': '(\_s*\%#\_s*)'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
-
-if s:use_neocon
-
-" To avoid conflict with neocomplcache; refer :help neocomplcache-faq
-autocmd VimrcGlobal VimEnter * call s:SetupCRMapping()
-function! s:SetupCRMapping()
-    if s:is_neocomplete_available
-        execute printf('imap <silent> <CR> <C-r>=%ssmart_close_popup()<CR><Plug>my_cr_function_smartinput', s:neocompl_function_prefix)
-    endif
-    call smartinput#map_to_trigger('i', '<Plug>my_cr_function_smartinput', '<Enter>', '<CR>')
-endfunction
-
-endif
 
 " surrounding with braces or quotes with s and S key
 NeoBundle 'tpope/vim-surround'
@@ -638,60 +602,6 @@ nmap R <Plug>(operator-replace)
 
 " :grep by ag
 NeoBundle 'rking/ag.vim'
-
-" ** }}}
-
-" ** neocomplcache ** {{{2
-
-if s:use_neocon
-
-if has('lua')
-    NeoBundleLazy 'Shougo/neocomplete', {
-    \   'autoload' : {
-    \       'insert' : 1
-    \   }
-    \}
-    let s:is_neocomplete_available = 1
-    let s:neocompl_config_prefix   = 'neocomplete#'
-    let s:neocompl_function_prefix = 'neocomplete#'
-    let g:neocomplete#ctags_command = ''
-else
-    NeoBundleLazy 'Shougo/neocomplcache', {
-    \   'autoload' : {
-    \       'insert' : 1
-    \   }
-    \}
-    let s:is_neocomplete_available = 0
-    let s:neocompl_config_prefix   = 'neocomplcache_'
-    let s:neocompl_function_prefix = 'neocomplcache#'
-endif
-NeoBundle 'Shougo/neosnippet'
-NeoBundle 'Shougo/neosnippet-snippets'
-" English spell completion with 'look' command
-NeoBundle 'ujihisa/neco-look'
-
-let s:neocompl_options = {
-\   'enable_at_startup'             : 1,
-\   'enable_prefetch'               : 1,
-\   'enable_fuzzy_completion'       : 1,
-\   'fuzzy_completion_start_length' : 3,
-\   'enable_auto_delimiter'         : 1,
-\   'enable_refresh_always'         : 1,
-\   'max_list'                      : 100,
-\   'source_disable' : {
-\       'tags_complete' : 1,
-\   },
-\   'dictionary_filetype_lists' : {
-\       'default'    : '',
-\       'perl'       : $HOME . '/.vim/dict/perl.dict'
-\   },
-\}
-
-for s:k in keys(s:neocompl_options)
-    execute printf('let g:%s%s = s:neocompl_options[s:k]', s:neocompl_config_prefix, s:k)
-endfor
-
-endif
 
 " ** }}}
 
@@ -954,29 +864,12 @@ call s:NeoBundleAutoloadFiletypes('python', ['python'])
 NeoBundleLazy 'tmhedberg/SimpylFold', '', 'python'
 NeoBundleLazy 'yuroyoro/vim-python',  '', 'python'
 
-if s:use_neocon
-
-NeoBundleLazy 'davidhalter/jedi-vim', '', 'python', {
-\   'build' : {
-\       'windows' : 'git submodule update --init',
-\       'mac'     : 'git submodule update --init',
-\       'unix'    : 'git submodule update --init',
-\      },
-\   }
-
-endif
-
 " ** }}}
 
 " ** Objective-C / iOS ** {{{
 
 call s:NeoBundleAutoloadFiletypes('objc', ['objc'])
 
-" TODO check out [here]( http://d.hatena.ne.jp/thinca/20130522/1369234427 )
-" NeoBundleLazy 'Rip-Rip/clang_complete', '', 'objc'
-" NeoBundleLazy 'osyo-manga/neocomplcache-clang_complete', { 'autoload' : {
-"      \ 'filetypes' : g:my.ft.c_files,
-"      \ }}
 NeoBundleLazy 'eraserhd/vim-ios',       '', 'objc'
 NeoBundleLazy 'msanders/cocoa.vim',     '', 'objc'
 
@@ -1260,12 +1153,6 @@ NeoBundleLazy 'basyura/unite-rails',         '', 'ruby'
 NeoBundleLazy 'ruby-matchit',                '', 'ruby'
 NeoBundleLazy 'thoughtbot/vim-rspec',        '', 'ruby'
 
-" if s:is_neocomplete_available
-"     NeoBundleLazy 'supermomonga/neocomplete-rsense.vim', '', 'ruby'
-" else
-"     NeoBundleLazy 'Shougo/neocomplcache-rsense.vim', '', 'ruby'
-" endif
-
 " https://github.com/CocoaPods/CocoaPods/wiki/Make-your-text-editor-recognize-the-CocoaPods-files
 autocmd VimrcGlobal BufNewFile,BufRead Podfile,*.podspec setf ruby
 
@@ -1282,29 +1169,6 @@ let g:quickrun_config.markdown = {
 
 autocmd VimrcGlobal FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd VimrcGlobal FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-
-if s:use_neocon
-
-nmap <expr><TAB> neosnippet#jumpable() ?
- \ "i<TAB>" : "\<TAB>"
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable() ?
- \ "\<Plug>(neosnippet_expand_or_jump)"
- \: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable() ?
- \ "\<Plug>i_(neosnippet_expand_or_jump)"
- \: "\<TAB>"
-nmap <Esc>s i_<Plug>(neosnippet_start_unite_snippet)
-imap <Esc>s i_<Plug>(neosnippet_start_unite_snippet)
-
-if !exists('g:neocomplete#sources#omni#input_patterns')
-    let g:neocomplete#sources#omni#input_patterns = {}
-endif
-let g:neocomplete#sources#omni#input_patterns.perl =
-\   '[^. \t]->\%(\h\w*\)\?'
-" \   '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-
-endif
 
 NeoBundle 'MultipleSearch' " TODO
 " NeoBundle 'airblade/vim-rooter'
@@ -1407,16 +1271,14 @@ let g:alpaca_tags#config = {
             \ }
 autocmd VimrcGlobal BufReadPost * call DelayedExecute('normal :AlpacaTagsSet')
 
-if !s:use_neocon
-  NeoBundle 'Valloric/YouCompleteMe', {
-        \   'build' : {
-        \       'windows' : 'echo "Sorry, cannot compile YouCompleteMe binary file in Windows."',
-        \       'cygwin'  : 'install.sh --clang-completer',
-        \       'mac'     : 'install.sh --clang-completer',
-        \       'unix'    : 'install.sh --clang-completer',
-        \      },
-        \   }
-endif
+NeoBundle 'Valloric/YouCompleteMe', {
+    \   'build' : {
+    \       'windows' : 'echo "Sorry, cannot compile YouCompleteMe binary file in Windows."',
+    \       'cygwin'  : 'install.sh --clang-completer',
+    \       'mac'     : 'install.sh --clang-completer',
+    \       'unix'    : 'install.sh --clang-completer',
+    \      },
+    \   }
 
 " Track the engine.
 NeoBundle 'SirVer/ultisnips'
@@ -1462,16 +1324,6 @@ if executable("ag")
     let &grepprg='ag --search-binary'
 elseif executable("ack")
     let &grepprg='ack'
-endif
-
-if s:use_neocon
-
-let g:neocomplcache_min_syntax_length = 3
-if !exists('g:neocomplcache_keyword_patterns')
-    let g:neocomplcache_keyword_patterns = {}
-endif
-let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-
 endif
 
 set autoread
@@ -1697,27 +1549,7 @@ NeoBundle 'kana/vim-niceblock'
 xmap I  <Plug>(niceblock-I)
 xmap A  <Plug>(niceblock-A)
 
-if s:use_neocon
-
-let s:bundle = neobundle#get('neocomplete')
-if !empty(s:bundle)
-    function! s:bundle.hooks.on_source(bundle)
-        if !exists("g:neocomplete#sources#omni#functions")
-            let g:neocomplete#sources#omni#functions = {}
-        endif
-        " let g:neocomplete#sources#omni#functions.java = 'eclim#java#complete#CodeComplete'
-
-        let g:neocomplete#keyword_patterns = {
-        \   '_' : '[0-9a-zA-Z:#_]\+',
-        \   'c' : '[^.[:digit:]*\t]\%(\.\|->\)',
-        \}
-    endfunction
-endif
-
-endif
-
 let g:surround_no_imappings = 1
-imap <expr><C-G> pumvisible() ? neocomplete#undo_completion() : "\<Esc>"
 
 let g:echodoc_enable_at_startup = 1
 NeoBundle 'Shougo/echodoc', {
@@ -1815,5 +1647,7 @@ syntax on " for os x
 " *** }}}
 
 set secure
+
+" call vimproc#popen3("")
 
 " vim:set foldmethod=marker:
