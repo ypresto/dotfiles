@@ -12,6 +12,9 @@
 	renamelimit = 3000
 	ff = true
 	conflictstyle = diff3
+[merge "mergepbx"]
+	name = Xcode project files merger
+	driver = mergepbx %O %A %B
 [color]
 	ui = auto
 [alias]
@@ -49,6 +52,7 @@
 [diff]
 	tool = vimdiff
 	renames = true
+	renamelimit = 3000
 [difftool]
 	prompt = true
 [github]
