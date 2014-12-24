@@ -246,6 +246,7 @@ submit-to() {
 alias ts='tig status'
 alias fo='git fetch origin'
 alias be='bundle exec'
+alias bi='bundle install'
 
 copy-line() { print -rn $BUFFER | pbcopy; zle -M "Copied: ${BUFFER}" }
 zle -N copy-line
@@ -467,6 +468,17 @@ unset _missing_commands
 
 export RSENSE_HOME="$GEM_HOME"
 export GRADLE_OPTS="-Xmx3072m"
+
+sed-inplace () {
+    if (( $# < 2 )); then
+        echo "sed-inplace FROM TO [PATH ...]"
+        return 1
+    fi
+    from="$1"
+    to="$2"
+    shift 2
+    sed -i'' -e "s/$from/$to/g" `ag -l "$from"` "$@"
+}
 
 # HERE
 
