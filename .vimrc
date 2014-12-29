@@ -4,21 +4,6 @@
 " * Please checkout 'Plugins' section for recommended plugins.
 " *
 
-set nocompatible
-let mapleader=" "
-
-" *** Make This Reloadable *** {{{1
-" reset global autocmd
-augroup VimrcGlobal
-    autocmd!
-    " reload when writing .vimrc
-    autocmd BufWritePost $MYVIMRC,$HOME/dotfiles/.vimrc source $MYVIMRC |
-                \ if (has('gui_running') && filereadable($MYGVIMRC)) | source $MYGVIMRC
-    " TODO: should :colorscheme manually and fire ColorScheme autocmd
-    autocmd BufWritePost $MYGVIMRC,$HOME/dotfiles/.gvimrc if has('gui_running') | source $MYGVIMRC
-augroup END
-" *** }}}
-
 " *** Start up *** {{{1
 
 " for neobundle
@@ -43,6 +28,20 @@ NeoBundle 'Shougo/vimproc', {
 \      },
 \   }
 
+" *** }}}
+
+let mapleader=" "
+
+" *** Make This Reloadable *** {{{1
+" reset global autocmd
+augroup VimrcGlobal
+    autocmd!
+    " reload when writing .vimrc
+    autocmd BufWritePost $MYVIMRC,$HOME/dotfiles/.vimrc source $MYVIMRC |
+                \ if (has('gui_running') && filereadable($MYGVIMRC)) | source $MYGVIMRC
+    " TODO: should :colorscheme manually and fire ColorScheme autocmd
+    autocmd BufWritePost $MYGVIMRC,$HOME/dotfiles/.gvimrc if has('gui_running') | source $MYGVIMRC
+augroup END
 " *** }}}
 
 " *** Editor Functionality *** {{{1
@@ -130,6 +129,7 @@ set sessionoptions-=options
 set backspace=indent,eol,start " go to previous line with backspace
 set whichwrap+=h,l             " 行をまたいでカーソル移動
 set textwidth=0                " don't insert break automatically
+set virtualedit=block
 
 set foldmethod=marker " Use '{{{' and '}}}' for marker
 set foldlevelstart=1  " Start with some folds closed
@@ -313,7 +313,20 @@ cnoremap <Esc>d <Del>
 snoremap <Esc>d <Del>
 " Remap <C-d> de-indentation to Alt-t
 inoremap <Esc>t <C-d>
-inoremap <C-k> <C-o>D
+" thanks!: thinca
+inoremap <expr> <C-k> col('.') == col('$') ? "" : "\<C-o>D"
+
+" emacs in command mode (vimrc reading @ 2012/03/23)
+cnoremap <C-a> <Home>
+cnoremap <C-b> <Left>
+cnoremap <C-d> <Del>
+cnoremap <C-e> <End>
+cnoremap <C-f> <Right>
+cnoremap <C-n> <Down>
+cnoremap <C-p> <Up>
+cnoremap <C-k> <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
+cnoremap <C-y> <C-r>*
+
 " ** }}}
 
 " Move lines up and down (bubbling) left and right (indent)
@@ -346,6 +359,11 @@ endfunction
 
 " Maximizes current split, <C-w>= to restore
 nnoremap <C-w>a <C-w>\|<C-w>_
+" Open file under cursor in vertical window
+" http://stackoverflow.com/questions/7672783/how-can-i-do-something-like-gf-but-in-a-new-vertical-split
+nnoremap <C-w><C-f> :vertical wincmd f<CR>
+noremap <Leader>f :vertical wincmd f<CR>
+
 
 " QuickFix Toggle
 nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
@@ -362,6 +380,7 @@ endif
 
 " Gundo
 nnoremap <Leader>G :GundoToggle<CR>
+
 
 " ** unite ** {{{2
 
@@ -441,7 +460,6 @@ NeoBundle 'tpope/vim-surround'
 
 " open reference manual with K key
 NeoBundle 'thinca/vim-ref'
-NeoBundle 'soh335/vim-ref-jquery'
 let g:ref_perldoc_auto_append_f = 1
 
 " git support
@@ -501,15 +519,27 @@ NeoBundle 'nathanaelkane/vim-indent-guides'
 let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_guide_size = 1
 
-" interferes with other plugins use conceal feature
-" NeoBundle 'Yggdroot/indentLine'
-
 " Search word with * and # also on Visual Mode
 NeoBundle 'thinca/vim-visualstar'
 
 " Move among buffer, quickfix, loclist, ...so many... and encode/decode.
 " ]e to exchange line, ]n to go to next SCM conflict marker.
 NeoBundle 'tpope/vim-unimpaired'
+
+" Switch between related files.
+NeoBundle 'kana/vim-altr'
+nmap ]r <Plug>(altr-forward)
+nmap [r <Plug>(altr-back)
+
+let s:altr_bundle = neobundle#get('vim-altr')
+function! s:altr_bundle.hooks.on_post_source(bundle)
+    " rails
+    call altr#define('app/models/%.rb', 'spec/models/%_spec.rb', 'spec/factories/%s.rb')
+    call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
+    call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
+    call altr#define('spec/routing/%_spec.rb', 'config/routes.rb')
+    call altr#define('lib/%.rb', 'spec/lib/%_spec.rb')
+endfunction
 
 " Add repeat support to some plugins, like surround.vim
 NeoBundle 'tpope/vim-repeat'
@@ -568,10 +598,21 @@ let g:ctrlp_map = '<Leader><C-p>'
 let g:ctrlp_max_files = 0
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files --cached --others --exclude-standard'] " speedup
 nmap <Leader><C-q> :CtrlPQuickfix<CR>
-nmap <Leader><C-m> :CtrlPMRU<CR>
+" nmap <Leader><C-m> :CtrlPMRU<CR>
 nmap <Leader><C-c> :CtrlPChangeAll<CR>
 nmap <Leader><C-l> :CtrlPLine<CR>
 nmap <Leader><C-t> :CtrlPTag<CR>
+" for unite keymap compatibility
+nmap <Leader>us :CtrlPMRU<CR>
+nmap <Leader>uq :CtrlPQuickfix<CR>
+
+NeoBundle 'jasoncodes/ctrlp-modified.vim'
+nmap <Leader><C-m> :CtrlPModified<CR>
+nmap <Leader><C-b> :CtrlPBranch<CR>
+
+NeoBundle 'tacahiroy/ctrlp-funky'
+let g:ctrlp_funky_syntax_highlight = 1
+nmap <Leader><C-f> :CtrlPFunky<CR>
 
 " Indent comments and expressions
 NeoBundle 'godlygeek/tabular'
@@ -589,9 +630,6 @@ vnoremap <Leader>t"  :Tabular/"/<CR>
 
 vnoremap <Leader>t<Space> :Tabular multiple_spaces<CR>
 
-" Move between buffers, diff hunks, etc places with bracket keys
-NeoBundle 'tpope/vim-abolish'
-
 " Paste with textobj, use this instead of vi"p
 NeoBundle 'kana/vim-operator-replace', {
 \   'depends' : [
@@ -602,6 +640,7 @@ nmap R <Plug>(operator-replace)
 
 " :grep by ag
 NeoBundle 'rking/ag.vim'
+nnoremap <Leader>R R
 
 " ** }}}
 
@@ -621,16 +660,13 @@ function! s:unite_bundle.hooks.on_post_source(bundle)
     call unite#custom#source('outline,outline:folding', 'sorters', 'sorter_reverse')
 endfunction
 
-" Cannot make it lazy: vim path/to/file.txt doesn't update file_mru list
-NeoBundle 'Shougo/neomru.vim'
-
 NeoBundle 'kmnk/vim-unite-giti.git'
-NeoBundle 'Shougo/unite-session'
-NeoBundleLazy 'tacroe/unite-mark',    { 'autoload' : { 'unite_sources' : ['mark'] } }
+" NeoBundle 'Shougo/unite-session'
+" let g:unite_source_session_options = &sessionoptions
+" NeoBundleLazy 'tacroe/unite-mark',    { 'autoload' : { 'unite_sources' : ['mark'] } }
 NeoBundleLazy 'Shougo/unite-outline', { 'autoload' : { 'unite_sources' : ['outline', 'outline:folding'] } }
 NeoBundleLazy 'taka84u9/unite-git',   { 'autoload' : { 'unite_sources' : ['git_untracked', 'git_cached', 'git_modified'] } }
-NeoBundleLazy 'tsukkee/unite-help',   { 'autoload' : { 'unite_sources' : ['help'] } }
-let g:unite_source_session_options = &sessionoptions
+" NeoBundleLazy 'tsukkee/unite-help',   { 'autoload' : { 'unite_sources' : ['help'] } }
 
 " ** }}}
 
@@ -645,7 +681,7 @@ NeoBundle 'kana/vim-textobj-entire'          " [ai]e
 NeoBundle 'kana/vim-textobj-fold'            " [ai]z
 NeoBundle 'kana/vim-textobj-function'        " [ai]f
 NeoBundle 'kana/vim-textobj-indent'          " [ai][iI]
-NeoBundle 'kana/vim-textobj-syntax'          " [ai]y
+NeoBundle 'kana/vim-textobj-syntax'          " [ai]sy
 NeoBundle 'kana/vim-textobj-line'            " [ai]l
 NeoBundle 'vimtaku/vim-textobj-sigil'        " [ai]g / a: includes index/key/arrow, i: symbol only
 NeoBundle 'vimtaku/vim-textobj-keyvalue'     " [ai][kv]
@@ -683,6 +719,7 @@ xmap <silent> <Plug>disabled_CamelCaseMotion_ie <Plug>CamelCaseMotion_ie
 
 " List or Highlight all todo, fixme, xxx comments
 NeoBundleLazy 'TaskList.vim', { 'autoload' : { 'mappings' : ['<Plug>TaskList'] } }
+map <Leader>tl <Plug>TaskList
 
 " extended % key matching
 NeoBundle "tmhedberg/matchit"
@@ -701,14 +738,6 @@ augroup VimrcGlobal
     autocmd Syntax * call DelayedExecute('RainbowParenthesesLoadRound')
     autocmd Syntax * call DelayedExecute('call rainbow_parentheses#activate()')
 augroup END
-
-" IME
-NeoBundleLazy 'vimtaku/vim-mlh', {
-\   'depends' : [
-\       'mattn/webapi-vim',
-\   ]
-\}
-command! LoadMlh NeoBundleSource vim-mlh
 
 " ** }}}
 
@@ -756,6 +785,11 @@ let g:use_zen_complete_tag = 1
 
 NeoBundleLazy 'sukima/xmledit', '', 'htmlcss'
 " see http://nanasi.jp/articles/vim/xml-plugin.html
+
+" highlight matching tags
+NeoBundleLazy 'Valloric/MatchTagAlways', '', 'htmlcss'
+
+autocmd VimrcGlobal FileType html setlocal matchpairs+=<:>
 
 " haml / sass / scss
 call s:NeoBundleAutoloadFiletypes('hamlsass', ['haml', 'sass', 'scss'])
@@ -821,6 +855,21 @@ autocmd VimrcGlobal FileType javascript call s:MapTernForVim()
 
 " http://wozozo.hatenablog.com/entry/2012/02/08/121504
 map <Leader>FJ !python -m json.tool<CR>
+
+" ** }}}
+
+" ** Ruby ** {{{2
+
+call s:NeoBundleAutoloadFiletypes('ruby', ['ruby'])
+
+NeoBundleLazy 'vim-ruby/vim-ruby',           '', 'ruby'
+" NeoBundleLazy 'ecomba/vim-ruby-refactoring', '', 'ruby'
+" NeoBundleLazy 'tpope/vim-rails',             '', 'ruby'
+NeoBundleLazy 'ruby-matchit',                '', 'ruby'
+NeoBundleLazy 'thoughtbot/vim-rspec',        '', 'ruby' " TODO
+
+" https://github.com/CocoaPods/CocoaPods/wiki/Make-your-text-editor-recognize-the-CocoaPods-files
+autocmd VimrcGlobal BufNewFile,BufRead Podfile,*.podspec setf ruby
 
 " ** }}}
 
@@ -902,6 +951,10 @@ autocmd VimrcGlobal FileType vim,help set keywordprg=":help"
 " Refer: :help DiffOrig
 command! DiffOrig vert new | set bt=nofile | r ++edit # | 0d_
                 \ | diffthis | wincmd p | diffthis
+
+command! PurgeTrailingSpace :%s/\v\s+$//
+command! TwoIndent  set softtabstop=2 shiftwidth=2 | :IndentGuidesToggle | :IndentGuidesToggle
+command! FourIndent set softtabstop=4 shiftwidth=4 | :IndentGuidesToggle | :IndentGuidesToggle
 
 " *** }}}
 
@@ -1040,47 +1093,6 @@ endfunction
 
 " Beta: These are currently testing/starting-to-use!
 
-NeoBundle 'fuenor/qfixgrep'
-
-NeoBundle 'taku-o/vim-copypath'
-let g:copypath_copy_to_unnamed_register = 1
-
-NeoBundle 'kana/vim-altr'
-nmap ]r <Plug>(altr-forward)
-nmap [r <Plug>(altr-back)
-
-let s:altr_bundle = neobundle#get('vim-altr')
-function! s:altr_bundle.hooks.on_post_source(bundle)
-    " rails
-    call altr#define('app/models/%.rb', 'spec/models/%_spec.rb', 'spec/factories/%s.rb')
-    call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
-    call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
-    call altr#define('spec/routing/%_spec.rb', 'config/routes.rb')
-    call altr#define('lib/%.rb', 'spec/lib/%_spec.rb')
-endfunction
-
-" Bundle 'jpalardy/vim-slime' " TODO
-
-if has('mac')
-    nnoremap <silent> <Space>y :.w !pbcopy<CR><CR>
-    vnoremap <silent> <Space>y :w !pbcopy<CR><CR>
-    nnoremap <silent> <Space>p :r !pbpaste<CR>
-    vnoremap <silent> <Space>p :r !pbpaste<CR>
-endif
-
-map <Leader>tl <Plug>TaskList
-
-NeoBundleLazy 'http://conque.googlecode.com/svn/trunk/', {
-\   'name' : 'vim-conque',
-\   'type' : 'svn',
-\   'autoload' : {
-\       'commands' : ['ConqueTerm', 'ConqueTermSplit', 'ConqueTermTab', 'ConqueTermVSplit']
-\   },
-\}
-let g:ConqueTerm_ReadUnfocused = 1
-let g:ConqueTerm_InsertOnEnter = 0
-let g:ConqueTerm_TERM = 'xterm-256color'
-
 NeoBundle 'thinca/vim-scouter'
 
 NeoBundle 'tyru/operator-camelize.vim', {
@@ -1145,22 +1157,6 @@ NeoBundle 'AndrewRadev/splitjoin.vim' " gS and gJ
 NeoBundleLazy 'reinh/vim-makegreen', '', 'python'
 NeoBundleLazy 'python-rope/ropevim', '', 'python'
 
-call s:NeoBundleAutoloadFiletypes('ruby', ['ruby'])
-NeoBundleLazy 'vim-ruby/vim-ruby',           '', 'ruby'
-" NeoBundleLazy 'ecomba/vim-ruby-refactoring', '', 'ruby'
-" NeoBundleLazy 'tpope/vim-rails',             '', 'ruby'
-NeoBundleLazy 'basyura/unite-rails',         '', 'ruby'
-NeoBundleLazy 'ruby-matchit',                '', 'ruby'
-NeoBundleLazy 'thoughtbot/vim-rspec',        '', 'ruby'
-
-" https://github.com/CocoaPods/CocoaPods/wiki/Make-your-text-editor-recognize-the-CocoaPods-files
-autocmd VimrcGlobal BufNewFile,BufRead Podfile,*.podspec setf ruby
-
-NeoBundleLazy 'dbext.vim' " TODO
-NeoBundleLazy 'mattn/qiita-vim' " TODO
-NeoBundleLazy 'thinca/vim-prettyprint'
-NeoBundleLazy 'benmills/vimux' " TODO
-
 let g:quickrun_config.markdown = {
     \ 'type': 'markdown/pandoc',
     \ 'cmdopt': '-s',
@@ -1170,18 +1166,12 @@ let g:quickrun_config.markdown = {
 autocmd VimrcGlobal FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd VimrcGlobal FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 
-NeoBundle 'MultipleSearch' " TODO
-" NeoBundle 'airblade/vim-rooter'
-
 NeoBundle 'thinca/vim-unite-history'
 " NeoBundle 't9md/vim-surround_custom_mapping'
 
 " http://hail2u.net/blog/software/only-one-line-life-changing-vimrc-setting.html
 autocmd VimrcGlobal FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') path+=;/
 autocmd VimrcGlobal FileType diff setlocal includeexpr=substitute(v:fname,'^[ab]\\/','','')
-
-" http://stackoverflow.com/questions/7672783/how-can-i-do-something-like-gf-but-in-a-new-vertical-split
-noremap <Leader>f :vertical wincmd f<CR>
 
 " [ai], : argument than parameter
 NeoBundle 'sgur/vim-textobj-parameter'
@@ -1190,9 +1180,6 @@ NeoBundle 'sgur/vim-textobj-parameter'
 " autocmd VimrcGlobal VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
 " autocmd VimrcGlobal VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
 
-call s:NeoBundleAutoloadFiletypes('xmlbased', ['html', 'xhtml', 'xml'])
-" highlight matching tags
-NeoBundleLazy 'Valloric/MatchTagAlways', '', 'xmlbased'
 
 NeoBundle 'kana/vim-fakeclip' " TODO
 
@@ -1206,13 +1193,6 @@ NeoBundleLazy 'mattn/mkdpreview-vim', {
 " let g:loaded_matchparen = 1
 " NeoBundle 'haruyama/vim-matchopen'
 " above is good but too slow on large file...
-
-noremap <C-w><C-f> :vertical wincmd f<CR>
-
-command! PurgeTrailingSpace :%s/\v\s+$//
-
-command! TwoIndent  set softtabstop=2 shiftwidth=2 | :IndentGuidesToggle | :IndentGuidesToggle
-command! FourIndent set softtabstop=4 shiftwidth=4 | :IndentGuidesToggle | :IndentGuidesToggle
 
 " Reflection
 " @see http://mattn.kaoriya.net/software/vim/20110728094347.htm
@@ -1228,17 +1208,15 @@ function! FunctionForSID(sid, func_name)
     return function('<SNR>'.a:sid.'_'.a:func_name)
 endfunction
 
-nnoremap <Leader>R R
 
 NeoBundle 'vim-scripts/argtextobj.vim'
 
-NeoBundle 'ypresto/alpaca_powertabline', 'align_center_or_not'
+NeoBundle 'alpaca-tc/alpaca_powertabline', 'align_center_or_not'
 let g:alpaca_powertabline_align_center = 0
 let g:alpaca_powertabline_sep1 = ' > '
 let g:alpaca_powertabline_sep2 = ': '
 
-NeoBundle 'haya14busa/vim-migemo'
-
+" TODO
 NeoBundle 'koron/codic-vim'
 NeoBundle 'rhysd/unite-codic.vim'
 
@@ -1265,11 +1243,14 @@ function! RSpecQuickrun()
 endfunction
 autocmd BufReadPost *_spec.rb call RSpecQuickrun()
 
-NeoBundle 'alpaca-tc/alpaca_tags'
+NeoBundleLazy 'alpaca-tc/alpaca_tags'
 let g:alpaca_tags#config = {
             \ '_' : '-R --sort=yes --languages=+Ruby',
             \ }
-autocmd VimrcGlobal BufReadPost * call DelayedExecute('normal :AlpacaTagsSet')
+if executable("ctags")
+    NeoBundleSource 'alpaca-tc/alpaca_tags'
+    autocmd VimrcGlobal BufReadPost * call DelayedExecute('normal :AlpacaTagsSet')
+endif
 
 NeoBundle 'Valloric/YouCompleteMe', {
     \   'build' : {
@@ -1297,6 +1278,9 @@ let g:UltiSnipsEditSplit="vertical"
 let $LANG = 'en_US.UTF-8'
 
 autocmd VimrcGlobal BufNewFile,BufRead *.gradle setf groovy
+
+" bash-like search and replacement
+NeoBundle 'tpope/vim-abolish'
 
 " HERE
 
@@ -1340,18 +1324,8 @@ set autoread
 
 " https://github.com/yomi322/config/blob/master/dot.vimrc
 
-" " http://mattn.kaoriya.net/software/vim/20121105111112.htm
-" NeoBundle 'mattn/multi-vim'
-
 NeoBundle 'rhysd/vim-textobj-ruby' " [ai]r
 " g:textobj_ruby_more_mappings = 1 " ro rl rc rd rr
-
-NeoBundle 'sgur/unite-qf'
-NeoBundle 'osyo-manga/unite-quickfix'
-nmap <Leader>uq <Leader>u: qf<CR>
-nmap <Leader>Uq <Leader>U: qf<CR>
-nmap <Leader>uQ <Leader>u: quickfix<CR>
-nmap <Leader>UQ <Leader>U: quickfix<CR>
 
 " ** }}}
 
@@ -1365,17 +1339,11 @@ nmap ss <Plug>Yssurround
 nmap Ss <Plug>YSsurround
 nmap SS <Plug>YSsurround
 
-" set directory-=. " don't save tmp swap file in current directory
-
 " ** }}}
 
 " ** vimrc reading @ 2012/12/15 {{{
 
-set virtualedit=block
 " set ambiwidth=double
-
-" thanks!: thinca
-inoremap <expr> <C-k> col('.') == col('$') ? "" : "\<C-o>D"
 
 if has('gui_running')
     "# yankとclipboardを同期する
@@ -1383,19 +1351,14 @@ if has('gui_running')
     " not work corect
     " set iminsert
     set imdisable
+else
+    let g:fakeclip_provide_clipboard_key_mappings = 1
 endif
-
-" ** }}}
-
-" ** vimrc reading @ 2012/01/19 {{{
-
-"UUB NeoBundle 't9md/vim-quickhl'
 
 " ** }}}
 
 " ** vimrc reading @ 2012/03/23 {{{
 
-if 0
 " buggy on relative paths?
 
 " @see http://vim-users.jp/2011/02/hack202/
@@ -1411,19 +1374,6 @@ augroup AutoMkdir
   endfunction
 augroup END
 
-endif
-
-" command mode
-cnoremap <C-a> <Home>
-cnoremap <C-b> <Left>
-cnoremap <C-d> <Del>
-cnoremap <C-e> <End>
-cnoremap <C-f> <Right>
-cnoremap <C-n> <Down>
-cnoremap <C-p> <Up>
-cnoremap <C-k> <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
-cnoremap <C-y> <C-r>*
-
 " タブページの位置を移動
 nnoremap <silent> <S-Left>    :<C-u>execute 'tabmove' tabpagenr() - 2<CR>
 nnoremap <silent> <S-Right>   :<C-u>execute 'tabmove' tabpagenr()<CR>
@@ -1432,35 +1382,7 @@ nnoremap <silent> <S-Right>   :<C-u>execute 'tabmove' tabpagenr()<CR>
 
 set winaltkeys=no
 
-" mail
-NeoBundleLazy 'yuratomo/gmail.vim'
-let g:gmail_user_name = 'yuya.presto@gmail.com'
-
-"UUB NeoBundle 'itchyny/thumbnail.vim'
-
-" @see http://d.hatena.ne.jp/itchyny/20130319/1363690268
-" augroup VimrcGlobal
-"     autocmd VimEnter * NeoBundleCheck
-" augroup END
-
-" fugitive
-nnoremap <Space>ge  :<C-u>Gedit<CR>
-nnoremap <Space>gs  :<C-u>Gstatus<CR>
-nnoremap <Space>gd  :<C-u>Gdiff<CR>
-nnoremap <Space>gw  :<C-u>Gwrite<CR>
-
-"UUB " gitv
-"UUB NeoBundle 'gregsexton/gitv'
-"UUB autocmd VimrcGlobal FileType git :setlocal foldlevel=99
-"UUB nnoremap <Space>gv  :<C-u>Gitv<CR>
-"UUB nnoremap <Space>gV  :<C-u>Gitv!<CR>
-
-" ** }}}
-
 " ** vimrc reading @ 2012/04/06 {{{
-
-" ペアとなる括弧の定義
-autocmd VimrcGlobal FileType html setlocal matchpairs+=<:>
 
 set nojoinspaces
 
@@ -1474,28 +1396,9 @@ let g:unite_source_grep_default_opts = "--nogroup --nocolor"
 let g:unite_source_grep_max_candidates = 100
 " let g:unite_source_session_enable_auto_save = 1     " セッション保存
 
-if 0
-
-" http://d.hatena.ne.jp/thinca/20120201/1328099090
-NeoBundleLazy 'thinca/vim-singleton'
-if has('clientserver')
-    NeoBundleSource thinca/vim-singleton
-    call singleton#enable()
-endif
-
-endif
-
 " ** }}}
 
 " ** vimrc reading @ 2012/04/27 {{{
-
-let g:neobundle#default_options['java'] = {
-\   'autoload' : {
-\       'filetypes' : ['java']
-\   }
-\}
-
-NeoBundle 'yuratomo/dbg.vim.git'
 
 " TODO
 augroup VimrcGlobal
@@ -1537,24 +1440,10 @@ endfunction
 cnoremap <C-P> <UP>
 cnoremap <C-N> <Down>
 
-nnoremap <silent>gM :Gcommit --amend<CR>
-nnoremap <silent>gb :Gblame<CR>
-nnoremap <silent>gB :Gbrowse<CR>
-nnoremap <silent>gm :Gcommit<CR>
-
-autocmd FileType gitcommit,git-diff nnoremap <buffer>q :q<CR>
-
 " Enable blocked I in non-visual-block mode
 NeoBundle 'kana/vim-niceblock'
 xmap I  <Plug>(niceblock-I)
 xmap A  <Plug>(niceblock-A)
-
-let g:surround_no_imappings = 1
-
-let g:echodoc_enable_at_startup = 1
-NeoBundle 'Shougo/echodoc', {
-\   'autoload' : { 'insert' : 1 }
-\}
 
 command! UnwatchBuffer setlocal buftype=nofile nobuflisted noswapfile bufhidden=hide
 
