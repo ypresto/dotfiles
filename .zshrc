@@ -113,7 +113,7 @@ if ((${#_gem_paths[@]} > 0)); then
   _gem_path_fragment="${_gem_paths[1]%/bin}:" # NOTE: this is "first element" of array, different from bash
 fi
 export GOPATH="$HOME/go"
-export PATH="bin/:$HOME/dotfiles/bin:$HOME/dotfiles/node_modules/.bin:$_gem_path_fragment$GOPATH/bin:$PATH"
+export PATH="$HOME/bin:$HOME/dotfiles/bin:$HOME/dotfiles/node_modules/.bin:$_gem_path_fragment$GOPATH/bin:$PATH"
 export EDITOR=vim
 export CLICOLOR=YES
 
