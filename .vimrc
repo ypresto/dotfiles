@@ -637,9 +637,6 @@ NeoBundle 'kana/vim-operator-replace', {
 \   ]
 \}
 nmap R <Plug>(operator-replace)
-
-" :grep by ag
-NeoBundle 'rking/ag.vim'
 nnoremap <Leader>R R
 
 " ** }}}
@@ -1303,11 +1300,14 @@ NeoBundle 'tpope/vim-abolish'
 " ** vimrc reading @ 2012/11/10 {{{
 
 " https://github.com/kazuph/dotfiles/blob/master/_vimrc
+" http://saihoooooooo.hatenablog.com/entry/2013/07/18/013400
 
 if executable("ag")
-    let &grepprg='ag --search-binary'
+    let &grepprg='ag --search-binary --nogroup -S $* /dev/null'
+    set grepformat=%f:%l:%m
 elseif executable("ack")
-    let &grepprg='ack'
+    let &grepprg='ack $* /dev/null'
+    set grepformat=%f:%l:%m
 endif
 
 set autoread
