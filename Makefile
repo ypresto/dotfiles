@@ -19,7 +19,7 @@ install:
 	make vimproc
 	vim -c ":Unite -here neobundle/install"
 	npm install
-	bundle install
+	bundle install --binstubs --path vendor/bundle
 	make _up
 	clear
 

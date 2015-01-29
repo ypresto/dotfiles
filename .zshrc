@@ -106,14 +106,8 @@ fi
 export PAGER='less -Ri'
 
 # ENV
-_gem_paths=( $HOME/dotfiles/gems/ruby/*/bin(N) )
-((${#_gem_paths[@]} > 1)) && echo "There are multiple ruby version for ./gems, using first one ($_gem_path)."
-_gem_path_fragment=''
-if ((${#_gem_paths[@]} > 0)); then
-  _gem_path_fragment="${_gem_paths[1]%/bin}:" # NOTE: this is "first element" of array, different from bash
-fi
 export GOPATH="$HOME/go"
-export PATH="$HOME/bin:$HOME/dotfiles/bin:$HOME/dotfiles/node_modules/.bin:$_gem_path_fragment$GOPATH/bin:$PATH"
+export PATH="bin:$HOME/bin:$HOME/dotfiles/bin:$HOME/dotfiles/node_modules/.bin:$GOPATH/bin:$PATH"
 export EDITOR=vim
 export CLICOLOR=YES
 
