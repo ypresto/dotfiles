@@ -12,12 +12,10 @@ install:
 	rm -fr neobundle.vim && \
 	rm -fr vimproc && \
 	rm -fr neocomplcache && \
-	rm -fr unite.vim && \
 	git clone git://github.com/Shougo/neobundle.vim.git && \
-	git clone git://github.com/Shougo/unite.vim.git && \
 	git clone git://github.com/Shougo/vimproc.git
 	make vimproc
-	vim -c ":Unite -here neobundle/install"
+	vim -c ":NeoBundleInstall"
 	npm install
 	bundle install --binstubs --path vendor/bundle
 	make _up
@@ -26,7 +24,7 @@ install:
 update:
 	./mksymlinks
 	make vimproc
-	vim -c ":Unite -here neobundle/update"
+	vim -c ":NeoBundleUpdate"
 	vim -c ":NeoBundleClean"
 	npm update
 	bundle update

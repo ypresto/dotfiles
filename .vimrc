@@ -272,7 +272,7 @@ endif
 
 " Fast saving
 noremap ZJ :update<CR>
-nnoremap <silent> <Esc><Esc> :nohlsearch<CR>:set nopaste<CR>
+nmap <silent> <Esc><Esc> :nohlsearch<CR>:set nopaste<CR><Esc>
 
 " swap g[jk] (move displayed line) and [jk] (move original line)
 noremap <silent> j gj
@@ -598,13 +598,22 @@ let g:ctrlp_map = '<Leader><C-p>'
 let g:ctrlp_max_files = 0
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files --cached --others --exclude-standard'] " speedup
 nmap <Leader><C-q> :CtrlPQuickfix<CR>
-" nmap <Leader><C-m> :CtrlPMRU<CR>
+nmap <Leader><C-u> :CtrlPMRU<CR>
 nmap <Leader><C-c> :CtrlPChangeAll<CR>
 nmap <Leader><C-l> :CtrlPLine<CR>
 nmap <Leader><C-t> :CtrlPTag<CR>
 " for unite keymap compatibility
 nmap <Leader>us :CtrlPMRU<CR>
 nmap <Leader>uq :CtrlPQuickfix<CR>
+
+" TODO
+" experimental mappings
+nmap <Esc><C-p> <Leader><C-p>
+nmap <Esc><C-q> <Leader><C-q>
+nmap <Esc><C-u> <Leader><C-u>
+nmap <Esc><C-c> <Leader><C-c>
+nmap <Esc><C-l> <Leader><C-l>
+nmap <Esc><C-t> <Leader><C-t>
 
 NeoBundle 'jasoncodes/ctrlp-modified.vim'
 nmap <Leader><C-m> :CtrlPModified<CR>
