@@ -537,6 +537,7 @@ function! s:altr_bundle.hooks.on_post_source(bundle)
     call altr#define('app/models/%.rb', 'spec/models/%_spec.rb', 'spec/factories/%s.rb')
     call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
     call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
+    call altr#define('app/mailers/%.rb', 'spec/mailers/%_spec.rb')
     call altr#define('spec/routing/%_spec.rb', 'config/routes.rb')
     call altr#define('lib/%.rb', 'spec/lib/%_spec.rb')
 endfunction
@@ -1245,7 +1246,7 @@ let g:quickrun_config['rspec/normal'] = {
   \ 'exec': '%c %s'
   \}
 function! RSpecQuickrun()
-  let b:quickrun_config = {'type' : 'rspec/bundle/cwd'}
+  let b:quickrun_config = {'type' : 'rspec/bundle'}
 endfunction
 autocmd BufReadPost *_spec.rb call RSpecQuickrun()
 
@@ -1342,11 +1343,16 @@ NeoBundle 'rhysd/vim-textobj-ruby' " [ai]r
 
 " https://github.com/tsukkee/config/blob/master/vimrc
 
-nmap s  <Plug>Ysurround
-nmap S  <Plug>YSurround
-nmap ss <Plug>Yssurround
-nmap Ss <Plug>YSsurround
-nmap SS <Plug>YSsurround
+" nmap s  <Plug>Ysurround
+" nmap S  <Plug>YSurround
+" nmap ss <Plug>Yssurround
+" nmap Ss <Plug>YSsurround
+" nmap SS <Plug>YSsurround
+
+nmap s  <Plug>Ysurroundiw
+nmap S  <Plug>YsurroundiW
+
+let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 'x', 'X', 'y', 'Y'] " without s and S
 
 " ** }}}
 
