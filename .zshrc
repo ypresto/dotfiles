@@ -471,7 +471,11 @@ sed-inplace () {
     from="$1"
     to="$2"
     shift 2
-    sed -i'' -e "s/$from/$to/g" `ag -l "$from"` "$@"
+    if [ "`uname`" = "Darwin" ]; then # please, please give me portable sed...
+      sed -i '' -e "s/$from/$to/g" `ag -l "$from" "$@"`
+    else
+      sed -i'' -e "s/$from/$to/g" `ag -l "$from" "$@"`
+    fi
 }
 
 # HERE
