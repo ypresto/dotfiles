@@ -1113,6 +1113,7 @@ map <Leader>L <Plug>(operator-camelize-toggle)
 
 " NeoBundle 'chikatoike/activefix.vim'
 
+let g:gist_post_private = 1
 let g:gist_open_browser_after_post = 1
 
 NeoBundleLazy 'mbbill/fencview', {

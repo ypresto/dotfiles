@@ -415,8 +415,8 @@ EOS
 if _should_available 'ag'; then
     unalias ag 2> /dev/null
     orig_ag=`which ag`
-    alias agnb="$orig_ag --pager='less -RSi'"
-    alias ag="$orig_ag --search-binary --pager='less -RSi'"
+    alias agb="$orig_ag --search-binary --pager='less -RSi'"
+    alias ag="$orig_ag --pager='less -RSi'"
 fi
 
 alias modified='git diff --name-only'
