@@ -7,7 +7,7 @@ all:
 	install_anyenv install_gom install_xcode_themes install_xcode_plugins install_scripts
 
 install:
-	./mksymlinks
+	homeshick link --verbose dotfiles
 	cd .vim/bundle && \
 	rm -fr neobundle.vim && \
 	rm -fr vimproc && \
@@ -22,14 +22,13 @@ install:
 	clear
 
 update:
-	./mksymlinks
+	homeshick link --verbose dotfiles
 	make vimproc
 	vim -c ":NeoBundleUpdate"
 	vim -c ":NeoBundleClean"
 	npm update
 	bundle update
 	make _up
-	./mksymlinks
 
 _up: skkdict perldict gitsubmodules completions install_scripts
 
@@ -64,11 +63,10 @@ gitsubmodules:
 completions:
 	cd .zsh/functions && \
 		curl -LkO https://raw.github.com/git/git/master/contrib/completion/git-completion.bash && \
+		curl -LkO https://raw.github.com/jonas/tig/master/contrib/tig-completion.bash && \
 		curl -Lko _git https://raw.github.com/git/git/master/contrib/completion/git-completion.zsh && \
 		curl -Lko _hub https://raw.github.com/github/hub/master/etc/hub.zsh_completion && \
 		curl -Lko _brew https://raw.github.com/mxcl/homebrew/master/Library/Contributions/brew_zsh_completion.zsh
-	cd bashcomp && \
-		curl -LkO https://raw.github.com/jonas/tig/master/contrib/tig-completion.bash
 
 cleanlinks:
 # below also works with BSD find

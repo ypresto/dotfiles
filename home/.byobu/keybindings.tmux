@@ -1,5 +1,5 @@
+source $HOME/.byobu_keybindings
 
-source $HOME/dotfiles/byobu_keybindings
 unbind-key -n C-a
 unbind-key -n C-t
 set -g prefix ^T

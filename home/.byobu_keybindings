@@ -1,7 +1,4 @@
-# To use this config, add below line to `$HOME/.byobu/keybindings.tmux'.
-#
-#     source $HOME/dotfiles/byobu_keybindings
-#
+# To use this config, source this file from `$HOME/.byobu/keybindings.tmux'.
 
 bind-key -n M-F2 display-panes \; split-window -h
 bind-key -n M-S-F2 new-session

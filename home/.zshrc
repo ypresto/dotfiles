@@ -4,6 +4,8 @@
 # functions, options, key bindings, etc.
 #
 
+DOTFILES_DIR="$HOME/.homesick/repos/dotfiles"
+
 if [ -f "$HOME/.zshrc_local_init" ]; then
     source "$HOME/.zshrc_local_init"
 fi
@@ -25,6 +27,7 @@ fi
 bindkey -e
 
 fpath=(~/.zsh/functions ~/homebrew/share/zsh/{site-,}functions /usr/local/share/zsh/{site-,}functions ${fpath})
+fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
 
 autoload -U compinit
 compinit
@@ -56,9 +59,9 @@ setopt INTERACTIVE_COMMENTS
 
 
 autoload -U +X bashcompinit && bashcompinit
-source "$HOME/dotfiles/bashcomp/tig-completion.bash"
+source "$HOME/.zsh/functions/tig-completion.bash"
 
-# source ~/.bashrc
+source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
 _missing_commands=''
 function _is_available () {
@@ -81,14 +84,14 @@ function _not_available () {
 if _is_available 'gls'; then
     # os x with homebrew/coreutils
     alias ls='gls --color=auto'
-    eval `gdircolors ~/dotfiles/dircolors-solarized/dircolors.ansi-dark`
+    eval `gdircolors $DOTFILES_DIR/dircolors-solarized/dircolors.ansi-dark`
 elif [ -d /Library ]; then
     # os x without homebrew/coreutils
     alias ls='ls -G'
 else
     # maybe linux
     alias ls='ls --color=auto'
-    eval `dircolors ~/dotfiles/dircolors-solarized/dircolors.ansi-dark`
+    eval `dircolors $DOTFILES_DIR/dircolors-solarized/dircolors.ansi-dark`
 fi
 
 # for homebrew
@@ -107,7 +110,7 @@ export PAGER='less -Ri'
 
 # ENV
 export GOPATH="$HOME/go"
-export PATH="bin:$HOME/bin:$HOME/dotfiles/bin:$HOME/dotfiles/node_modules/.bin:$GOPATH/bin:$PATH"
+export PATH="bin:$HOME/bin:$DOTFILES_DIR/bin:$DOTFILES_DIR/node_modules/.bin:$GOPATH/bin:$PATH"
 export EDITOR=vim
 export CLICOLOR=YES
 
@@ -202,24 +205,24 @@ alias p='popd'
 alias gl='g l'
 alias gg='g g'
 alias :q='exit'
-alias :z='v ~/dotfiles/.zshrc'
+alias :z='v ~/.zshrc'
 alias :zl='v ~/.zshrc_local'
 alias :zz='. ~/.zshrc'
 alias :b='v ~/.bashrc'
 alias :bb='. ~/.bashrc'
-alias :v='v ~/dotfiles/.vimrc'
-alias :V='V ~/dotfiles/.vimrc'
-alias :gc='v ~/dotfiles/.gitconfig'
+alias :v='v ~/.vimrc'
+alias :V='V ~/.vimrc'
+alias :gc='v ~/.gitconfig'
 alias :gcl='v ~/.gitconfig_local'
 alias :sc='v ~/.ssh/config'
-alias :d='cd ~/dotfiles'
-alias :t='v ~/dotfiles/.tigrc'
+alias :d='homeshick cd dotfiles'
+alias :t='v ~/.tigrc'
 alias :h=' \
     [ -d ~/homebrew ] && cd ~/homebrew || \
     [ -d /usr/local ] && cd /usr/local || \
     echo "no homebrew" >&2 && return 1'
 alias :g='cd ~/repo/github.com'
-alias :by='v ~/dotfiles/byobu_keybindings'
+alias :by='v ~/.byobu_keybindings'
 #alias snip='open ~/.vim/bundle/snipMate/snippets'
 a() { 1=${1:--A}; git add $*; git status --short }
 m() { git commit -m "$*" }
@@ -305,13 +308,13 @@ zstyle ':completion:*' recent-dirs-insert both
 if [ "`uname`" = "Darwin" ] && _should_available 'terminal-notifier'; then
     export NOTIFY_COMMAND_COMPLETE_TIMEOUT=5
     export SYS_NOTIFIER="`which terminal-notifier`"
-    source $HOME/dotfiles/zsh-notify/notify.plugin.zsh
+    source $DOTFILES_DIR/zsh-notify/notify.plugin.zsh
 fi
 
 #=============================
 # source auto-fu.zsh
 #=============================
-source ~/dotfiles/auto-fu.zsh/auto-fu.zsh
+source $DOTFILES_DIR/auto-fu.zsh/auto-fu.zsh
 function zle-line-init () {
     auto-fu-init
 }
@@ -320,7 +323,7 @@ zstyle ':completion:*' completer _oldlist _complete
 
 # zaw.zsh
 # FIXME: conflicts with auto-fu, use Ctrl-C to avoid
-source ~/dotfiles/zaw/zaw.zsh
+source $DOTFILES_DIR/zaw/zaw.zsh
 zstyle ':filter-select' case-insensitive yes
 bindkey '^Z^D' zaw-cdr
 bindkey '^V' zaw-cdr
