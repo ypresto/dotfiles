@@ -540,6 +540,7 @@ function! s:altr_bundle.hooks.on_post_source(bundle)
     call altr#define('app/mailers/%.rb', 'spec/mailers/%_spec.rb')
     call altr#define('spec/routing/%_spec.rb', 'config/routes.rb')
     call altr#define('lib/%.rb', 'spec/lib/%_spec.rb')
+    call altr#define('lib/%.rb', 'spec/%_spec.rb')
 endfunction
 
 " Add repeat support to some plugins, like surround.vim

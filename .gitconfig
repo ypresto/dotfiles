@@ -33,9 +33,11 @@
 	d = diff
 	dw = diff --color-words
 	dwd = diff --word-diff
+	dd = diff  --color-words --ignore-space-change -M40
 	c = diff --cached
 	cw = diff --color-words --cached
 	cwd = diff --word-diff --cached
+	cc = diff  --color-words --ignore-space-change -M40 --cached
 	dn = diff --name-only
 	cn = diff --cached --name-only
 	l = log --stat --decorate

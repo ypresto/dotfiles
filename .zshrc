@@ -191,9 +191,11 @@ alias g="git"
 alias v='vim "$@"'
 alias V='gvi "$@"'
 alias d='git d'
-alias D='git dw'
+alias dw='git dw'
+alias D='git dd'
 alias c='git c'
-alias C='git cw'
+alias cw='git cw'
+alias C='git cc'
 alias s='git status --short --branch'
 alias t='tig'
 alias p='popd'
@@ -241,6 +243,7 @@ alias ts='tig status'
 alias fo='git fetch origin'
 alias be='bundle exec'
 alias bi='bundle install'
+alias bu='bundle update'
 
 copy-line() { print -rn $BUFFER | pbcopy; zle -M "Copied: ${BUFFER}" }
 zle -N copy-line
