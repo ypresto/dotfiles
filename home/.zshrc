@@ -4,7 +4,7 @@
 # functions, options, key bindings, etc.
 #
 
-DOTFILES_DIR="$HOME/.homesick/repos/dotfiles"
+export DOTFILES_DIR="$HOME/.homesick/repos/dotfiles"
 
 if [ -f "$HOME/.zshrc_local_init" ]; then
     source "$HOME/.zshrc_local_init"
@@ -16,12 +16,6 @@ if [ "$TERM" = "xterm" ]; then
 fi
 
 export LANG
-
-# setup anyenv if exists
-if [ -d "$HOME/.anyenv" ]; then
-    export PATH="$HOME/.anyenv/bin:$PATH"
-    eval "$(anyenv init -)"
-fi
 
 #bindkey -v
 bindkey -e
@@ -109,8 +103,6 @@ fi
 export PAGER='less -Ri'
 
 # ENV
-export GOPATH="$HOME/go"
-export PATH="bin:$HOME/bin:$DOTFILES_DIR/bin:$DOTFILES_DIR/node_modules/.bin:$GOPATH/bin:$PATH"
 export EDITOR=vim
 export CLICOLOR=YES
 
