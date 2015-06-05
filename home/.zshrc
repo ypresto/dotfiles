@@ -4,6 +4,8 @@
 # functions, options, key bindings, etc.
 #
 
+source "$HOME/.homesick/repos/homeshick/homeshick.sh"
+
 export DOTFILES_DIR="$HOME/.homesick/repos/dotfiles"
 
 if [ -f "$HOME/.zshrc_local_init" ]; then
@@ -459,7 +461,7 @@ unfunction _is_available _should_available _not_available
 unset _missing_commands
 
 export RSENSE_HOME="$GEM_HOME"
-export GRADLE_OPTS="-Xmx3072m"
+export GRADLE_OPTS="-Xmx3072m -Dorg.gradle.daemon=true -Dorg.gradle.parallel=true"
 
 sed-inplace () {
     if (( $# < 2 )); then
