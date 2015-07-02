@@ -3,14 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "jshint": "*",
+    "bower": "*",
+    "coffeelint": "*",
     "csslint": "*",
     "grunt-cli": "*",
-    "jsonlint": "*",
-    "tern": "*",
     "jsgrep-toolkit": "*",
-    "coffeelint": "*",
-    "bower": "*",
+    "jshint": "*",
+    "jsonlint": "^1.6.2",
+    "tern": "*",
     "webpack": "*"
   },
   "devDependencies": {

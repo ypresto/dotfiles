@@ -6,8 +6,6 @@
 
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
-export DOTFILES_DIR="$HOME/.homesick/repos/dotfiles"
-
 if [ -f "$HOME/.zshrc_local_init" ]; then
     source "$HOME/.zshrc_local_init"
 fi

@@ -1,3 +1,5 @@
+export DOTFILES_DIR="$HOME/.homesick/repos/dotfiles"
+
 # setup anyenv if exists
 if [ -d "$HOME/.anyenv" ]; then
     export PATH="$HOME/.anyenv/bin:$PATH"
