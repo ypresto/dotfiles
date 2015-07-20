@@ -404,7 +404,7 @@ alias ws='python -m SimpleHTTPServer'
 
 wsr() {
 ruby -rwebrick <<EOS
-    server = WEBrick::HTTPServer.new(:Port => $hoge, :DocumentRoot => Dir.pwd)
+    server = WEBrick::HTTPServer.new(:Port => 3000, :DocumentRoot => Dir.pwd)
     trap 'INT' do server.shutdown end
     server.start
 EOS
