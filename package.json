@@ -6,6 +6,7 @@
     "bower": "*",
     "coffeelint": "*",
     "csslint": "*",
+    "eslint": "^1.2.1",
     "grunt-cli": "*",
     "jsgrep-toolkit": "*",
     "jshint": "*",
