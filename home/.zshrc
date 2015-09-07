@@ -78,14 +78,14 @@ function _not_available () {
 if _is_available 'gls'; then
     # os x with homebrew/coreutils
     alias ls='gls --color=auto'
-    eval `gdircolors $DOTFILES_DIR/dircolors-solarized/dircolors.ansi-dark`
+    # eval `gdircolors $DOTFILES_DIR/dircolors-solarized/dircolors.ansi-dark`
 elif [ -d /Library ]; then
     # os x without homebrew/coreutils
     alias ls='ls -G'
 else
     # maybe linux
     alias ls='ls --color=auto'
-    eval `dircolors $DOTFILES_DIR/dircolors-solarized/dircolors.ansi-dark`
+    # eval `dircolors $DOTFILES_DIR/dircolors-solarized/dircolors.ansi-dark`
 fi
 
 # for homebrew

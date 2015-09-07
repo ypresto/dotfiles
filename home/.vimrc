@@ -554,6 +554,9 @@ let g:accelerated_jk_anable_deceleration = 1
 let g:accelerated_jk_acceleration_table = [10,20,15,15]
 
 NeoBundle 'bling/vim-airline'
+
+if 0
+
 let s:airline_bundle = neobundle#get('vim-airline')
 " patch airline solarized theme, make blue
 let g:airline_theme_patch_func = 'AirlineThemePatch'
@@ -575,6 +578,8 @@ function! AirlineThemePatch(palette)
         let a:palette.normal.airline_z[3] = normal_color.t
     endif
 endfunction
+
+endif
 
 let g:airline_mode_map = {
 \   '__' : '-',
@@ -751,6 +756,10 @@ augroup END
 
 " ** Color Scheme ** {{{2
 
+NeoBundle 'chriskempson/vim-tomorrow-theme'
+
+if 0
+
 " Too hard to setup not-degraded-mode...
 " (You should setup your term emulator first)
 " So please try it first with termcolors=256, then setup if you like it.
@@ -761,6 +770,8 @@ let g:solarized_termtrans=1
 let g:solarized_bold=1
 let g:solarized_underline=1
 let g:solarized_italic=1
+
+endif
 
 " ** }}}
 
@@ -1542,8 +1553,9 @@ endif
 
 call neobundle#end()
 
-colorscheme solarized
-set background=dark
+" colorscheme solarized
+colorscheme tomorrow-night-bright
+set background=light " by design of tomorrow theme.
 
 " *** Enable Filetype Plugins *** {{{1
 " for neobundle, these are disabled in start up section
