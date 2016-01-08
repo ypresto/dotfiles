@@ -20,7 +20,8 @@
 [alias]
 	co = checkout
 	cm = commit
-	cma = commit --amend --no-edit
+	cma = commit --amend
+	cman = commit --amend --no-edit
 	st = status
 	br = branch
 	hist = log --pretty=format:\"%C(auto)%h %ad | %s%d [%an]\" --graph --date=short
