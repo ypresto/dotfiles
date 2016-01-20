@@ -420,6 +420,14 @@ fi
 alias modified='git diff --name-only'
 alias staged='git diff --name-only --cached'
 
+# ec2list
+# http://qiita.com/dealforest/items/637ab0bc11ecf06a1a09
+_should_available 'ec2list'
+alias ec2list="AWS_ACCESS_KEY_ID=${CONFIG_EC2LIST_AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${CONFIG_EC2LIST_AWS_ACCESS_KEY_SECRET} ec2list"
+alias peco-ec2ssh="ec2list | peco | cut -f 3 | xargs -o -n 1 ssh"
+
+# ALIAS HERE
+
 git-prune-branches-dry-run() {
     git fetch --dry-run --prune origin
     git fetch origin && git branch --merged origin/master | grep -vE ' master$|^\*' | xargs echo git branch -d
