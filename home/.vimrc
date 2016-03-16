@@ -1272,6 +1272,7 @@ if executable("ctags")
     autocmd VimrcGlobal BufReadPost * call DelayedExecute('normal :AlpacaTagsSet')
 endif
 
+if 0
 NeoBundle 'Valloric/YouCompleteMe', {
     \   'build' : {
     \       'windows' : 'echo "Sorry, cannot compile YouCompleteMe binary file in Windows."',
@@ -1280,6 +1281,7 @@ NeoBundle 'Valloric/YouCompleteMe', {
     \       'unix'    : 'git submodule update --init --recursive && ./install.sh --clang-completer',
     \      },
     \   }
+end
 
 " Track the engine.
 NeoBundle 'SirVer/ultisnips'
