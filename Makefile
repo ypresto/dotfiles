@@ -88,4 +88,4 @@ install_xcode_plugins:
 
 install_scripts:
 	curl -Lo bin/git-getpull https://github.com/RapGenius/git-getpull/raw/master/git-getpull && chmod +x bin/git-getpull
-	curl -Lo bin/mergepbx https://github.com/simonwagner/mergepbx/releases/download/v0.6/mergepbx && chmod +x bin/mergepbx
+	curl -Lo bin/mergepbx https://github.com/simonwagner/mergepbx/releases/download/v0.9/mergepbx && chmod +x bin/mergepbx
