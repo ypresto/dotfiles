@@ -303,6 +303,8 @@ if [ "`uname`" = "Darwin" ] && _should_available 'terminal-notifier'; then
     source $DOTFILES_DIR/zsh-notify/notify.plugin.zsh
 fi
 
+if false; then # disabled!
+
 #=============================
 # source auto-fu.zsh
 #=============================
@@ -312,6 +314,17 @@ function zle-line-init () {
 }
 zle -N zle-line-init
 zstyle ':completion:*' completer _oldlist _complete
+
+# bindkey -M afu '^[' afu+cancel # conflicts with ^[[Z
+bindkey -M afu '^G' afu+cancel
+bindkey '^[[Z' reverse-menu-complete
+# bindkey -M afu "^J" afu+cancel afu+accept-line
+# bindkey -M afu "^M" afu+cancel afu+accept-line
+
+fi
+
+# zsh-autosuggestions
+source $DOTFILES_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # zaw.zsh
 # FIXME: conflicts with auto-fu, use Ctrl-C to avoid
@@ -325,11 +338,6 @@ bindkey '^Z^B' zaw-git-recent-branches
 
 unsetopt list_beep
 unsetopt beep
-# bindkey -M afu '^[' afu+cancel # conflicts with ^[[Z
-bindkey -M afu '^G' afu+cancel
-bindkey '^[[Z' reverse-menu-complete
-# bindkey -M afu "^J" afu+cancel afu+accept-line
-# bindkey -M afu "^M" afu+cancel afu+accept-line
 
 source_homebrew () {
     for dir in ~/homebrew /usr/local; do
