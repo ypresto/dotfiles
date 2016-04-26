@@ -1,4 +1,5 @@
 UNAME := $(shell uname)
+HOMESHICK := "$(HOME)/.homesick/repos/homeshick/bin/homeshick"
 
 all:
 	echo "call 'make install' or 'make update'"
@@ -7,7 +8,7 @@ all:
 	install_anyenv install_gom install_xcode_themes install_xcode_plugins install_scripts
 
 install:
-	homeshick link --verbose dotfiles
+	$(HOMESHICK) link --verbose dotfiles
 	cd .vim/bundle && \
 	rm -fr neobundle.vim && \
 	rm -fr vimproc && \
@@ -22,7 +23,7 @@ install:
 	clear
 
 update:
-	homeshick link --verbose dotfiles
+	$(HOMESHICK) link --verbose dotfiles
 	make vimproc
 	vim -c ":NeoBundleUpdate"
 	vim -c ":NeoBundleClean"
@@ -88,3 +89,6 @@ install_xcode_plugins:
 
 install_scripts:
 	curl -Lo bin/git-getpull https://github.com/RapGenius/git-getpull/raw/master/git-getpull && chmod +x bin/git-getpull
+
+install_homeshick:
+	git clone https://github.com/andsens/homeshick.git $(HOME)/.homesick/repos/homeshick
