@@ -15,7 +15,7 @@ if [ "$TERM" = "xterm" ]; then
     export TERM=xterm-256color
 fi
 
-export LANG
+export LANG=en_US.UTF-8
 
 #bindkey -v
 bindkey -e
@@ -296,11 +296,15 @@ zstyle ':chpwd:*' recent-dirs-max 5000
 zstyle ':chpwd:*' recent-dirs-default yes
 zstyle ':completion:*' recent-dirs-insert both
 
+if false; then # disabled because unexpcted syntax error occurs on init
+
 # source zsh-notify
 if [ "`uname`" = "Darwin" ] && _should_available 'terminal-notifier'; then
     export NOTIFY_COMMAND_COMPLETE_TIMEOUT=5
     export SYS_NOTIFIER="`which terminal-notifier`"
     source $DOTFILES_DIR/zsh-notify/notify.plugin.zsh
+fi
+
 fi
 
 if false; then # disabled!
