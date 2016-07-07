@@ -5,14 +5,14 @@
   "dependencies": {
     "coffeelint": "*",
     "csslint": "*",
-    "eslint": "^1.2.1",
-    "git-open": "^1.0.2",
+    "eslint": "*",
+    "git-open": "*",
     "jsgrep-toolkit": "*",
     "jshint": "*",
-    "jsonlint": "^1.6.2",
-    "node-inspector": "^0.12.7",
-    "sass-lint": "^1.5.1",
+    "jsonlint": "*",
+    "node-inspector": "*",
+    "sass-lint": "*",
     "tern": "*",
-    "vue-cli": "^2.0.2"
+    "vue-cli": "*"
   }
 }
