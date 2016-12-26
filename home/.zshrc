@@ -4,6 +4,9 @@
 # functions, options, key bindings, etc.
 #
 
+HOMEBREW_PATH="/usr/local"
+# HOMEBREW_PATH="$HOME/homebrew"
+
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
 if [ -f "$HOME/.zshrc_local_init" ]; then
@@ -20,7 +23,7 @@ export LANG=en_US.UTF-8
 #bindkey -v
 bindkey -e
 
-fpath=(~/.zsh/functions ~/homebrew/share/zsh/{site-,}functions /usr/local/share/zsh/{site-,}functions ${fpath})
+fpath=(~/.zsh/functions $HOMEBREW_PATH/share/zsh/{site-,}functions /usr/local/share/zsh/{site-,}functions ${fpath})
 fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
 
 autoload -U compinit
@@ -184,7 +187,6 @@ bindkey ";5D" backward-word
 
 alias g="git"
 alias v='vim "$@"'
-alias V='gvi "$@"'
 alias d='git d'
 alias dw='git dw'
 alias D='git dd'
@@ -209,13 +211,7 @@ alias :gcl='v ~/.gitconfig_local'
 alias :sc='v ~/.ssh/config'
 alias :d='homeshick cd dotfiles'
 alias :t='v ~/.tigrc'
-alias :h=' \
-    [ -d ~/homebrew ] && cd ~/homebrew || \
-    [ -d /usr/local ] && cd /usr/local || \
-    echo "no homebrew" >&2 && return 1'
 alias :g='cd ~/repo/github.com'
-alias :by='v ~/.byobu_keybindings'
-#alias snip='open ~/.vim/bundle/snipMate/snippets'
 a() { 1=${1:--A}; git add $*; git status --short }
 m() { git commit -m "$*" }
 submit() {
@@ -242,7 +238,6 @@ alias bu='bundle update'
 
 copy-line() { print -rn $BUFFER | pbcopy; zle -M "Copied: ${BUFFER}" }
 zle -N copy-line
-#bindkey '\@' copy-line
 
 #zshプロンプトにモード表示####################################
 # PROMPT="%{$fg[red]%}[%{$reset_color%}%n%{$fg[red]%}]%#%{$reset_color%} " # username pattern
@@ -327,8 +322,12 @@ bindkey '^[[Z' reverse-menu-complete
 
 fi
 
+if false; then # disabled!
+
 # zsh-autosuggestions
 source $DOTFILES_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+fi
 
 # zaw.zsh
 # FIXME: conflicts with auto-fu, use Ctrl-C to avoid
@@ -344,9 +343,7 @@ unsetopt list_beep
 unsetopt beep
 
 source_homebrew () {
-    for dir in ~/homebrew /usr/local; do
-        [ -f $dir/$1 ] && source $dir/$1 && return
-    done
+    [ -f $HOMEBREW_PATH/$1 ] && source $HOMEBREW_PATH/$1 && return
     echo "could not load $1" >&2
     return 1
 }
@@ -357,37 +354,9 @@ fi
 # hack to activate hub completions
 _hub >/dev/null 2>&1
 
-# for ubuntu
-if _is_available 'ack-grep'; then
-    alias ack='ack-grep'
-    # compdef ack-grep=ack
-fi
-
-alias gvimcd="gvim -c 'cd \`pwd\`'"
-
 if [ "`uname`" = "Darwin" ]; then
-    alias gvim=mvim
-    alias gvimdiff=mvimdiff
+  alias vscode="open -a 'Visual Studio Code'"
 fi
-
-# Refer: http://d.hatena.ne.jp/namutaka/20100118/1263830555
-# .zshrc
-# command "mvi"
-function gvi() {
-    if [ $# != 0 ]; then
-        gvim --remote-tab-silent $@ 2> /dev/null
-    else
-        srvs=`gvim --serverlist 2> /dev/null`
-        if [ "$srvs" != "" ]; then
-            gvim --remote-send "<Esc>:tabnew<CR>"
-        else
-            gvim
-        fi
-    fi
-}
-
-cl () { cd $1; ls }
-mkcd () { mkdir -p $1; cd $1 }
 
 # completion colors
 # http://linuxshellaccount.blogspot.jp/2008/12/color-completion-using-zsh-modules-on.html
@@ -400,8 +369,8 @@ fi
 
 git_new_workdir=( /usr/share/doc/git-*/contrib/workdir/git-new-workdir(N) )
 # bleeding edge
-if [ -e "$HOME/homebrew/share/git-core/contrib/workdir/git-new-workdir" ]; then
-    alias git-new-workdir="sh $HOME/homebrew/share/git-core/contrib/workdir/git-new-workdir"
+if [ -e "$HOMEBREW_PATH/share/git-core/contrib/workdir/git-new-workdir" ]; then
+    alias git-new-workdir="sh $HOMEBREW_PATH/share/git-core/contrib/workdir/git-new-workdir"
 elif [ -e "$git_new_workdir" ]; then
     alias git-new-workdir="sh $git_new_workdir"
 else
