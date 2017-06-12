@@ -7,6 +7,8 @@
 	excludesfile = ~/.gitignore_global
 	attributesfile = ~/.gitattributes_global
 	editor = vim
+[log]
+	follow = true
 [merge]
 	tool = vimdiff
 	renamelimit = 3000
@@ -24,21 +26,19 @@
 	cman = commit --amend --no-edit
 	st = status
 	br = branch
-	hist = log --pretty=format:\"%C(auto)%h %ad | %s%d [%an]\" --graph --date=short
 	g = log --graph --decorate --stat
-	go = log --graph --decorate --stat --oneline
-	gog = log --graph --decorate --oneline
-	gg = log --graph --decorate --pretty=format:\"%h %ad | %s%d [%an]\" --date=short
+	go = log --pretty=format:\"%C(auto)%h %ad | %s%d [%an]\" --graph --date=short
+	gog = log --pretty=format:\"%C(auto)%h %ad | %s%d [%an]\" --graph --date=short --stat
 	rs = reset
 	rsh = reset --hard
-	d = diff --minimal
-	dw = diff --minimal --color-words
-	dwd = diff --minimal --word-diff
-	dd = diff --minimal  --color-words --ignore-space-change -M40
-	c = diff --minimal --cached
-	cw = diff --minimal --color-words --cached
-	cwd = diff --minimal --word-diff --cached
-	cc = diff --minimal  --color-words --ignore-space-change -M40 --cached
+	d = diff
+	dw = diff --color-words
+	dwd = diff --word-diff
+	dd = diff  --color-words --ignore-space-change -M40
+	c = diff --cached
+	cw = diff --color-words --cached
+	cwd = diff --word-diff --cached
+	cc = diff  --color-words --ignore-space-change -M40 --cached
 	dn = diff --name-only
 	cn = diff --cached --name-only
 	l = log --stat --decorate
@@ -56,6 +56,7 @@
 	tool = vimdiff
 	renames = true
 	renamelimit = 3000
+	algorithm = minimal
 [difftool]
 	prompt = true
 [github]
@@ -66,3 +67,6 @@
 	enabled = true
 
 # vim: noet:nosta:ts=8:sts=0:sw=8
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f

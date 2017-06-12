@@ -25,9 +25,11 @@ noremap ZJ :update<CR>
 inoremap <C-[> <Esc>
 
 " ** Partial Emacs Keybind in Insert Mode ** {{{2
+
 " Refer: :help tcsh-style
 " Note: 'map!' maps both insert and command-line mode
 noremap! <C-f> <Right>
+" TODO: not working
 noremap! <C-b> <Left>
 " <C-o> and <Home> is different on indented line
 inoremap <C-a> <C-o>^
@@ -41,6 +43,7 @@ snoremap <C-e> <End>
 inoremap <C-d> <Right><BS>
 cnoremap <C-d> <Del>
 snoremap <C-d> <Del>
+noremap! <C-w> <A-BS>
 inoremap <A-f> <S-Right>
 cnoremap <A-f> <S-Right>
 snoremap <A-f> <S-Right>

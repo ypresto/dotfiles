@@ -469,6 +469,18 @@ sed-inplace () {
     done
 }
 
+alias docker-compose-dev='docker-compose -f docker-compose.yml -f docker-compose-dev.yml'
+docker-image-prune () {
+  docker rmi $(docker images | awk '/<none>/{print $3}')
+}
+docker-volume-prune () {
+  docker volume rm $(docker volume ls -qf dangling=true)
+}
+
+# http://stackoverflow.com/questions/14307086/tab-completion-for-aliased-sub-commands-in-zsh-alias-gco-git-checkout
+compdef docker-compose-dev='docker-compose'
+# setopt complete_aliases
+
 # HERE
 
 typeset -U path

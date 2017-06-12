@@ -63,11 +63,15 @@ gitsubmodules:
 
 completions:
 	cd .zsh/functions && \
-		curl -LkO https://raw.github.com/git/git/master/contrib/completion/git-completion.bash && \
-		curl -LkO https://raw.github.com/jonas/tig/master/contrib/tig-completion.bash && \
-		curl -Lko _git https://raw.github.com/git/git/master/contrib/completion/git-completion.zsh && \
-		curl -Lko _hub https://raw.github.com/github/hub/master/etc/hub.zsh_completion && \
-		curl -Lko _brew https://raw.github.com/mxcl/homebrew/master/Library/Contributions/brew_zsh_completion.zsh
+		curl -fLO https://github.com/git/git/raw/master/contrib/completion/git-completion.bash && \
+		curl -fLO https://github.com/jonas/tig/raw/master/contrib/tig-completion.bash && \
+		curl -fLO https://github.com/docker/docker/raw/master/contrib/completion/zsh/_docker && \
+		curl -fLO https://github.com/docker/compose/raw/master/contrib/completion/zsh/_docker-compose && \
+		curl -fLO https://github.com/Homebrew/brew/raw/master/completions/zsh/_brew && \
+		curl -fLO https://github.com/Homebrew/brew/raw/master/completions/zsh/_brew_cask && \
+		curl -fLo _git https://github.com/git/git/raw/master/contrib/completion/git-completion.zsh && \
+		curl -fLo _hub https://github.com/github/hub/raw/master/etc/hub.zsh_completion && \
+		curl -fLO https://github.com/Homebrew/brew/raw/master/completions/zsh/_brew
 
 cleanlinks:
 # below also works with BSD find
@@ -75,6 +79,9 @@ cleanlinks:
 
 install_anyenv:
 	git clone https://github.com/riywo/anyenv ~/.anyenv
+
+install_pyenv_virtualenv:
+	git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.anyenv/envs/pyenv/plugins/pyenv-virtualenv
 
 install_gom:
 	mkdir -p ~/go
@@ -92,3 +99,6 @@ install_scripts:
 
 install_homeshick:
 	git clone https://github.com/andsens/homeshick.git $(HOME)/.homesick/repos/homeshick
+
+install_node_modules:
+	npm install -g csslint eslint sass-lint tslint typescript

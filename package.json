@@ -3,20 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "coffeelint": "*",
-    "csslint": "*",
-    "eslint": "*",
     "git-open": "*",
-    "jsgrep-toolkit": "*",
-    "jshint": "*",
-    "jsonlint": "*",
-    "node-inspector": "*",
-    "sass-lint": "*",
-    "tern": "*",
-    "tslint": "^4.0.2",
-    "typescript": "^2.0.10",
-    "typings": "^2.0.0",
-    "vue-cli": "*",
-    "yarn": "^0.17.8"
+    "jsgrep-toolkit": "*"
   }
 }
