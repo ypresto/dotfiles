@@ -188,33 +188,8 @@ fi
 bindkey ";5C" forward-word
 bindkey ";5D" backward-word
 
-alias g="git"
-alias v='vim "$@"'
-alias d='git d'
-alias dw='git dw'
-alias D='git dd'
-alias c='git c'
-alias cw='git cw'
-alias C='git cc'
-alias s='git status --short --branch'
-alias t='tig'
-alias p='popd'
-alias gl='g l'
-alias gg='g g'
-alias :q='exit'
-alias :z='v ~/.zshrc'
-alias :zl='v ~/.zshrc_local'
-alias :zz='. ~/.zshrc'
-alias :b='v ~/.bashrc'
-alias :bb='. ~/.bashrc'
-alias :v='v ~/.vimrc'
-alias :V='V ~/.vimrc'
-alias :gc='v ~/.gitconfig'
-alias :gcl='v ~/.gitconfig_local'
-alias :sc='v ~/.ssh/config'
-alias :d='homeshick cd dotfiles'
-alias :t='v ~/.tigrc'
-alias :g='cd ~/repo/github.com'
+source "$DOTFILES_DIR/aliases.sh"
+
 a() { 1=${1:--A}; git add $*; git status --short }
 m() { git commit -m "$*" }
 submit() {
@@ -233,11 +208,6 @@ submit-to() {
     shift 2
     git push "$@" $remote HEAD:$branch
 }
-alias ts='tig status'
-alias fo='git fetch origin'
-alias be='bundle exec'
-alias bi='bundle install'
-alias bu='bundle update'
 
 copy-line() { print -rn $BUFFER | pbcopy; zle -M "Copied: ${BUFFER}" }
 zle -N copy-line

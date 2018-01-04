@@ -1,0 +1,1 @@
+../../../../../homeshick/completions/homeshick.fish
