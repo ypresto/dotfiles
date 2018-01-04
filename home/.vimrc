@@ -187,10 +187,15 @@ set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
 
 " ** Highlighting ** {{{2
 
+if !s:light_mode
+
 set cursorline              " Highlight current line
 if exists("+colorcolumn")
     set colorcolumn=73,74,81,82 " Highlight border of 'long line'
 endif
+
+end
+
 set list                    " highlight garbage characters (see below)
 set listchars=tab:»-,trail:\ ,extends:»,precedes:«,nbsp:%
 
@@ -466,6 +471,8 @@ NeoBundle 'tpope/vim-surround'
 NeoBundle 'thinca/vim-ref'
 let g:ref_perldoc_auto_append_f = 1
 
+if !s:light_mode
+
 " git support
 NeoBundle 'tpope/vim-fugitive', { 'augroup' : 'fugitive' }
 NeoBundle 'mattn/gist-vim', {
@@ -473,6 +480,8 @@ NeoBundle 'mattn/gist-vim', {
 \       'mattn/webapi-vim',
 \   ],
 \}
+
+end
 
 " show marker on edited lines
 NeoBundle 'airblade/vim-gitgutter'
@@ -522,11 +531,6 @@ let g:quickrun_config.perl = {'command': 'prove'}
 
 end
 
-" Highlight indent by its levels, must have for pythonist
-NeoBundle 'nathanaelkane/vim-indent-guides'
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_guide_size = 1
-
 " Search word with * and # also on Visual Mode
 NeoBundle 'thinca/vim-visualstar'
 
@@ -565,11 +569,8 @@ nmap k <Plug>(accelerated_jk_gk)
 let g:accelerated_jk_anable_deceleration = 1
 let g:accelerated_jk_acceleration_table = [10,20,15,15]
 
-if !s:light_mode
-
 NeoBundle 'bling/vim-airline'
-
-end
+let g:airline_highlighting_cache = 1
 
 if 0
 
