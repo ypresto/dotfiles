@@ -7,6 +7,9 @@
 HOMEBREW_PATH="/usr/local"
 # HOMEBREW_PATH="$HOME/homebrew"
 
+# Give priority to homebrew executables.
+PATH="$HOMEBREW_PATH/bin:$PATH"
+
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
 if [ -f "$HOME/.zshrc_local_init" ]; then
