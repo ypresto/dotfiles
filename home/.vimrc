@@ -6,6 +6,8 @@
 
 " *** Start up *** {{{1
 
+let s:light_mode = 1
+
 " for neobundle
 filetype off
 filetype plugin indent off
@@ -63,6 +65,8 @@ autocmd VimrcGlobal BufReadPost *
 \   if &modifiable && !search('[^\x00-\x7F]', 'cnw')
 \ |   setlocal fileencoding=
 \ | endif
+
+let $LANG = 'en_US.UTF-8'
 
 " ** }}}
 
@@ -479,6 +483,8 @@ map [g :GitGutterPrevHunk<CR>
 " read/write by sudo with `vim sudo:file.txt`
 NeoBundle 'sudo.vim'
 
+if !s:light_mode
+
 " shows syntax error on every save
 NeoBundle 'scrooloose/syntastic'
 let g:syntastic_mode_map = {
@@ -514,6 +520,8 @@ let g:quickrun_config._ = {
 
 let g:quickrun_config.perl = {'command': 'prove'}
 
+end
+
 " Highlight indent by its levels, must have for pythonist
 NeoBundle 'nathanaelkane/vim-indent-guides'
 let g:indent_guides_enable_on_vim_startup = 1
@@ -525,6 +533,8 @@ NeoBundle 'thinca/vim-visualstar'
 " Move among buffer, quickfix, loclist, ...so many... and encode/decode.
 " ]e to exchange line, ]n to go to next SCM conflict marker.
 NeoBundle 'tpope/vim-unimpaired'
+
+if !s:light_mode
 
 " Switch between related files.
 NeoBundle 'kana/vim-altr'
@@ -543,6 +553,8 @@ function! s:altr_bundle.hooks.on_post_source(bundle)
     call altr#define('lib/%.rb', 'spec/%_spec.rb')
 endfunction
 
+end
+
 " Add repeat support to some plugins, like surround.vim
 NeoBundle 'tpope/vim-repeat'
 
@@ -553,7 +565,11 @@ nmap k <Plug>(accelerated_jk_gk)
 let g:accelerated_jk_anable_deceleration = 1
 let g:accelerated_jk_acceleration_table = [10,20,15,15]
 
+if !s:light_mode
+
 NeoBundle 'bling/vim-airline'
+
+end
 
 if 0
 
@@ -622,6 +638,8 @@ nmap <Esc><C-c> <Leader><C-c>
 nmap <Esc><C-l> <Leader><C-l>
 nmap <Esc><C-t> <Leader><C-t>
 
+if !s:light_mode
+
 NeoBundle 'jasoncodes/ctrlp-modified.vim'
 nmap <Leader><C-m> :CtrlPModified<CR>
 nmap <Leader><C-b> :CtrlPBranch<CR>
@@ -646,6 +664,8 @@ vnoremap <Leader>t"  :Tabular/"/<CR>
 
 vnoremap <Leader>t<Space> :Tabular multiple_spaces<CR>
 
+end
+
 " Paste with textobj, use this instead of vi"p
 NeoBundle 'kana/vim-operator-replace', {
 \   'depends' : [
@@ -658,6 +678,8 @@ nnoremap <Leader>R R
 " ** }}}
 
 " ** unite ** {{{2
+
+if !s:light_mode
 
 NeoBundle 'Shougo/unite.vim', {
 \   'autoload' : {
@@ -681,6 +703,8 @@ NeoBundleLazy 'Shougo/unite-outline', { 'autoload' : { 'unite_sources' : ['outli
 NeoBundleLazy 'taka84u9/unite-git',   { 'autoload' : { 'unite_sources' : ['git_untracked', 'git_cached', 'git_modified'] } }
 " NeoBundleLazy 'tsukkee/unite-help',   { 'autoload' : { 'unite_sources' : ['help'] } }
 
+end
+
 " ** }}}
 
 " ** textobj ** {{{2
@@ -690,12 +714,17 @@ NeoBundleLazy 'taka84u9/unite-git',   { 'autoload' : { 'unite_sources' : ['git_u
 " @see http://d.hatena.ne.jp/osyo-manga/20130717/1374069987
 
 NeoBundle 'kana/vim-textobj-user'            " framework for all belows
+if !s:light_mode
 NeoBundle 'kana/vim-textobj-entire'          " [ai]e
 NeoBundle 'kana/vim-textobj-fold'            " [ai]z
 NeoBundle 'kana/vim-textobj-function'        " [ai]f
+end
 NeoBundle 'kana/vim-textobj-indent'          " [ai][iI]
 NeoBundle 'kana/vim-textobj-syntax'          " [ai]sy
 NeoBundle 'kana/vim-textobj-line'            " [ai]l
+
+if !s:light_mode
+
 NeoBundle 'vimtaku/vim-textobj-sigil'        " [ai]g / a: includes index/key/arrow, i: symbol only
 NeoBundle 'vimtaku/vim-textobj-keyvalue'     " [ai][kv]
 NeoBundle 'vimtaku/vim-textobj-doublecolon'  " [ai]:
@@ -726,13 +755,19 @@ xmap <silent> <Plug>disabled_CamelCaseMotion_ib <Plug>CamelCaseMotion_ib
 omap <silent> <Plug>disabled_CamelCaseMotion_ie <Plug>CamelCaseMotion_ie
 xmap <silent> <Plug>disabled_CamelCaseMotion_ie <Plug>CamelCaseMotion_ie
 
+end
+
 " ** }}}
 
 " ** Misc ** {{{2
 
+if !s:light_mode
+
 " List or Highlight all todo, fixme, xxx comments
 NeoBundleLazy 'TaskList.vim', { 'autoload' : { 'mappings' : ['<Plug>TaskList'] } }
 map <Leader>tl <Plug>TaskList
+
+end
 
 " extended % key matching
 NeoBundle "tmhedberg/matchit"
@@ -786,6 +821,8 @@ function! s:NeoBundleAutoloadFiletypes(name, filetypes)
     \   },
     \ }
 endfunction
+
+if !s:light_mode
 
 " ** HTML / CSS / XML ** {{{2
 
@@ -949,10 +986,14 @@ autocmd VimrcGlobal BufNewFile,BufRead *.md setf markdown
 
 " ** }}}
 
+end " light_mode
+
 " ** Shell ** {{{
 
 call s:NeoBundleAutoloadFiletypes('sh', ['sh'])
+call s:NeoBundleAutoloadFiletypes('fish', ['fish'])
 NeoBundleLazy 'sh.vim', '', 'sh'
+NeoBundleLazy 'dag/vim-fish', '', 'fish'
 
 " ** }}}
 
@@ -1109,6 +1150,8 @@ endfunction
 " *** }}}
 
 " *** Bleeding Edge *** {{{1
+
+if !s:light_mode
 
 " Beta: These are currently testing/starting-to-use!
 
@@ -1297,12 +1340,12 @@ let g:UltiSnipsJumpBackwardTrigger="<Esc>b"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 
-let $LANG = 'en_US.UTF-8'
-
 autocmd VimrcGlobal BufNewFile,BufRead *.gradle setf groovy
 
 " bash-like search and replacement
 NeoBundle 'tpope/vim-abolish'
+
+end " light_mode
 
 " HERE
 
