@@ -665,7 +665,7 @@ vnoremap <Leader>t"  :Tabular/"/<CR>
 
 vnoremap <Leader>t<Space> :Tabular multiple_spaces<CR>
 
-end
+end " light_mode
 
 " Paste with textobj, use this instead of vi"p
 NeoBundle 'kana/vim-operator-replace', {
@@ -675,6 +675,16 @@ NeoBundle 'kana/vim-operator-replace', {
 \}
 nmap R <Plug>(operator-replace)
 nnoremap <Leader>R R
+
+" Lightweight tab key completion plugin
+NeoBundle 'ajh17/VimCompletesMe'
+let g:vcm_default_maps = 0
+imap <Esc><Leader> <Plug>vim_completes_me_forward
+
+" Toggle comment
+NeoBundle 'tyru/caw.vim'
+nmap <Esc>/ <Plug>(caw:prefix)c
+imap <Esc>/ <Esc><Plug>(caw:prefix)ca
 
 " ** }}}
 
