@@ -6,6 +6,7 @@
 *.java diff=java
 *.xml diff=html
 *.html diff=html
+*.erb diff=html
 *.tmpl diff=html
 *.pl diff=perl
 *.pm diff=perl
@@ -13,4 +14,9 @@
 *.php diff=php
 *.py diff=python
 *.rb diff=ruby
+*.rake diff=ruby
+*.slim diff=ruby
 *.js diff=java
+*.ts diff=java
+*.kt diff=java
+*.csv diff=ruby
