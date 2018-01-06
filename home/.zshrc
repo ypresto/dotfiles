@@ -191,7 +191,7 @@ bindkey ";5D" backward-word
 source "$DOTFILES_DIR/aliases.sh"
 
 a() { 1=${1:--A}; git add $*; git status --short }
-m() { git commit -m "$*" }
+cm() { git commit -m "$*" }
 submit() {
     local remote=$1
     shift 1
