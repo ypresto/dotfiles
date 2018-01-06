@@ -4,11 +4,12 @@ HOMESHICK := "$(HOME)/.homesick/repos/homeshick/bin/homeshick"
 all:
 	echo "call 'make install' or 'make update'"
 
-.PHONY: install update _up vimplugins vimproc skkdict perldict gitsubmodules completions cleanlinks \
+.PHONY: install update _up vimplugins vimproc fisher_deps skkdict perldict gitsubmodules completions cleanlinks \
 	install_anyenv install_gom install_xcode_themes install_xcode_plugins install_scripts
 
 install:
 	$(HOMESHICK) link --verbose dotfiles
+	make fisher_deps
 	make vimplugins
 	npm install
 	bundle install --binstubs --path vendor/bundle
@@ -24,7 +25,7 @@ update:
 	bundle update
 	make _up
 
-_up: skkdict perldict gitsubmodules completions install_scripts
+_up: fisher_deps skkdict perldict gitsubmodules completions install_scripts
 
 vimplugins:
 	cd .vim/bundle && \
@@ -48,6 +49,10 @@ ifeq ($(UNAME),Darwin)
 	make -fmake_mac.mak clean && \
 	make -fmake_mac.mak
 endif
+
+fisher_deps:
+	curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher
+	fish -c 'fisher'
 
 skkdict:
 	cd .vim/dict && \
