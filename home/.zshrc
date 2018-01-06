@@ -383,12 +383,14 @@ alias peco-ec2ssh="ec2list | peco | cut -f 3 | xargs -o -n 1 ssh"
 # ALIAS HERE
 
 git-prune-branches-dry-run() {
+    branch=${1:-master}
     git fetch --dry-run --prune origin
-    git fetch origin && git branch --merged origin/master | grep -vE ' master$|^\*' | xargs echo git branch -d
+    git fetch origin && git branch --merged origin/$branch | grep -vE ' '$branch'$|^\*' | xargs echo git branch -d
 }
 
 git-prune-branches() {
-    git fetch --prune origin && git branch --merged origin/master | grep -vE ' master$|^\*' | xargs git branch -d
+    branch=${1:-master}
+    git fetch --prune origin && git branch --merged origin/$branch | grep -vE ' '$branch'$|^\*' | xargs git branch -d
 }
 
 if [ -f "$HOME/.zshrc_local" ]; then
