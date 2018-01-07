@@ -1,9 +1,0 @@
-{
-  "name": "ypresto-dotfiles",
-  "version": "0.0.1",
-  "private": true,
-  "dependencies": {
-    "git-open": "*",
-    "jsgrep-toolkit": "*"
-  }
-}

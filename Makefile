@@ -11,8 +11,6 @@ install:
 	$(HOMESHICK) link --verbose dotfiles
 	make fisher_deps
 	make vimplugins
-	npm install
-	bundle install --binstubs --path vendor/bundle
 	make _up
 	clear
 
@@ -21,7 +19,6 @@ update:
 	make vimproc
 	vim -c ":NeoBundleUpdate"
 	vim -c ":NeoBundleClean"
-	npm update
 	bundle update
 	make _up
 
@@ -107,6 +104,3 @@ install_scripts:
 
 install_homeshick:
 	git clone https://github.com/andsens/homeshick.git $(HOME)/.homesick/repos/homeshick
-
-install_node_modules:
-	npm install -g csslint eslint sass-lint tslint typescript
