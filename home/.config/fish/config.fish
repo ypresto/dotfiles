@@ -7,3 +7,9 @@ source "$DOTFILES_PATH/aliases.sh"
 function fish_user_key_bindings
   bind \cr peco_select_history
 end
+
+# https://github.com/fish-shell/fish-shell/issues/825#issuecomment-226646287
+function sync_history --on-event fish_preexec
+    history --save
+    history --merge
+end
