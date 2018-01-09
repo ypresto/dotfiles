@@ -686,6 +686,9 @@ NeoBundle 'tyru/caw.vim'
 nmap <Esc>/ <Plug>(caw:prefix)c
 imap <Esc>/ <Esc><Plug>(caw:prefix)ca
 
+" Multiple cursors
+NeoBundle 'terryma/vim-multiple-cursors'
+
 " ** }}}
 
 " ** unite ** {{{2
