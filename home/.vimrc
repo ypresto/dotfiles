@@ -6,8 +6,6 @@
 
 " *** Start up *** {{{1
 
-let s:light_mode = 1
-
 " for neobundle
 filetype off
 filetype plugin indent off
@@ -32,7 +30,28 @@ NeoBundle 'Shougo/vimproc', {
 
 " *** }}}
 
-let mapleader=" "
+" *** Utility function: DelayedExecute *** {{{
+
+" Promising the order of autocmd executions, e.g. set hl after main syntax
+function! DelayedExecute(command)
+    if !exists('s:delayed_execute_queue')
+        let s:delayed_execute_queue = []
+        augroup DelayedExecutor
+            autocmd!
+            autocmd CursorHold,CursorHoldI,CursorMoved,CursorMovedI * call RunDelayedExecute()
+        augroup END
+    endif
+    call add(s:delayed_execute_queue, a:command)
+endfunction
+function! RunDelayedExecute()
+    autocmd! DelayedExecutor
+    for cmd in s:delayed_execute_queue
+        execute cmd
+    endfor
+    unlet cmd s:delayed_execute_queue
+endfunction
+
+" *** }}}
 
 " *** Make This Reloadable *** {{{1
 " reset global autocmd
@@ -53,6 +72,7 @@ catch
     :language C
 endtry
 
+set spelllang=en
 set helplang=ja
 
 set encoding=utf-8
@@ -131,10 +151,12 @@ set backspace=indent,eol,start " go to previous line with backspace
 set whichwrap+=h,l             " 行をまたいでカーソル移動
 set textwidth=0                " don't insert break automatically
 set virtualedit=block
+set nojoinspaces
 
 set foldmethod=marker " Use '{{{' and '}}}' for marker
 set foldlevelstart=1  " Start with some folds closed
 set foldcolumn=2
+
 set noeb vb t_vb=     " no beep
 set scrolloff=1       " show N more next line when scrolling
 
@@ -160,9 +182,23 @@ set incsearch         " Use 'incremental search'
 set hlsearch          " Highlight search result
 set ignorecase        " Ignore case when searching
 set smartcase         " Do not ignorecase if keyword contains uppercase
+if executable("ag")
+    let &grepprg='ag --search-binary --nogroup -S $* /dev/null'
+    set grepformat=%f:%l:%m
+elseif executable("ack")
+    let &grepprg='ack $* /dev/null'
+    set grepformat=%f:%l:%m
+endif
+
+" Highlight
+set list                    " highlight garbage characters (see below)
+set listchars=tab:»-,trail:\ ,extends:»,precedes:«,nbsp:%
+set display=uhex " shows unprintable chars as hex
 
 " Misc
 set nrformats-=octal  " <c-a> や <c-x> で数値を増減させるときに8進数を無効にする
+set autoread
+set lazyredraw
 
 " ** }}}
 
@@ -184,22 +220,11 @@ set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
 
 " ** Highlighting ** {{{2
 
-if !s:light_mode
-
-set cursorline              " Highlight current line
 if exists("+colorcolumn")
     set colorcolumn=73,74,81,82 " Highlight border of 'long line'
 endif
 
-end
-
-set list                    " highlight garbage characters (see below)
-set listchars=tab:»-,trail:\ ,extends:»,precedes:«,nbsp:%
-
 function! s:HighlightSetup()
-    " Change highlight color of current line
-    highlight clear CursorLine
-    highlight CursorLine ctermbg=black
     highlight SignColumn ctermfg=white ctermbg=black cterm=none
 
     highlight SpecialKey   ctermbg=black
@@ -207,15 +232,9 @@ function! s:HighlightSetup()
 endfunction
 
 augroup VimrcGlobal
-    if !s:light_mode
-        " Highlight current line only on current window
-        autocmd WinLeave * set nocursorline
-        autocmd WinEnter,BufRead * set cursorline
-    end
-
     " activates custom highlight settings
     autocmd VimEnter,WinEnter,ColorScheme * call s:HighlightSetup()
-    autocmd VimEnter,WinEnter * call matchadd('ZenkakuSpace', '　')
+    autocmd VimEnter,WinEnter,ColorScheme * call matchadd('ZenkakuSpace', '　')
 augroup END
 
 " ** }}}
@@ -263,6 +282,8 @@ let g:netrw_http_xcmd = '-o'
 " *** }}}
 
 " *** Keymapping *** {{{1
+
+let mapleader=" "
 
 " Wait for slow input of key combination
 set timeout
@@ -371,28 +392,11 @@ noremap <Leader>f :vertical wincmd f<CR>
 nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
 nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 
-" ZenCoding
-let g:user_emmet_leader_key = '<Esc>y'
-let g:user_emmet_expandabbr_key = '<Esc>y<Esc>y'
-
-" Gundo
-nnoremap <Leader>G :GundoToggle<CR>
-
 " *** }}}
 
 " *** Plugins *** {{{1
 
 " ** Recommended: YOU SHOULD USE THESE AND BE IMproved! *** {{{2
-
-NeoBundle 'maxbrunsfeld/vim-yankstack'
-let s:yankstack_bundle = neobundle#get('vim-yankstack')
-function! s:yankstack_bundle.hooks.on_post_source(bundle)
-    call yankstack#setup()
-    nmap Y y$
-endfunction
-
-nmap <C-p> <Plug>yankstack_substitute_older_paste
-nmap <C-n> <Plug>yankstack_substitute_newer_paste
 
 " autocompletes parenthesis, braces and more
 NeoBundle 'kana/vim-smartinput'
@@ -402,22 +406,12 @@ NeoBundle 'kana/vim-smartinput'
 
 " surrounding with braces or quotes with s and S key
 NeoBundle 'tpope/vim-surround'
+nmap s  <Plug>Ysurroundiw
+nmap S  <Plug>YsurroundiW
 
 " open reference manual with K key
 NeoBundle 'thinca/vim-ref'
 let g:ref_perldoc_auto_append_f = 1
-
-if !s:light_mode
-
-" git support
-NeoBundle 'tpope/vim-fugitive', { 'augroup' : 'fugitive' }
-NeoBundle 'mattn/gist-vim', {
-\   'depends' : [
-\       'mattn/webapi-vim',
-\   ],
-\}
-
-end
 
 " show marker on edited lines
 NeoBundle 'airblade/vim-gitgutter'
@@ -428,72 +422,12 @@ map [g :GitGutterPrevHunk<CR>
 " read/write by sudo with `vim sudo:file.txt`
 NeoBundle 'sudo.vim'
 
-if !s:light_mode
-
-" shows syntax error on every save
-NeoBundle 'scrooloose/syntastic'
-let g:syntastic_mode_map = {
-\   'mode': 'active',
-\   'active_filetypes' : [],
-\   'passive_filetypes': ['java']
-\}
-let g:syntastic_error_symbol='E>' " ✗
-let g:syntastic_warning_symbol='W>' " ⚠
-let g:syntastic_always_populate_loc_list=1
-let g:syntastic_ruby_checkers = ['mri', 'rubocop']
-let g:syntastic_perl_checkers = ['perl', 'perlcritic', 'podchecker']
-let g:syntastic_perl_perlcritic_thres = 4
-let g:syntastic_enable_perl_checker = 1
-nmap <Leader>s :SyntasticCheck<CR>
-
-" rich-formatted undo history
-NeoBundle 'sjl/gundo.vim'
-let g:gundo_right = 1
-let g:gundo_close_on_revert = 1
-
-" Run current file by <Leader>r and get result in another buffer
-NeoBundle 'thinca/vim-quickrun', {
-\   'depends' : [
-\      'tyru/open-browser.vim',
-\   ]
-\}
-let g:quickrun_config = {}
-let g:quickrun_config._ = {
-\   'runner' : 'vimproc',
-\   'runner/vimproc/updatetime' : '500',
-\}
-
-let g:quickrun_config.perl = {'command': 'prove'}
-
-end
-
 " Search word with * and # also on Visual Mode
 NeoBundle 'thinca/vim-visualstar'
 
 " Move among buffer, quickfix, loclist, ...so many... and encode/decode.
 " ]e to exchange line, ]n to go to next SCM conflict marker.
 NeoBundle 'tpope/vim-unimpaired'
-
-if !s:light_mode
-
-" Switch between related files.
-NeoBundle 'kana/vim-altr'
-nmap ]r <Plug>(altr-forward)
-nmap [r <Plug>(altr-back)
-
-let s:altr_bundle = neobundle#get('vim-altr')
-function! s:altr_bundle.hooks.on_post_source(bundle)
-    " rails
-    call altr#define('app/models/%.rb', 'spec/models/%_spec.rb', 'spec/factories/%s.rb')
-    call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
-    call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
-    call altr#define('app/mailers/%.rb', 'spec/mailers/%_spec.rb')
-    call altr#define('spec/routing/%_spec.rb', 'config/routes.rb')
-    call altr#define('lib/%.rb', 'spec/lib/%_spec.rb')
-    call altr#define('lib/%.rb', 'spec/%_spec.rb')
-endfunction
-
-end
 
 " Add repeat support to some plugins, like surround.vim
 NeoBundle 'tpope/vim-repeat'
@@ -507,33 +441,6 @@ let g:accelerated_jk_acceleration_table = [10,20,15,15]
 
 NeoBundle 'bling/vim-airline'
 let g:airline_highlighting_cache = 1
-
-if 0
-
-let s:airline_bundle = neobundle#get('vim-airline')
-" patch airline solarized theme, make blue
-let g:airline_theme_patch_func = 'AirlineThemePatch'
-function! AirlineThemePatch(palette)
-    if g:airline_theme == 'solarized'
-        let background  = get(g:, 'airline_solarized_bg', &background)
-        let ansi_colors = get(g:, 'solarized_termcolors', 16) != 256 && &t_Co >= 16 ? 1 : 0
-        let tty         = &t_Co == 8
-
-        let violet  = {'t': ansi_colors ?  13 : (tty ? '5' : 61 ), 'g': '#6c71c4'}
-        let blue    = {'t': ansi_colors ?   4 : (tty ? '4' : 33 ), 'g': '#268bd2'}
-        let cyan    = {'t': ansi_colors ?   6 : (tty ? '6' : 37 ), 'g': '#2aa198'}
-        let green   = {'t': ansi_colors ?   2 : (tty ? '2' : 64 ), 'g': '#859900'}
-        let normal_color = violet
-
-        let a:palette.normal.airline_a[1] = normal_color.g
-        let a:palette.normal.airline_a[3] = normal_color.t
-        let a:palette.normal.airline_z[1] = normal_color.g
-        let a:palette.normal.airline_z[3] = normal_color.t
-    endif
-endfunction
-
-endif
-
 let g:airline_mode_map = {
 \   '__' : '-',
 \   'n'  : 'N',
@@ -563,43 +470,6 @@ nmap <Leader>us :CtrlPMRU<CR>
 nmap <Leader>uq :CtrlPQuickfix<CR>
 nmap <Leader>ub :CtrlPBuffer<CR>
 
-" TODO
-" experimental mappings
-nmap <Esc><C-p> <Leader><C-p>
-nmap <Esc><C-q> <Leader><C-q>
-nmap <Esc><C-u> <Leader><C-u>
-nmap <Esc><C-c> <Leader><C-c>
-nmap <Esc><C-l> <Leader><C-l>
-nmap <Esc><C-t> <Leader><C-t>
-
-if !s:light_mode
-
-NeoBundle 'jasoncodes/ctrlp-modified.vim'
-nmap <Leader><C-m> :CtrlPModified<CR>
-nmap <Leader><C-b> :CtrlPBranch<CR>
-
-NeoBundle 'tacahiroy/ctrlp-funky'
-let g:ctrlp_funky_syntax_highlight = 1
-nmap <Leader><C-f> :CtrlPFunky<CR>
-
-" Indent comments and expressions
-NeoBundle 'godlygeek/tabular'
-vnoremap <Leader>t=  :Tabular /=/<CR>
-vnoremap <Leader>th  :Tabular /=>/<CR>
-vnoremap <Leader>t#  :Tabular /#/<CR>
-vnoremap <Leader>t\| :Tabular /\|/<CR>
-" JavaScript-style
-vnoremap <Leader>t:  :Tabular /:/<CR>
-" YAML-style
-vnoremap <Leader>t;  :Tabular/:\zs/<CR>
-vnoremap <Leader>t,  :Tabular/,\zs/<CR>
-" Vim
-vnoremap <Leader>t"  :Tabular/"/<CR>
-
-vnoremap <Leader>t<Space> :Tabular multiple_spaces<CR>
-
-end " light_mode
-
 " Paste with textobj, use this instead of vi"p
 NeoBundle 'kana/vim-operator-replace', {
 \   'depends' : [
@@ -622,79 +492,9 @@ imap <Esc>/ <Esc><Plug>(caw:prefix)ca
 " Multiple cursors
 NeoBundle 'terryma/vim-multiple-cursors'
 
-" ** }}}
-
-" ** textobj ** {{{2
-
-" select range of text with only two or three keys
-" For example: [ai]w
-" @see http://d.hatena.ne.jp/osyo-manga/20130717/1374069987
-
-NeoBundle 'kana/vim-textobj-user'            " framework for all belows
-if !s:light_mode
-NeoBundle 'kana/vim-textobj-entire'          " [ai]e
-NeoBundle 'kana/vim-textobj-fold'            " [ai]z
-NeoBundle 'kana/vim-textobj-function'        " [ai]f
-end
-NeoBundle 'kana/vim-textobj-indent'          " [ai][iI]
-NeoBundle 'kana/vim-textobj-syntax'          " [ai]sy
-NeoBundle 'kana/vim-textobj-line'            " [ai]l
-
-if !s:light_mode
-
-NeoBundle 'vimtaku/vim-textobj-sigil'        " [ai]g / a: includes index/key/arrow, i: symbol only
-NeoBundle 'vimtaku/vim-textobj-keyvalue'     " [ai][kv]
-NeoBundle 'vimtaku/vim-textobj-doublecolon'  " [ai]:
-NeoBundle 'thinca/vim-textobj-comment'       " [ai]c
-NeoBundle 'deris/vim-textobj-enclosedsyntax' " [ai]q / perl/ruby regex and literal, eruby
-
-NeoBundle 'thinca/vim-textobj-function-javascript'
-NeoBundle 'thinca/vim-textobj-function-perl'
-
-" function: [ai]f / class: [ai]c
-NeoBundle 'bps/vim-textobj-python'
-function! s:MapTextobjPython()
-    omap <silent><buffer> iC <Plug>(textobj-python-class-i)
-    omap <silent><buffer> aC <Plug>(textobj-python-class-a)
-    vmap <silent><buffer> iC <Plug>(textobj-python-class-i)
-    vmap <silent><buffer> aC <Plug>(textobj-python-class-a)
-endfunction
-autocmd VimrcGlobal FileType python call s:MapTextobjPython()
-
-" [ai]u / under_bar or CamelCase
-" Also provides motions: ,[wbe]
-" (default: [ai],[bew])
-NeoBundle 'bkad/CamelCaseMotion'
-omap <silent> iu <Plug>CamelCaseMotion_iw
-xmap <silent> iu <Plug>CamelCaseMotion_iw
-omap <silent> <Plug>disabled_CamelCaseMotion_ib <Plug>CamelCaseMotion_ib
-xmap <silent> <Plug>disabled_CamelCaseMotion_ib <Plug>CamelCaseMotion_ib
-omap <silent> <Plug>disabled_CamelCaseMotion_ie <Plug>CamelCaseMotion_ie
-xmap <silent> <Plug>disabled_CamelCaseMotion_ie <Plug>CamelCaseMotion_ie
-
-end
-
-" ** }}}
-
-" ** Misc ** {{{2
-
-if !s:light_mode
-
-" List or Highlight all todo, fixme, xxx comments
-NeoBundleLazy 'TaskList.vim', { 'autoload' : { 'mappings' : ['<Plug>TaskList'] } }
-map <Leader>tl <Plug>TaskList
-
-end
-
 " extended % key matching
 NeoBundle "tmhedberg/matchit"
 NeoBundle 'tpope/vim-endwise' " supports ruby, vimscript
-
-" :Rename current file on disk
-NeoBundleLazy 'danro/rename.vim', { 'autoload' : { 'commands' : 'Rename' } }
-
-" Bulk renamer
-NeoBundleLazy 'renamer.vim', { 'autoload' : { 'commands' : 'Renamer' } }
 
 " Colorize any parenthesis or brackets
 NeoBundle 'kien/rainbow_parentheses.vim'
@@ -706,24 +506,50 @@ augroup END
 
 " ** }}}
 
+" ** textobj ** {{{2
+
+" select range of text with only two or three keys
+" For example: [ai]w
+" @see http://d.hatena.ne.jp/osyo-manga/20130717/1374069987
+
+NeoBundle 'kana/vim-textobj-user'            " framework for all belows
+NeoBundle 'kana/vim-textobj-fold'            " [ai]z
+NeoBundle 'kana/vim-textobj-function'        " [ai]f
+NeoBundle 'kana/vim-textobj-indent'          " [ai][iI]
+NeoBundle 'kana/vim-textobj-syntax'          " [ai]y
+NeoBundle 'kana/vim-textobj-line'            " [ai]l
+
+" ** }}}
+
+" ** Misc ** {{{2
+
+" :Rename current file on disk
+NeoBundleLazy 'danro/rename.vim', { 'autoload' : { 'commands' : 'Rename' } }
+
+" Bulk renamer
+NeoBundleLazy 'renamer.vim', { 'autoload' : { 'commands' : 'Renamer' } }
+
+" Automatic mkdir on save
+NeoBundle 'travisjeffery/vim-auto-mkdir'
+
+" a.k.a. yankring
+NeoBundle 'maxbrunsfeld/vim-yankstack'
+let s:yankstack_bundle = neobundle#get('vim-yankstack')
+function! s:yankstack_bundle.hooks.on_post_source(bundle)
+    call yankstack#setup()
+    nmap Y y$
+endfunction
+
+nmap <C-p> <Plug>yankstack_substitute_older_paste
+nmap <C-n> <Plug>yankstack_substitute_newer_paste
+
+let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 'x', 'X', 'y', 'Y'] " without s and S, which are mapped to vim-surround
+
+" ** }}}
+
 " ** Color Scheme ** {{{2
 
 NeoBundle 'chriskempson/vim-tomorrow-theme'
-
-if 0
-
-" Too hard to setup not-degraded-mode...
-" (You should setup your term emulator first)
-" So please try it first with termcolors=256, then setup if you like it.
-
-NeoBundle 'altercation/vim-colors-solarized'
-let g:solarized_termcolors=16
-let g:solarized_termtrans=1
-let g:solarized_bold=1
-let g:solarized_underline=1
-let g:solarized_italic=1
-
-endif
 
 " ** }}}
 
@@ -739,185 +565,18 @@ function! s:NeoBundleAutoloadFiletypes(name, filetypes)
     \ }
 endfunction
 
-if !s:light_mode
-
-" ** HTML / CSS / XML ** {{{2
-
-call s:NeoBundleAutoloadFiletypes('htmlcss', ['html', 'css', 'xml', 'htmlcheetah'])
-
-NeoBundleLazy 'othree/html5.vim',       '', 'htmlcss'
-NeoBundleLazy 'hail2u/vim-css3-syntax', '', 'htmlcss'
-" NeoBundleLazy 'skammer/vim-css-color',  '', 'htmlcss' " too heavy
-
-" zencoding
-NeoBundleLazy 'mattn/emmet-vim',        '', 'htmlcss'
-let g:user_emmet_settings = {
-\   'lang': "ja"
-\}
-let g:use_zen_complete_tag = 1
-
-NeoBundleLazy 'sukima/xmledit', '', 'htmlcss'
-" see http://nanasi.jp/articles/vim/xml-plugin.html
-
-" highlight matching tags
-NeoBundleLazy 'Valloric/MatchTagAlways', '', 'htmlcss'
-
-autocmd VimrcGlobal FileType html setlocal matchpairs+=<:>
-
-" haml / sass / scss
-call s:NeoBundleAutoloadFiletypes('hamlsass', ['haml', 'sass', 'scss'])
-NeoBundleLazy 'tpope/vim-haml', '', 'hamlsass'
-let g:syntastic_sass_check_partials=1
-
-" slim
-call s:NeoBundleAutoloadFiletypes('slim', ['slim'])
-NeoBundleLazy 'slim-template/vim-slim', '', 'slim'
-
-" ** }}}
-
-" ** JavaScript ** {{{2
-
-call s:NeoBundleAutoloadFiletypes('javascript', ['javascript', 'json', 'coffee'])
-
-autocmd VimrcGlobal BufNewFile,BufRead *.json setf json
-
-NeoBundleLazy 'jelera/vim-javascript-syntax',         '', 'javascript'
-NeoBundleLazy 'jiangmiao/simple-javascript-indenter', '', 'javascript'
-let g:SimpleJsIndenter_BriefMode = 1 " one indent per any number of parentheses
-let g:vim_json_syntax_conceal = 0
-NeoBundleLazy 'elzr/vim-json', '', 'javascript'
-
-NeoBundleLazy 'kchmck/vim-coffee-script', '', 'javascript'
-
-" NeoBundleLazy 'nono/jquery.vim',                      '', 'javascript' "
-
-" NeoBundleLazy 'mklabs/grunt.vim', '', 'javascript'
-" NeoBundleLazy 'pangloss/vim-javascript', '', 'javascript' " indent, conflicts with lazyloaded vim-javascript-syntax
-
-" syntax conflicts with something...
-" autocmd VimrcGlobal FileType javascript call DelayedExecute('set syntax=jquery')
-
-NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript'
-" Use below instead to use tern.js bundled in vim plugin
-" NeoBundleLazy 'marijnh/tern_for_vim', '', 'javascript', {
-" \   'build' : {
-" \       'windows' : 'npm install',
-" \       'cygwin'  : 'npm install',
-" \       'mac'     : 'npm install',
-" \       'unix'    : 'npm install',
-" \   }
-" \}
-
-let g:tern#command = ['node', $HOME.'/dotfiles/node_modules/.bin/tern']
-" let g:tern#is_show_argument_hints_enabled = 0
-
-function! s:MapTernForVim()
-    command! -buffer TernDefVSplitLocal py tern_lookupDefinition("vsplit")
-    nmap <buffer> <Leader>jf :<C-U>TernDef<CR>
-    nmap <buffer> <Leader>js :<C-U>TernDefSplit<CR>
-    nmap <buffer> <Leader>jv :<C-U>TernDefVSplitLocal<CR>
-    nmap <buffer> <Leader>jt :<C-U>TernDefTab<CR>
-    nmap <buffer> <Leader>jp :<C-U>TernDefPreview<CR>
-    nmap <buffer> <Leader>jt :<C-U>TernType<CR>
-    nmap <buffer> <Leader>jr :<C-U>TernRefs<CR>
-    nmap <buffer> <Leader>jd :<C-U>TernDoc<CR>
-    nmap <buffer> <Leader>jb :<C-U>TernDocBrowse<CR>
-    nmap <buffer> <Leader>jR :<C-U>TernRename<CR>
-endfunction
-autocmd VimrcGlobal FileType javascript call s:MapTernForVim()
-
-" http://wozozo.hatenablog.com/entry/2012/02/08/121504
-map <Leader>FJ !python -m json.tool<CR>
-
-" ** }}}
-
-" ** Ruby ** {{{2
-
-call s:NeoBundleAutoloadFiletypes('ruby', ['ruby'])
-
-NeoBundleLazy 'vim-ruby/vim-ruby',           '', 'ruby'
-" NeoBundleLazy 'ecomba/vim-ruby-refactoring', '', 'ruby'
-" NeoBundleLazy 'tpope/vim-rails',             '', 'ruby'
-NeoBundleLazy 'ruby-matchit',                '', 'ruby'
-NeoBundleLazy 'thoughtbot/vim-rspec',        '', 'ruby' " TODO
-
-" https://github.com/CocoaPods/CocoaPods/wiki/Make-your-text-editor-recognize-the-CocoaPods-files
-autocmd VimrcGlobal BufNewFile,BufRead Podfile,*.podspec setf ruby
-
-" ** }}}
-
-" ** Perl ** {{{2
-
-call s:NeoBundleAutoloadFiletypes('perl', ['perl'])
-
-autocmd VimrcGlobal BufNewFile,BufRead *.t setf perl
-
-" use new perl syntax and indent!
-NeoBundleLazy 'vim-perl/vim-perl', '', 'perl'
-" Enable perl specific rich fold
-let perl_fold=1
-let perl_fold_blocks=1
-" let perl_nofold_packages = 1
-" let perl_include_pod=1
-
-NeoBundleLazy 'c9s/perlomni.vim',       '', 'perl'
-NeoBundleLazy 'mattn/perlvalidate-vim', '', 'perl'
-
-" NeoBundleLazy 'yko/mojo.vim', '', 'perl'
-" let mojo_highlight_data = 1
-
-augroup VimrcGlobal
-    autocmd FileType perl inoremap <buffer> <C-l> $
-    autocmd FileType perl snoremap <buffer> <C-l> $
-augroup END
-
-" vim-ref for perldoc
-cnoreabbrev Pod Ref perldoc
-
-" Refer: Also refer textobj section
-
-" ** }}}
-
-" ** Python ** {{{2
-
-call s:NeoBundleAutoloadFiletypes('python', ['python'])
-
-NeoBundleLazy 'tmhedberg/SimpylFold', '', 'python'
-NeoBundleLazy 'yuroyoro/vim-python',  '', 'python'
-
-" ** }}}
-
-" ** Objective-C / iOS ** {{{
-
-call s:NeoBundleAutoloadFiletypes('objc', ['objc'])
-
-NeoBundleLazy 'eraserhd/vim-ios',       '', 'objc'
-NeoBundleLazy 'msanders/cocoa.vim',     '', 'objc'
-
-" ** }}}
-
-" ** Markdown ** {{{
-
-autocmd VimrcGlobal BufNewFile,BufRead *.md setf markdown
-
-" ** }}}
-
-end " light_mode
-
-" ** Shell ** {{{
-
+" Shell
 call s:NeoBundleAutoloadFiletypes('sh', ['sh'])
 call s:NeoBundleAutoloadFiletypes('fish', ['fish'])
 NeoBundleLazy 'sh.vim', '', 'sh'
 NeoBundleLazy 'dag/vim-fish', '', 'fish'
 
-" ** }}}
-
-" ** VimScript ** {{{
-
+" VimScript
 autocmd VimrcGlobal FileType vim,help set keywordprg=":help"
 
-" ** }}}
+" http://hail2u.net/blog/software/only-one-line-life-changing-vimrc-setting.html
+autocmd VimrcGlobal FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') path+=;/
+autocmd VimrcGlobal FileType diff setlocal includeexpr=substitute(v:fname,'^[ab]\\/','','')
 
 " *** }}}
 
@@ -935,29 +594,6 @@ command! FourIndent set softtabstop=4 shiftwidth=4 | :IndentGuidesToggle | :Inde
 " *** }}}
 
 " *** Utility Function *** {{{1
-
-" ** DelayedExecute ** {{{2
-
-" Promising the order of autocmd executions, e.g. set hl after main syntax
-function! DelayedExecute(command)
-    if !exists('s:delayed_execute_queue')
-        let s:delayed_execute_queue = []
-        augroup DelayedExecutor
-            autocmd!
-            autocmd CursorHold,CursorHoldI,CursorMoved,CursorMovedI * call RunDelayedExecute()
-        augroup END
-    endif
-    call add(s:delayed_execute_queue, a:command)
-endfunction
-function! RunDelayedExecute()
-    autocmd! DelayedExecutor
-    for cmd in s:delayed_execute_queue
-        execute cmd
-    endfor
-    unlet cmd s:delayed_execute_queue
-endfunction
-
-" ** }}}
 
 " ** FoldRenewer ** {{{2
 
@@ -1067,339 +703,14 @@ endfunction
 
 " *** Bleeding Edge *** {{{1
 
-if !s:light_mode
-
-" Beta: These are currently testing/starting-to-use!
-
-NeoBundle 'thinca/vim-scouter'
-
-NeoBundle 'tyru/operator-camelize.vim', {
-\   'depends' : [
-\       'kana/vim-operator-user',
-\   ]
-\}
-map <Leader>L <Plug>(operator-camelize-toggle)
-" map <Leader>_L <Plug>(operator-upper-camelize)
-" let g:operator_camelize_word_case = "lower"
-
-" NeoBundle 'chikatoike/activefix.vim'
-
-let g:gist_post_private = 1
-let g:gist_open_browser_after_post = 1
-
-NeoBundleLazy 'mbbill/fencview', {
-\   'autoload' : {
-\       'commands' : ['FencAutoDetect', 'FencManualEncoding', 'FencView']
-\   }
-\}
-
-command! Uall :bufdo :update
-
-" NeoBundleLazy 'joonty/vdebug'
-NeoBundleLazy 'ypresto/vdebug', { 'directory' : 'my_vdebug' }
-
-if !exists("g:vdebug_options")
-    let g:vdebug_options = {}
-endif
-" let g:vdebug_options['exec_perl']   = $HOME.'/dotfiles/bin/komodo-perl.sh %s'
-" let g:vdebug_options['exec_python'] = $HOME.'/dotfiles/bin/komodo-python.sh %s'
-" let g:vdebug_options['exec_ruby']   = $HOME.'/dotfiles/bin/komodo-ruby.sh %s'
-let g:vdebug_options['command_perl']   = ':call OpenDebugTerminal("'.$HOME.'/dotfiles/bin/komodo-perl.sh %s")'
-let g:vdebug_options['command_python'] = ':call OpenDebugTerminal("'.$HOME.'/dotfiles/bin/komodo-python.sh %s")'
-let g:vdebug_options['command_ruby']   = ':call OpenDebugTerminal("'.$HOME.'/dotfiles/bin/komodo-ruby.sh %s")'
-
-let s:debug_terminal = 0
-function! OpenDebugTerminal(cmd)
-    if !has('gui_running') && $TMUX
-        call VimuxRunCommand(a:cmd)
-    else
-        if !s:debug_terminal
-            let s:debug_terminal = conque_term#open(a:cmd)
-        else
-            call s:debug_terminal.writeln(a:cmd)
-        endif
-    endif
-endfunction
-
-
-NeoBundleLazy 'tell-k/vim-browsereload-mac'
-NeoBundleLazy 'lordm/vim-browser-reload-linux'
-if has('mac')
-    NeoBundleSource vim-browsereload-mac
-elseif has('linux')
-    NeoBundleSource vim-browser-reload-linux
-endif
-
-
-NeoBundle 'AndrewRadev/splitjoin.vim' " gS and gJ
-
-NeoBundleLazy 'reinh/vim-makegreen', '', 'python'
-NeoBundleLazy 'python-rope/ropevim', '', 'python'
-
-let g:quickrun_config.markdown = {
-    \ 'type': 'markdown/pandoc',
-    \ 'cmdopt': '-s',
-    \ 'outputter': 'browser'
-    \ }
-
-autocmd VimrcGlobal FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd VimrcGlobal FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-
-" NeoBundle 't9md/vim-surround_custom_mapping'
-
-" http://hail2u.net/blog/software/only-one-line-life-changing-vimrc-setting.html
-autocmd VimrcGlobal FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') path+=;/
-autocmd VimrcGlobal FileType diff setlocal includeexpr=substitute(v:fname,'^[ab]\\/','','')
-
-" [ai], : argument than parameter
-NeoBundle 'sgur/vim-textobj-parameter'
-
-
-NeoBundleLazy 'mattn/mkdpreview-vim', {
-\   'autoload' : {
-\       'filetypes' : ['markdown']
-\   }
-\}
-
-" " highlight matching open and close parentheses pair
-" let g:loaded_matchparen = 1
-" NeoBundle 'haruyama/vim-matchopen'
-" above is good but too slow on large file...
-
-" Reflection
-" @see http://mattn.kaoriya.net/software/vim/20110728094347.htm
-
-function! GetSidForScript(script_name)
-    silent! redir => scriptname_text
-    silent! scriptnames
-    silent! redir END
-    return matchstr(matchstr(split(scriptname_text, '\n'), '\W'.a:script_name), '\d\+')
-endfunction
-
-function! FunctionForSID(sid, func_name)
-    return function('<SNR>'.a:sid.'_'.a:func_name)
-endfunction
-
-
-NeoBundle 'vim-scripts/argtextobj.vim'
-
-NeoBundle 'alpaca-tc/alpaca_powertabline', 'align_center_or_not'
-let g:alpaca_powertabline_align_center = 0
-let g:alpaca_powertabline_sep1 = ' > '
-let g:alpaca_powertabline_sep2 = ': '
-
-" http://d.hatena.ne.jp/joker1007/20111208/1323324569
-let g:quickrun_config = {}
-let g:quickrun_config._ = {'runner' : 'vimproc'}
-let g:quickrun_config['rspec/bundle/cwd'] = {
-  \ 'type': 'rspec/bundle/cwd',
-  \ 'command': 'rspec',
-  \ 'exec': 'bundle exec bin/rspec %s'
-  \}
-let g:quickrun_config['rspec/bundle'] = {
-  \ 'type': 'rspec/bundle',
-  \ 'command': 'rspec',
-  \ 'exec': 'bundle exec %c %s'
-  \}
-let g:quickrun_config['rspec/normal'] = {
-  \ 'type': 'rspec/normal',
-  \ 'command': 'rspec',
-  \ 'exec': '%c %s'
-  \}
-function! RSpecQuickrun()
-  let b:quickrun_config = {'type' : 'rspec/bundle'}
-endfunction
-autocmd BufReadPost *_spec.rb call RSpecQuickrun()
-
-NeoBundleLazy 'alpaca-tc/alpaca_tags'
-let g:alpaca_tags#config = {
-            \ '_' : '-R --sort=yes --languages=+Ruby',
-            \ }
-if executable("ctags")
-    NeoBundleSource 'alpaca-tc/alpaca_tags'
-    autocmd VimrcGlobal BufReadPost * call DelayedExecute('normal :AlpacaTagsSet')
-endif
-
-if 0
-NeoBundle 'Valloric/YouCompleteMe', {
-    \   'build' : {
-    \       'windows' : 'echo "Sorry, cannot compile YouCompleteMe binary file in Windows."',
-    \       'cygwin'  : 'git submodule update --init --recursive && ./install.sh --clang-completer',
-    \       'mac'     : 'git submodule update --init --recursive && ./install.sh --clang-completer',
-    \       'unix'    : 'git submodule update --init --recursive && ./install.sh --clang-completer',
-    \      },
-    \   }
-end
-
-" Track the engine.
-NeoBundle 'SirVer/ultisnips'
-
-" Snippets are separated from the engine. Add this if you want them:
-NeoBundle 'honza/vim-snippets'
-
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<C-j>"
-let g:UltiSnipsJumpForwardTrigger="<Esc>f"
-let g:UltiSnipsJumpBackwardTrigger="<Esc>b"
-
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
-
-autocmd VimrcGlobal BufNewFile,BufRead *.gradle setf groovy
-
-" bash-like search and replacement
-NeoBundle 'tpope/vim-abolish'
-
-end " light_mode
-
-" HERE
-
-" ** vimrc reading @ 2012/11/03 {{{
-    " https://github.com/cpfaff/vim-my-setup/blob/master/vimrc
-    set lazyredraw
-    set spelllang=en
-    " nnoremap U <C-r>
-
-   " Small helper
-    function! CmdLine(str)
-       exe "menu Foo.Bar :" . a:str
-       emenu Foo.Bar
-       unmenu Foo
-    endfunction
-   "
-
-" ** }}}
-
-" ** vimrc reading @ 2012/11/10 {{{
-
-" https://github.com/kazuph/dotfiles/blob/master/_vimrc
-" http://saihoooooooo.hatenablog.com/entry/2013/07/18/013400
-
-if executable("ag")
-    let &grepprg='ag --search-binary --nogroup -S $* /dev/null'
-    set grepformat=%f:%l:%m
-elseif executable("ack")
-    let &grepprg='ack $* /dev/null'
-    set grepformat=%f:%l:%m
-endif
-
-set autoread
-" set modelines=0
-" set display=uhex " shows unprintable chars as hex
-
-" below conflict with repeatation
-" nnoremap 0 ^
-" nnoremap 9 $
-
-" ** }}}
-
-" ** vimrc reading @ 2012/11/17 {{{
-
-" https://github.com/yomi322/config/blob/master/dot.vimrc
-
-NeoBundle 'rhysd/vim-textobj-ruby' " [ai]r
-" g:textobj_ruby_more_mappings = 1 " ro rl rc rd rr
-
-" ** }}}
-
-" ** vimrc reading @ 2012/11/24 {{{
-
-" https://github.com/tsukkee/config/blob/master/vimrc
-
-" nmap s  <Plug>Ysurround
-" nmap S  <Plug>YSurround
-" nmap ss <Plug>Yssurround
-" nmap Ss <Plug>YSsurround
-" nmap SS <Plug>YSsurround
-
-nmap s  <Plug>Ysurroundiw
-nmap S  <Plug>YsurroundiW
-
-let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 'x', 'X', 'y', 'Y'] " without s and S
-
-" ** }}}
-
-" ** vimrc reading @ 2012/03/23 {{{
-
-" buggy on relative paths?
-
-" @see http://vim-users.jp/2011/02/hack202/
-" 保存時に対象ディレクトリが存在しなければ作成する(作成有無は確認できる)
-augroup AutoMkdir
-  autocmd!
-  autocmd BufWritePre * call s:auto_mkdir(expand('<afile>:p:h'), v:cmdbang)
-  function! s:auto_mkdir(dir, force)
-    if !isdirectory(a:dir) && (a:force ||
-          \    input(printf('"%s" does not exist. Create? [y/N]', a:dir)) =~? '^y\%[es]$')
-      call mkdir(a:dir, 'p')
-    endif
-  endfunction
-augroup END
-
-" タブページの位置を移動
-nnoremap <silent> <S-Left>    :<C-u>execute 'tabmove' tabpagenr() - 2<CR>
-nnoremap <silent> <S-Right>   :<C-u>execute 'tabmove' tabpagenr()<CR>
-
-" http://nanabit.net/blog/2007/11/01/vim-fullscreen/
-
-" ** vimrc reading @ 2012/04/06 {{{
-
-set nojoinspaces
-
-" ** }}}
-
-" ** vimrc reading @ 2012/04/27 {{{
-
-" TODO
-augroup VimrcGlobal
-    autocmd FileType java       set foldmarker={,} foldmethod=marker
-    autocmd FileType cpp        set foldmarker={,} foldmethod=marker
-    autocmd FileType c          set foldmarker={,} foldmethod=marker
-    autocmd FileType java       set omnifunc=javaapi#complete
-    autocmd FileType cpp        set omnifunc=cppapi#complete
-    autocmd FileType c          set omnifunc=cppapi#complete
-    "autocmd CompleteDone *.java call javaapi#showRef()
-
-    " use tern instead
-    " autocmd FileType javascript set omnifunc=jscomplete#CompleteJS
-    " let g:jscomplete_use = ['dom', 'webkit']
-
-    if has("balloon_eval") && has("balloon_multiline")
-    autocmd FileType java  set ballooneval bexpr=javaapi#balloon()
-    autocmd FileType cpp   set ballooneval bexpr=cppapi#balloon()
-    autocmd FileType c     set ballooneval bexpr=cppapi#balloon()
-    autocmd FileType h     set ballooneval bexpr=cppapi#balloon()
-    endif
-augroup END
-
-" 今開いているウィンドウを新しいタブで開きなおす
-command! OpenNewTab  :call OpenNewTab()
-function! OpenNewTab()
-  let l:f = expand("%:p")
-  if winnr('$') != 1 || tabpagenr('$') != 1
-    execute ":q"
-    execute ":tabnew ".l:f
-  endif
-endfunction
-
-" ** }}}
-
-" ** vimrc reading @ 2013/10/27 {{{
-
-" Complement command in command-line like zsh
-cnoremap <C-P> <UP>
-cnoremap <C-N> <Down>
+if 0 " Remove this if unnecessary
 
 " Enable blocked I in non-visual-block mode
 NeoBundle 'kana/vim-niceblock'
 xmap I  <Plug>(niceblock-I)
 xmap A  <Plug>(niceblock-A)
 
-command! UnwatchBuffer setlocal buftype=nofile nobuflisted noswapfile bufhidden=hide
-
-" ** }}}
-
-" vimrc reading HERE
+end
 
 " *** }}}
 
@@ -1425,7 +736,6 @@ endif
 
 call neobundle#end()
 
-" colorscheme solarized
 colorscheme tomorrow-night-bright
 set background=light " by design of tomorrow theme.
 
@@ -1437,7 +747,5 @@ syntax on " for os x
 " *** }}}
 
 set secure
-
-" call vimproc#popen3("")
 
 " vim:set foldmethod=marker:
