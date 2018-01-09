@@ -378,58 +378,6 @@ let g:user_emmet_expandabbr_key = '<Esc>y<Esc>y'
 " Gundo
 nnoremap <Leader>G :GundoToggle<CR>
 
-
-" ** unite ** {{{2
-
-nnoremap <Leader>u: :<C-u>Unite<Space>
-nmap <Leader>ub <Leader>u:buffer<CR>
-nmap <Leader>uf :UniteWithBufferDir -buffer-name=files file file/new<CR>
-nmap <Leader>ur <Leader>u:-buffer-name=register register<CR>
-nmap <Leader>us <Leader>u:file_mru<CR>
-nmap <Leader>ua :Unite buffer file_mru bookmark<CR>
-nmap <Leader>uc <Leader>u:command<CR>
-nmap <Leader>um <Leader>u:mark<CR>
-nmap <Leader>uo <Leader>u:outline<CR>
-nmap <Leader>uz <Leader>u:outline:folding<CR>
-nmap <Leader>uC <Leader>u:history/command<CR>
-nmap <Leader>ut <Leader>u:tab<CR>
-nmap <Leader>up <Leader>u:git_cached git_untracked<CR>
-nmap <Leader>ug <Leader>u:git_modified git_untracked<CR>
-nmap <Leader>uG <Leader>u:giti<CR>
-nmap <Leader>uS <Leader>u:session<CR>
-nmap <Leader>uh <Leader>u:help<CR>
-nmap <Leader>uu <Leader>u:source<CR>
-nmap <Leader>udp <Leader>u:ref/perldoc<CR>
-nmap <Leader>udr <Leader>u:ref/refe<CR>
-nnoremap <silent> <Leader>u<space> :<C-u>UniteResume<CR>
-
-augroup VimrcGlobal
-    autocmd FileType unite nnoremap <silent><buffer><expr> <C-j> unite#do_action('split')
-    autocmd FileType unite inoremap <silent><buffer><expr> <C-j> unite#do_action('split')
-    autocmd FileType unite nnoremap <silent><buffer><expr> <C-l> unite#do_action('vsplit')
-    autocmd FileType unite inoremap <silent><buffer><expr> <C-l> unite#do_action('vsplit')
-    autocmd FileType unite nmap <silent> <buffer> <ESC><ESC> q
-    autocmd FileType unite imap <silent> <buffer> <ESC><ESC> <ESC>q
-    autocmd FileType unite call UnmapAltKeys()
-augroup END
-
-function! UnmapAltKeys()
-    " almost for unite to avoid Alt keys does not fire normal <Esc>
-    " noremap <Esc> to avoid <Esc>* mappings fired
-    inoremap <buffer> <silent> <Plug>(esc) <Esc>
-    imap <buffer> <Esc>t <Plug>(esc)t
-    imap <buffer> <Esc>t <Plug>(esc)t
-endfunction
-
-" FIXME
-command! -nargs=? SQ call UniteSessionSaveAndQAll(<args>)
-function! UniteSessionSaveAndQAll(session)
-    execute "UniteSessionSave " + a:session
-endfunction
-command! -nargs=? SL UniteSessionLoad <args>
-
-" ** }}}
-
 " *** }}}
 
 " *** Plugins *** {{{1
@@ -610,9 +558,10 @@ nmap <Leader><C-u> :CtrlPMRU<CR>
 nmap <Leader><C-c> :CtrlPChangeAll<CR>
 nmap <Leader><C-l> :CtrlPLine<CR>
 nmap <Leader><C-t> :CtrlPTag<CR>
-" for unite keymap compatibility
+" for unite keymap (my own) compatibility
 nmap <Leader>us :CtrlPMRU<CR>
 nmap <Leader>uq :CtrlPQuickfix<CR>
+nmap <Leader>ub :CtrlPBuffer<CR>
 
 " TODO
 " experimental mappings
@@ -672,36 +621,6 @@ imap <Esc>/ <Esc><Plug>(caw:prefix)ca
 
 " Multiple cursors
 NeoBundle 'terryma/vim-multiple-cursors'
-
-" ** }}}
-
-" ** unite ** {{{2
-
-if !s:light_mode
-
-NeoBundle 'Shougo/unite.vim', {
-\   'autoload' : {
-\       'commands' : ['Unite', 'UniteSessionLoad', 'UniteSessionSave']
-\   }
-\}
-let g:unite_enable_start_insert=1
-let g:unite_split_rule="botright"
-let g:unite_winheight="10"
-
-let s:unite_bundle = neobundle#get('unite.vim')
-function! s:unite_bundle.hooks.on_post_source(bundle)
-    call unite#custom#source('outline,outline:folding', 'sorters', 'sorter_reverse')
-endfunction
-
-NeoBundle 'kmnk/vim-unite-giti.git'
-" NeoBundle 'Shougo/unite-session'
-" let g:unite_source_session_options = &sessionoptions
-" NeoBundleLazy 'tacroe/unite-mark',    { 'autoload' : { 'unite_sources' : ['mark'] } }
-NeoBundleLazy 'Shougo/unite-outline', { 'autoload' : { 'unite_sources' : ['outline', 'outline:folding'] } }
-NeoBundleLazy 'taka84u9/unite-git',   { 'autoload' : { 'unite_sources' : ['git_untracked', 'git_cached', 'git_modified'] } }
-" NeoBundleLazy 'tsukkee/unite-help',   { 'autoload' : { 'unite_sources' : ['help'] } }
-
-end
 
 " ** }}}
 
@@ -954,7 +873,6 @@ augroup END
 
 " vim-ref for perldoc
 cnoreabbrev Pod Ref perldoc
-command! Upod :Unite ref/perldoc
 
 " Refer: Also refer textobj section
 
@@ -1227,7 +1145,6 @@ let g:quickrun_config.markdown = {
 autocmd VimrcGlobal FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd VimrcGlobal FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 
-NeoBundle 'thinca/vim-unite-history'
 " NeoBundle 't9md/vim-surround_custom_mapping'
 
 " http://hail2u.net/blog/software/only-one-line-life-changing-vimrc-setting.html
@@ -1270,10 +1187,6 @@ NeoBundle 'alpaca-tc/alpaca_powertabline', 'align_center_or_not'
 let g:alpaca_powertabline_align_center = 0
 let g:alpaca_powertabline_sep1 = ' > '
 let g:alpaca_powertabline_sep2 = ': '
-
-" TODO
-NeoBundle 'koron/codic-vim'
-NeoBundle 'rhysd/unite-codic.vim'
 
 " http://d.hatena.ne.jp/joker1007/20111208/1323324569
 let g:quickrun_config = {}
@@ -1432,16 +1345,6 @@ nnoremap <silent> <S-Right>   :<C-u>execute 'tabmove' tabpagenr()<CR>
 " ** vimrc reading @ 2012/04/06 {{{
 
 set nojoinspaces
-
-
-" grepソース
-" let g:unite_source_grep_default_opts = '-Hn --include="*.vim" --include="*.txt" --include="*.php" --include="*.xml" --include="*.mkd" --include="*.hs" --include="*.js" --include="*.log" --include="*.sql" --include="*.coffee"'
-let g:unite_source_grep_command = "ag"
-let g:unite_source_grep_recursive_opt = ""
-let g:unite_source_grep_default_opts = "--nogroup --nocolor"
-
-let g:unite_source_grep_max_candidates = 100
-" let g:unite_source_session_enable_auto_save = 1     " セッション保存
 
 " ** }}}
 
