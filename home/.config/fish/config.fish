@@ -1,5 +1,10 @@
 set -x DOTFILES_PATH "$HOME/.homesick/repos/dotfiles"
 
+set -x PATH $HOME/.anyenv/bin $PATH
+eval (anyenv init - fish | source)
+
+eval (hub alias -s fish | source)
+
 source "$HOME/.homesick/repos/homeshick/homeshick.fish"
 
 source "$DOTFILES_PATH/aliases.sh"
