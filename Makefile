@@ -84,6 +84,8 @@ cleanlinks:
 
 install_anyenv:
 	git clone https://github.com/riywo/anyenv ~/.anyenv
+	mkdir -p $(anyenv root)/plugins
+	git clone https://github.com/znz/anyenv-update.git $(anyenv root)/plugins/anyenv-update
 
 install_pyenv_virtualenv:
 	git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.anyenv/envs/pyenv/plugins/pyenv-virtualenv
