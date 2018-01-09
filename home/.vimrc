@@ -39,10 +39,7 @@ let mapleader=" "
 augroup VimrcGlobal
     autocmd!
     " reload when writing .vimrc
-    autocmd BufWritePost $MYVIMRC,$HOME/dotfiles/.vimrc source $MYVIMRC |
-                \ if (has('gui_running') && filereadable($MYGVIMRC)) | source $MYGVIMRC
-    " TODO: should :colorscheme manually and fire ColorScheme autocmd
-    autocmd BufWritePost $MYGVIMRC,$HOME/dotfiles/.gvimrc if has('gui_running') | source $MYGVIMRC
+    autocmd BufWritePost $MYVIMRC,$HOME/dotfiles/.vimrc source $MYVIMRC
 augroup END
 " *** }}}
 
@@ -202,11 +199,11 @@ set listchars=tab:»-,trail:\ ,extends:»,precedes:«,nbsp:%
 function! s:HighlightSetup()
     " Change highlight color of current line
     highlight clear CursorLine
-    highlight CursorLine ctermbg=black guibg=black
+    highlight CursorLine ctermbg=black
     highlight SignColumn ctermfg=white ctermbg=black cterm=none
 
-    highlight SpecialKey   ctermbg=black      guibg=black
-    highlight ZenkakuSpace ctermbg=darkyellow guibg=darkyellow
+    highlight SpecialKey   ctermbg=black
+    highlight ZenkakuSpace ctermbg=darkyellow
 endfunction
 
 augroup VimrcGlobal
@@ -267,19 +264,13 @@ let g:netrw_http_xcmd = '-o'
 
 " *** Keymapping *** {{{1
 
-if has('gui_running')
-    set notimeout  " to avoid Esc+Key waiting bug
-    set nottimeout " blah, no effect on gui...
-    " below lines are problematic on MacVim with Alt+Key physically mapped to Esc+Key
-else
-    " Wait for slow input of key combination
-    set timeout
-    set timeoutlen=1000
-    " Activate alt key power on terminal,
-    " wait [ttimeoutlen]ms for following keys after <Esc> for Alt-* keys
-    set ttimeout
-    set ttimeoutlen=150
-endif
+" Wait for slow input of key combination
+set timeout
+set timeoutlen=1000
+" Activate alt key power on terminal,
+" wait [ttimeoutlen]ms for following keys after <Esc> for Alt-* keys
+set ttimeout
+set ttimeoutlen=150
 
 " Fast saving
 noremap ZJ :update<CR>
@@ -382,12 +373,7 @@ nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 
 " ZenCoding
 let g:user_emmet_leader_key = '<Esc>y'
-if has('gui_running')
-    " Workaround for gui meta
-    let g:user_emmet_expandabbr_key = '<M-y><M-y>'
-else
-    let g:user_emmet_expandabbr_key = '<Esc>y<Esc>y'
-endif
+let g:user_emmet_expandabbr_key = '<Esc>y<Esc>y'
 
 " Gundo
 nnoremap <Leader>G :GundoToggle<CR>
@@ -613,10 +599,6 @@ let g:airline_mode_map = {
 \   'S'  : 'S',
 \   '' : 'S',
 \}
-
-if has('gui_running') && has('gui_macvim')
-    let g:airline_powerline_fonts = 1
-endif
 
 " Fast file selector
 NeoBundle 'kien/ctrlp.vim'
@@ -1255,12 +1237,6 @@ autocmd VimrcGlobal FileType diff setlocal includeexpr=substitute(v:fname,'^[ab]
 " [ai], : argument than parameter
 NeoBundle 'sgur/vim-textobj-parameter'
 
-" let g:indent_guides_auto_colors = 0
-" autocmd VimrcGlobal VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
-" autocmd VimrcGlobal VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
-
-
-NeoBundle 'kana/vim-fakeclip' " TODO
 
 NeoBundleLazy 'mattn/mkdpreview-vim', {
 \   'autoload' : {
@@ -1430,22 +1406,6 @@ let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 'x', 'X', 'y', 'Y'] " without s
 
 " ** }}}
 
-" ** vimrc reading @ 2012/12/15 {{{
-
-" set ambiwidth=double
-
-if has('gui_running')
-    "# yankとclipboardを同期する
-    set clipboard+=unnamed
-    " not work corect
-    " set iminsert
-    set imdisable
-else
-    let g:fakeclip_provide_clipboard_key_mappings = 1
-endif
-
-" ** }}}
-
 " ** vimrc reading @ 2012/03/23 {{{
 
 " buggy on relative paths?
@@ -1468,8 +1428,6 @@ nnoremap <silent> <S-Left>    :<C-u>execute 'tabmove' tabpagenr() - 2<CR>
 nnoremap <silent> <S-Right>   :<C-u>execute 'tabmove' tabpagenr()<CR>
 
 " http://nanabit.net/blog/2007/11/01/vim-fullscreen/
-
-set winaltkeys=no
 
 " ** vimrc reading @ 2012/04/06 {{{
 
@@ -1551,56 +1509,6 @@ command! CurHl :echo
     \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"
 
 NeoBundleLazy 'mattn/benchvimrc-vim'
-
-" *** }}}
-
-" *** GUI Specific *** {{{1
-
-NeoBundleLazy 'thinca/vim-fontzoom'
-
-if has('gui_running')
-    if has('gui_macvim')
-        set macmeta " Use alt as meta on MacVim like on terminal
-        set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h12
-        " set guifontwide=
-        set transparency=5
-        set fuoptions=maxvert,maxhorz
-        NeoBundleSource 'thinca/vim-fontzoom'
-    elseif has('gui_gtk2')
-        set guioptions-=m " to avoid menu accelerator being bound
-        set guifont="DejaVu Sans Mono 10"
-        " set guifontwide=
-        " FIXME: no prompt text like "swp exists" shown on macvim when use script like UniteSession
-        set guioptions+=c " no dialog
-    endif
-    set guicursor=a:block,a:blinkon0,i:ver10
-    set guioptions-=T " no toolbar
-endif
-
-" ** Meta+Key to ESC and Key Mapping ** {{{2
-
-" Fix meta-keys to MAKE SURE to generate <Esc>a .. <Esc>z
-" This is almost for gvim which does not translate meta to esc
-" refer: http://vim.wikia.com/wiki/Fix_meta-keys_that_break_out_of_Insert_mode
-" refer: http://blog.remora.cx/2012/07/using-alt-as-meta-in-vim.html
-let nr=0x21 " ASCII exclamation
-while nr <= 0x7E " ASCII tilde
-    let c = nr2char(nr)
-    if c == '|' | let nr += 1 | continue | endif
-    exec printf('map <M-%s> <Esc>%s', tolower(c), tolower(c))
-    exec printf('map! <M-%s> <Esc>%s', tolower(c), tolower(c))
-    if (0x41 <= nr && nr <= 0x5A) || (0x61 <= nr && nr <= 0x7A)
-        " ascii; uppercases are required for at least on linux
-        exec printf('map <M-S-%s> <Esc>%s', tolower(c), toupper(c))
-        exec printf('map! <M-S-%s> <Esc>%s', tolower(c), toupper(c))
-    endif
-    let nr += 1
-endwhile
-" and space, keep from <M-<Space>> :)
-map <M-Space> <Esc><Space>
-map! <M-Space> <Esc><Space>
-
-" ** }}}
 
 " *** }}}
 
