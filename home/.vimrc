@@ -267,6 +267,11 @@ endif
 
 " ** Misc ** {{{2
 
+" NOTE: Improves start up performance..!
+" shell with slow start up time causes a performance issue around vim's system() func.
+" https://github.com/dag/vim-fish/issues/34#issuecomment-356347752
+set shell=sh
+
 set isfname-=%,$,@,= " filename characters for gf
 let &fillchars='vert: ,fold: ,diff: '
 set shortmess+=I      " Surpress intro message when starting vim
@@ -419,6 +424,13 @@ map [g :GitGutterPrevHunk<CR>
 
 " read/write by sudo with `vim sudo:file.txt`
 NeoBundle 'sudo.vim'
+
+" shows syntax error on every save
+NeoBundle 'scrooloose/syntastic'
+let g:syntastic_error_symbol='E>'
+let g:syntastic_warning_symbol='W>'
+let g:syntastic_always_populate_loc_list=1
+nmap <Leader>s :SyntasticCheck<CR>
 
 " Search word with * and # also on Visual Mode
 NeoBundle 'thinca/vim-visualstar'
