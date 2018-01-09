@@ -444,7 +444,6 @@ sed-inplace () {
     done
 }
 
-alias docker-compose-dev='docker-compose -f docker-compose.yml -f docker-compose-dev.yml'
 docker-image-prune () {
   docker rmi $(docker images | awk '/<none>/{print $3}')
 }
