@@ -225,10 +225,8 @@ if exists("+colorcolumn")
 endif
 
 function! s:HighlightSetup()
-    highlight SignColumn ctermfg=white ctermbg=black cterm=none
-
-    highlight SpecialKey   ctermbg=black
-    highlight ZenkakuSpace ctermbg=darkyellow
+    highlight SpecialKey   ctermbg=darkyellow guibg=darkyellow
+    highlight ZenkakuSpace ctermbg=darkyellow guibg=darkyellow
 endfunction
 
 augroup VimrcGlobal
@@ -552,12 +550,6 @@ endif
 
 " ** }}}
 
-" ** Color Scheme ** {{{2
-
-NeoBundle 'chriskempson/vim-tomorrow-theme'
-
-" ** }}}
-
 " *** }}}
 
 " *** Filetypes *** {{{1
@@ -739,10 +731,13 @@ if filereadable(expand('~/.vimlocal/.vimrc'))
 endif
 " *** }}}
 
+NeoBundle 'joshdick/onedark.vim'
+
 call neobundle#end()
 
-colorscheme tomorrow-night-bright
-set background=light " by design of tomorrow theme.
+colorscheme onedark
+set background=dark
+set termguicolors
 
 " *** Enable Filetype Plugins *** {{{1
 " for neobundle, these are disabled in start up section
