@@ -210,9 +210,11 @@ function! s:HighlightSetup()
 endfunction
 
 augroup VimrcGlobal
-    " Highlight current line only on current window
-    autocmd WinLeave * set nocursorline
-    autocmd WinEnter,BufRead * set cursorline
+    if !s:light_mode
+        " Highlight current line only on current window
+        autocmd WinLeave * set nocursorline
+        autocmd WinEnter,BufRead * set cursorline
+    end
 
     " activates custom highlight settings
     autocmd VimEnter,WinEnter,ColorScheme * call s:HighlightSetup()
