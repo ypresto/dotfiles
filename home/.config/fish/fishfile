@@ -1,3 +1,7 @@
+fisherman/await
+fisherman/fzf
+fisherman/get
 fisherman/getopts
-oh-my-fish/plugin-peco
+fisherman/last_job_id
+jonathye/push-line.fish
 fisherman/z

@@ -534,6 +534,8 @@ NeoBundle 'kana/vim-textobj-line'            " [ai]l
 
 " ** Misc ** {{{2
 
+NeoBundle 'editorconfig/editorconfig-vim'
+
 " :Rename current file on disk
 NeoBundleLazy 'danro/rename.vim', { 'autoload' : { 'commands' : 'Rename' } }
 
