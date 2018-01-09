@@ -39,7 +39,7 @@ let mapleader=" "
 augroup VimrcGlobal
     autocmd!
     " reload when writing .vimrc
-    autocmd BufWritePost $MYVIMRC,$HOME/dotfiles/.vimrc source $MYVIMRC
+    autocmd BufWritePost $MYVIMRC,$DOTFILES_PATH/home/.vimrc source $MYVIMRC
 augroup END
 " *** }}}
 
