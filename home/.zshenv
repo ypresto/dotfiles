@@ -1,4 +1,5 @@
 export DOTFILES_DIR="$HOME/.homesick/repos/dotfiles"
+export DOTFILES_PATH="$DOTFILES_DIR"
 
 # NOTE: OS X precedes PATHs like /usr/bin in /etc/profile.
 # Skip for login shell here and call later in .zprofile .

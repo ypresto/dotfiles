@@ -1,4 +1,4 @@
-set DOTFILES_PATH "$HOME/.homesick/repos/dotfiles"
+set -x DOTFILES_PATH "$HOME/.homesick/repos/dotfiles"
 
 source "$HOME/.homesick/repos/homeshick/homeshick.fish"
 
