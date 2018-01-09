@@ -486,8 +486,9 @@ imap <Esc><Leader> <Plug>vim_completes_me_forward
 
 " Toggle comment
 NeoBundle 'tyru/caw.vim'
-nmap <Esc>/ <Plug>(caw:prefix)c
-imap <Esc>/ <Esc><Plug>(caw:prefix)ca
+nmap <Esc>/ gcc
+xmap <Esc>/ gccgv
+imap <Esc>/ <Esc>gcca
 
 " Multiple cursors
 NeoBundle 'terryma/vim-multiple-cursors'
@@ -532,6 +533,8 @@ NeoBundleLazy 'renamer.vim', { 'autoload' : { 'commands' : 'Renamer' } }
 " Automatic mkdir on save
 NeoBundle 'travisjeffery/vim-auto-mkdir'
 
+if 0 " NOTE: Conflicting with vim-multiple-cursors keybinding
+
 " a.k.a. yankring
 NeoBundle 'maxbrunsfeld/vim-yankstack'
 let s:yankstack_bundle = neobundle#get('vim-yankstack')
@@ -544,6 +547,8 @@ nmap <C-p> <Plug>yankstack_substitute_older_paste
 nmap <C-n> <Plug>yankstack_substitute_newer_paste
 
 let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 'x', 'X', 'y', 'Y'] " without s and S, which are mapped to vim-surround
+
+endif
 
 " ** }}}
 
