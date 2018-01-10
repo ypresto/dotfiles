@@ -1,2 +1,4 @@
+root = true
+
 [*.fish]
 indent_size = 4
