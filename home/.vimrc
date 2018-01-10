@@ -751,7 +751,9 @@ call neobundle#end()
 
 colorscheme onedark
 set background=dark
-set termguicolors
+if has('termguicolors')
+    set termguicolors
+endif
 
 " *** Enable Filetype Plugins *** {{{1
 " for neobundle, these are disabled in start up section
