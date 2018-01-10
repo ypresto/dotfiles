@@ -7,7 +7,7 @@ set -U FZF_LEGACY_KEYBINDINGS 0
 set -x DOTFILES_PATH "$HOME/.homesick/repos/dotfiles"
 
 set -x PATH $HOME/.anyenv/bin $PATH
-eval (anyenv init - fish | source)
+eval (anyenv init - --no-rehash fish | source)
 
 eval (hub alias -s fish | source)
 
@@ -15,15 +15,14 @@ eval (hub alias -s fish | source)
 
 source "$HOME/.homesick/repos/homeshick/homeshick.fish"
 
-# Aliases
+# Commands
 
 source "$DOTFILES_PATH/aliases.sh"
 
 function a
-    if [ -z $argv ]
+    if [ -z "$argv" ]
         git add -A
     else
-        echo test
         git add $argv
     end
     git status --short
@@ -34,19 +33,42 @@ function cm
 end
 
 function submit
-    set remote $argv[0]
-    local branch=`git rev-parse --abbrev-ref HEAD`
+    set branch (git rev-parse --abbrev-ref HEAD)
     if [ "$branch" = "master" ]
-        print "Oops, current branch is master."
+        echo "Oops, current branch is master."
         return 1
     end
-    git push $argv[1..-1] $remote HEAD:$branch
+    git push $argv HEAD:$branch
+end
+
+function git-prune-branches-dry-run
+    set branch $argv[1]; test -n "$branch"; or set branch master
+    git fetch origin
+    git fetch --dry-run --prune origin
+    git branch --merged origin/$branch | grep -vE ' '$branch'$|^\*' | xargs echo git branch -d
+end
+
+function git-prune-branches
+    set branch $argv[1]; test -n "$branch"; or set branch master
+    git fetch --prune origin
+    git branch --merged origin/$branch | grep -vE ' '$branch'$|^\*' | xargs git branch -d
+end
+
+function git-replace-branch
+    set branch $argv[1]
+    if test -z "$branch"
+        echo 'New branch name is required.'
+        return 1
+    end
+    set current (git rev-parse --abbrev-ref HEAD)
+    git checkout -b $branch
+    git branch -f $current origin/$current
 end
 
 # Confings
 
 # https://github.com/fish-shell/fish-shell/issues/825#issuecomment-226646287
-function sync_history --on-event fish_preexec
+function sync_history --on-event fish_postexec
     history --save
     history --merge
 end

@@ -42,4 +42,5 @@ function fish_user_key_bindings
     ### push-line.fish ###
     bind \eq 'push_line'
     ### push-line.fish ###
+    bind \cq 'push_line' # custom
 end
