@@ -8,10 +8,21 @@ set FZF_FIND_AND_EXECUTE_OPTS -s
 
 set -x DOTFILES_PATH "$HOME/.homesick/repos/dotfiles"
 
+set -x ANDROID_HOME "$HOME/.android-sdk"
+set -x PATH $ANDROID_HOME/platform-tools $PATH
+
 set -x PATH $HOME/.anyenv/bin $PATH
 eval (anyenv init - --no-rehash fish | source)
 
 eval (hub alias -s fish | source)
+
+set -x PATH $HOME/bin $PATH
+
+# Local config
+
+if test -f "$HOME/fish_local_config.fish"
+    source "$HOME/fish_local_config.fish"
+end
 
 # Completions
 
