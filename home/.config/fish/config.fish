@@ -1,3 +1,5 @@
+set HOMEBREW_PATH "/usr/local"
+
 # Plugins
 
 set FZF_LEGACY_KEYBINDINGS 0
@@ -9,14 +11,18 @@ set FZF_FIND_AND_EXECUTE_OPTS -s
 set -x DOTFILES_PATH "$HOME/.homesick/repos/dotfiles"
 
 set -x ANDROID_HOME "$HOME/.android-sdk"
-set -x PATH $ANDROID_HOME/platform-tools $PATH
+set -x PATH "$ANDROID_HOME/platform-tools" $PATH
 
-set -x PATH $HOME/.anyenv/bin $PATH
+set -x PATH "$HOME/.anyenv/bin" $PATH
 eval (anyenv init - --no-rehash fish | source)
+
+set gopath $GOPATH "$HOME/go"
+set -x PATH "$gopath/bin" $PATH
 
 eval (hub alias -s fish | source)
 
-set -x PATH $HOME/bin $PATH
+set -x PATH "$DOTFILES_PATH/bin" $PATH
+set -x PATH "$HOME/bin" $PATH
 
 # Local config
 
@@ -31,6 +37,8 @@ source "$HOME/.homesick/repos/homeshick/homeshick.fish"
 # Commands
 
 source "$DOTFILES_PATH/aliases.sh"
+
+alias dcn='env PRODUCT_WORK_DIR=(git rev-parse --show-toplevel) docker-compose -f docker-compose.yml -f docker-compose-nfs.yml '
 
 function a
     if [ -z "$argv" ]
