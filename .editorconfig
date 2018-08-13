@@ -1,4 +1,7 @@
 root = true
 
+[{*.zsh,.zsh*,.zprofile}]
+indent_size = 2
+
 [*.fish]
 indent_size = 4

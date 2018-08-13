@@ -16,8 +16,8 @@ set -x PATH "$ANDROID_HOME/platform-tools" $PATH
 set -x PATH "$HOME/.anyenv/bin" $PATH
 eval (anyenv init - --no-rehash fish | source)
 
-set gopath $GOPATH "$HOME/go"
-set -x PATH "$gopath/bin" $PATH
+set GOPATH "$HOME/go"
+set -x PATH "$GOPATH/bin" $PATH
 
 eval (hub alias -s fish | source)
 
