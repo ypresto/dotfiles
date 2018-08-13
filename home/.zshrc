@@ -20,6 +20,46 @@ path=(
 
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
+# Plugins
+
+ZPLUG_HOME=/usr/local/opt/zplug
+source $ZPLUG_HOME/init.zsh
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+
+zplug 'zsh-users/zsh-autosuggestions'
+zplug 'zsh-users/zsh-syntax-highlighting', defer:2
+
+# pure
+zplug 'mafredri/zsh-async', from:github
+zplug 'sindresorhus/pure', use:pure.zsh, from:github, as:theme
+
+## enhancd
+ENHANCD_COMMAND=ecd
+zplug 'b4b4r07/enhancd', use:init.sh
+__enhancd_ctrl_v() {
+  __enhancd::cd -
+  zle reset-prompt
+}
+zle -N __enhancd_ctrl_v
+bindkey '^V' __enhancd_ctrl_v
+# https://github.com/b4b4r07/enhancd/issues/63
+autoload -Uz add-zsh-hook
+add-zsh-hook chpwd __enhancd::cd::after
+
+## completions
+zplug 'zsh-users/zsh-completions'
+zplug 'docker/compose', use:'contrib/completion/zsh'
+
+# Install plugins if there are plugins that have not been installed
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+
+zplug load
+
 # Configs
 
 bindkey -e
