@@ -13,9 +13,9 @@ export CLICOLOR=1
 # Paths (Also see .zshenv)
 
 path=(
-  $HOME/bin
-  $DOTFILES_PATH/bin
-  $path
+    $HOME/bin
+    $DOTFILES_PATH/bin
+    $path
 )
 
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
@@ -37,8 +37,8 @@ zplug 'sindresorhus/pure', use:pure.zsh, from:github, as:theme
 ENHANCD_COMMAND=ecd
 zplug 'b4b4r07/enhancd', use:init.sh
 __enhancd_ctrl_v() {
-  __enhancd::cd -
-  zle reset-prompt
+    __enhancd::cd -
+    zle reset-prompt
 }
 zle -N __enhancd_ctrl_v
 bindkey '^V' __enhancd_ctrl_v
