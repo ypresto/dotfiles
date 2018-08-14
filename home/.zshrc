@@ -119,6 +119,17 @@ git-prune-branches() {
     git fetch --prune origin && git branch --merged origin/$branch | grep -vE ' '$branch'$|^\*' | xargs git branch -d
 }
 
+git-replace-branch() {
+    branch=${1}
+    if [ -z "$branch" ]; then
+        echo 'New branch name is required.'
+        return 1
+    fi
+    current=`git rev-parse --abbrev-ref HEAD`
+    git checkout -b $branch
+    git branch -f $current origin/$current
+}
+
 ranking () {
     history 1 | awk '{print $2}' | sort | uniq -c | sort -nr | head -n30
 }
