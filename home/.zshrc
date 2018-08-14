@@ -46,6 +46,10 @@ bindkey '^V' __enhancd_ctrl_v
 autoload -Uz add-zsh-hook
 add-zsh-hook chpwd __enhancd::cd::after
 
+# zsh-fzy
+zplug 'aperezdc/zsh-fzy'
+bindkey '^R'  fzy-history-widget
+
 ## completions
 zplug 'zsh-users/zsh-completions'
 zplug 'docker/compose', use:'contrib/completion/zsh'
@@ -83,7 +87,7 @@ SAVEHIST=10000
 # Aliases
 
 source "$DOTFILES_PATH/aliases.sh"
-alias dcn='env PRODUCT_WORK_DIR=(git rev-parse --show-toplevel) docker-compose -f docker-compose.yml -f docker-compose-nfs.yml '
+alias dcn='PRODUCT_WORK_DIR=$(git rev-parse --show-toplevel) docker-compose -f docker-compose.yml -f docker-compose-nfs.yml'
 alias git-new-workdir="$HOMEBREW_PATH/share/git-core/contrib/workdir/git-new-workdir"
 alias ws='python -m SimpleHTTPServer'
 
