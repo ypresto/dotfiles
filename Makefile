@@ -4,7 +4,7 @@ HOMESHICK := "$(HOME)/.homesick/repos/homeshick/bin/homeshick"
 all:
 	echo "call 'make install' or 'make update'"
 
-.PHONY: install update _up vimplugins vimproc fisher_deps skkdict perldict gitsubmodules completions cleanlinks \
+.PHONY: install update _up vimplugins vimproc fisher_deps \
 	install_anyenv install_gom install_xcode_themes install_xcode_plugins install_scripts
 
 install:
@@ -22,7 +22,7 @@ update:
 	bundle update
 	make _up
 
-_up: fisher_deps skkdict perldict gitsubmodules completions install_scripts
+_up: fisher_deps install_scripts
 
 vimplugins:
 	cd .vim/bundle && \
@@ -50,37 +50,6 @@ endif
 fisher_deps:
 	curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher
 	fish -c 'fisher'
-
-skkdict:
-	cd .vim/dict && \
-	wget --timestamping http://openlab.jp/skk/dic/SKK-JISYO.L.gz && \
-	gzip -df SKK-JISYO.L.gz || \
-	echo "ring project servers often downs..."
-
-perldict:
-	cd .vim/dict && \
-	wget --timestamping https://raw.github.com/Cside/dotfiles/master/.vim/dict/perl.dict
-
-gitsubmodules:
-	git submodule sync
-	git submodule update --init
-	git submodule foreach 'git checkout master; git pull; git submodule sync; git submodule update --init'
-
-completions:
-	cd .zsh/functions && \
-		curl -fLO https://github.com/git/git/raw/master/contrib/completion/git-completion.bash && \
-		curl -fLO https://github.com/jonas/tig/raw/master/contrib/tig-completion.bash && \
-		curl -fLO https://github.com/docker/docker/raw/master/contrib/completion/zsh/_docker && \
-		curl -fLO https://github.com/docker/compose/raw/master/contrib/completion/zsh/_docker-compose && \
-		curl -fLO https://github.com/Homebrew/brew/raw/master/completions/zsh/_brew && \
-		curl -fLO https://github.com/Homebrew/brew/raw/master/completions/zsh/_brew_cask && \
-		curl -fLo _git https://github.com/git/git/raw/master/contrib/completion/git-completion.zsh && \
-		curl -fLo _hub https://github.com/github/hub/raw/master/etc/hub.zsh_completion && \
-		curl -fLO https://github.com/Homebrew/brew/raw/master/completions/zsh/_brew
-
-cleanlinks:
-# below also works with BSD find
-	find -L ~ -maxdepth 5 -type l 2>/dev/null | xargs -L5000 -I"{}" sh -c 'rm -i "{}" < /dev/tty'
 
 install_anyenv:
 	git clone https://github.com/riywo/anyenv ~/.anyenv
