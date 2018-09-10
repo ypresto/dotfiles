@@ -71,6 +71,7 @@ bindkey -e
 setopt auto_cd
 setopt auto_pushd
 setopt interactive_comments
+unsetopt flow_control # Make Ctrl+Q work.
 
 WORDCHARS="${WORDCHARS//\/}"
 
@@ -85,6 +86,10 @@ HISTSIZE=10000
 SAVEHIST=10000
 
 # Aliases
+
+if which hub > /dev/null; then
+    eval "$(hub alias -s)"
+fi
 
 source "$DOTFILES_PATH/aliases.sh"
 alias dcn='PRODUCT_WORK_DIR=$(git rev-parse --show-toplevel) docker-compose -f docker-compose.yml -f docker-compose-nfs.yml'
