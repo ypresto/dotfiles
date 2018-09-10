@@ -411,6 +411,7 @@ NeoBundle 'kana/vim-smartinput'
 NeoBundle 'tpope/vim-surround'
 nmap s  <Plug>Ysurroundiw
 nmap S  <Plug>YsurroundiW
+vmap s  <Plug>VSurround
 
 " open reference manual with K key
 NeoBundle 'thinca/vim-ref'
