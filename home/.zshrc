@@ -22,7 +22,7 @@ source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
 # Plugins
 
-ZPLUG_HOME=/usr/local/opt/zplug
+ZPLUG_HOME=~/.zplug
 source $ZPLUG_HOME/init.zsh
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
@@ -34,6 +34,7 @@ zplug 'mafredri/zsh-async', from:github
 zplug 'sindresorhus/pure', use:pure.zsh, from:github, as:theme
 
 ## enhancd
+# requires fzf
 ENHANCD_COMMAND=ecd
 zplug 'b4b4r07/enhancd', use:init.sh
 __enhancd_ctrl_v() {
@@ -46,9 +47,35 @@ bindkey '^V' __enhancd_ctrl_v
 autoload -Uz add-zsh-hook
 add-zsh-hook chpwd __enhancd::cd::after
 
-# zsh-fzy
-zplug 'aperezdc/zsh-fzy'
-bindkey '^R'  fzy-history-widget
+# fzf
+# NOTE: binary is not included.
+zplug 'junegunn/fzf', use:'shell/key-bindings.zsh', from:github
+export FZF_DEFAULT_OPTS='--height 20% --layout=reverse --inline-info'
+# https://github.com/junegunn/fzf/wiki/Color-schemes#one-dark without bg+
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
+--color=dark
+--color=fg:-1,bg:-1,hl:#c678dd,fg+:#ffffff,bg+:-1,hl+:#d858fe
+--color=info:#98c379,prompt:#61afef,pointer:#be5046,marker:#e5c07b,spinner:#61afef,header:#61afef
+'
+export FZF_CTRL_R_OPTS='--with-nth=2..'
+
+# TODO
+# zplug 'junegunn/fzf', use:'shell/*.zsh', from:github, hook-load:__zshrc_init_fzf__
+# export FZF_COMPLETION_TRIGGER=''
+# __zshrc_init_fzf__() {
+#     bindkey '^T' fzf-completion
+#     bindkey '^I' $fzf_default_completion
+# }
+
+__ypresto_git_fzf() {
+    file=`git ls-files | fzf`
+    [ $! -ne 0 ] && return
+    BUFFER="${BUFFER}$file"
+    CURSOR=$#BUFFER
+    zle reset-prompt
+}
+zle -N __ypresto_git_fzf
+bindkey '^G' __ypresto_git_fzf
 
 ## completions
 zplug 'zsh-users/zsh-completions'
@@ -71,7 +98,12 @@ bindkey -e
 setopt auto_cd
 setopt auto_pushd
 setopt interactive_comments
-unsetopt flow_control # Make Ctrl+Q work.
+
+# Make Ctrl+Q work.
+unsetopt flow_control
+stty start undef
+stty stop undef
+
 
 WORDCHARS="${WORDCHARS//\/}"
 
@@ -88,13 +120,10 @@ SAVEHIST=10000
 # Aliases
 
 if which hub > /dev/null; then
-    eval "$(hub alias -s)"
+    eval "$(hub alias -s zsh)"
 fi
 
 source "$DOTFILES_PATH/aliases.sh"
-alias dcn='PRODUCT_WORK_DIR=$(git rev-parse --show-toplevel) docker-compose -f docker-compose.yml -f docker-compose-nfs.yml'
-alias git-new-workdir="$HOMEBREW_PATH/share/git-core/contrib/workdir/git-new-workdir"
-alias ws='python -m SimpleHTTPServer'
 
 # Custom functions
 
@@ -138,6 +167,33 @@ git-replace-branch() {
 ranking () {
     history 1 | awk '{print $2}' | sort | uniq -c | sort -nr | head -n30
 }
+
+dc() {
+  local toplevel=$(git rev-parse --show-toplevel 2> /dev/null)
+
+  (
+    chpwd_functions= cd "${toplevel}" &&
+      PRODUCT_WORK_DIR="${toplevel}" docker-compose "$@"
+  )
+}
+compdef dc='docker-compose'
+
+alias dcn="dc -f docker-compose.yml -f docker-compose-nfs.yml"
+alias dcd="dc -f docker-compose.yml -f docker-compose-dev.yml"
+alias dcm="dc -f docker-compose.yml -f docker-compose-mutagen.yml"
+
+# Custom keybindings
+
+expand-all-aliases() {
+  local new_buffer=()
+  for word in ${=BUFFER}; do
+    new_buffer=($new_buffer ${aliases[$word]:-$word})
+  done
+  BUFFER=${(j: :)new_buffer}
+  zle end-of-line
+}
+zle -N expand-all-aliases
+bindkey '\e^E' expand-all-aliases
 
 # Misc.
 

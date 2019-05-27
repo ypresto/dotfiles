@@ -298,14 +298,14 @@ set ttimeoutlen=150
 
 " Fast saving
 noremap ZJ :update<CR>
-nmap <silent> <Esc><Esc> :nohlsearch<CR>:set nopaste<CR><Esc>
+nmap <silent> <C-c> :nohlsearch<CR>:set nopaste<CR><Esc>
 
 " swap g[jk] (move displayed line) and [jk] (move original line)
 noremap <silent> j gj
 noremap <silent> gj j
 noremap <silent> k gk
 noremap <silent> gk k
-inoremap <silent> <C-[> <Esc>
+" inoremap <silent> <C-[> <Esc>
 
 " ** Partial Emacs Keybind in Insert Mode ** {{{2
 " Refer: :help tcsh-style
@@ -390,6 +390,7 @@ nnoremap <C-w>a <C-w>\|<C-w>_
 nnoremap <C-w><C-f> :vertical wincmd f<CR>
 noremap <Leader>f :vertical wincmd f<CR>
 
+nnoremap <C-w><C-q> <C-w>q
 
 " QuickFix Toggle
 nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
@@ -749,6 +750,14 @@ endif
 NeoBundle 'joshdick/onedark.vim'
 
 call neobundle#end()
+
+if (has("autocmd"))
+  augroup colorextend
+    autocmd!
+    " For terminal with transparent or one dark themed colors.
+    autocmd ColorScheme * call onedark#extend_highlight("Normal", { "bg": { "cterm": 'NONE' } })
+  augroup END
+endif
 
 colorscheme onedark
 set background=dark

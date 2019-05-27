@@ -5,7 +5,7 @@
 	excludesfile = ~/.gitignore_global
 	attributesfile = ~/.gitattributes_global
 	editor = vim
-	pager = LESS=RS less
+	pager = LESS=RSim less
 [log]
 	follow = true
 [merge]
