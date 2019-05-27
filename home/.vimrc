@@ -6,27 +6,72 @@
 
 " *** Start up *** {{{1
 
-" for neobundle
-filetype off
-filetype plugin indent off
-syntax off " seems to be faster to enable at the end
-
-" load installed plugins
-if has('vim_starting')
-    set nocompatible
-    set rtp+=~/.vim/bundle/neobundle.vim/
+"dein Scripts-----------------------------
+if &compatible
+  set nocompatible               " Be iMproved
 endif
-call neobundle#begin(expand('~/.vim/bundle'))
-let g:neobundle#types#git#enable_submodule = 1
-NeoBundleFetch 'Shougo/neobundle.vim'
-NeoBundle 'Shougo/vimproc', {
-\   'build' : {
-\       'windows' : 'echo "Sorry, cannot update vimproc binary file in Windows."',
-\       'cygwin'  : 'make -f make_cygwin.mak',
-\       'mac'     : 'make -f make_mac.mak',
-\       'unix'    : 'make -f make_unix.mak',
-\      },
-\   }
+
+" Required:
+set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
+
+" Required:
+if dein#load_state(expand('~/.vim/dein'))
+  call dein#begin(expand('~/.vim/dein'))
+
+  " Let dein manage dein
+  " Required:
+  call dein#add(expand('~/.vim/dein/repos/github.com/Shougo/dein.vim'))
+
+  call dein#add('kana/vim-smartinput')
+  call dein#add('tpope/vim-surround')
+  call dein#add('thinca/vim-ref')
+  call dein#add('airblade/vim-gitgutter')
+  call dein#add('vim-scripts/sudo.vim')
+  call dein#add('scrooloose/syntastic')
+  call dein#add('thinca/vim-visualstar')
+  call dein#add('tpope/vim-unimpaired')
+  call dein#add('tpope/vim-repeat')
+  call dein#add('rhysd/accelerated-jk')
+  call dein#add('bling/vim-airline')
+  call dein#add('kien/ctrlp.vim')
+  call dein#add('ajh17/VimCompletesMe')
+  call dein#add('tyru/caw.vim')
+  call dein#add('terryma/vim-multiple-cursors')
+  call dein#add('tmhedberg/matchit')
+  call dein#add('tpope/vim-endwise') " supports ruby, vimscript
+  call dein#add('kien/rainbow_parentheses.vim')
+  call dein#add('kana/vim-operator-user')
+  call dein#add('kana/vim-operator-replace')
+  call dein#add('kana/vim-textobj-user')     " framework for all belows
+  call dein#add('kana/vim-textobj-fold')     " [ai]z
+  call dein#add('kana/vim-textobj-function') " [ai]f
+  call dein#add('kana/vim-textobj-indent')   " [ai][iI]
+  call dein#add('kana/vim-textobj-syntax')   " [ai]y
+  call dein#add('kana/vim-textobj-line')     " [ai]l
+  call dein#add('editorconfig/editorconfig-vim')
+  call dein#add('travisjeffery/vim-auto-mkdir')
+  " call dein#add('maxbrunsfeld/vim-yankstack') " NOTE: Conflicting with vim-multiple-cursors keybinding
+  call dein#add('joshdick/onedark.vim')
+  call dein#add('danro/rename.vim', { 'on_cmd' : 'Rename' })
+  call dein#add('vim-scripts/renamer.vim', { 'on_cmd' : 'Renamer' })
+  call dein#add('vim-scripts/sh.vim', { 'on_ft': 'sh' })
+  " call dein#add('mattn/benchvimrc-vim')
+
+  " Required:
+  call dein#end()
+  call dein#save_state()
+endif
+
+" Required:
+filetype plugin indent on
+syntax enable
+
+" If you want to install not installed plugins on startup.
+"if dein#check_install()
+"  call dein#install()
+"endif
+
+"End dein Scripts-------------------------
 
 " *** }}}
 
@@ -398,60 +443,26 @@ nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 
 " *** }}}
 
-" *** Plugins *** {{{1
+" *** Plugin Config and Keybindings *** {{{
 
-" ** Recommended: YOU SHOULD USE THESE AND BE IMproved! *** {{{2
-
-" autocompletes parenthesis, braces and more
-NeoBundle 'kana/vim-smartinput'
-"call smartinput#define_rule({ 'at': '\[\_s*\%#\_s*\]', 'char': '<Enter>', 'input': '<Enter><C-o>O' })
-"call smartinput#define_rule({ 'at': '{\_s*\%#\_s*}'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
-"call smartinput#define_rule({ 'at': '(\_s*\%#\_s*)'  , 'char': '<Enter>', 'input': '<Enter><C-o>O' })
-
-" surrounding with braces or quotes with s and S key
-NeoBundle 'tpope/vim-surround'
+" vim-surround
 nmap s  <Plug>Ysurroundiw
 nmap S  <Plug>YsurroundiW
 vmap s  <Plug>VSurround
 
-" open reference manual with K key
-NeoBundle 'thinca/vim-ref'
-let g:ref_perldoc_auto_append_f = 1
-
-" show marker on edited lines
-NeoBundle 'airblade/vim-gitgutter'
 let g:gitgutter_sign_removed = "-"
 map ]g :GitGutterNextHunk<CR>
 map [g :GitGutterPrevHunk<CR>
 
-" read/write by sudo with `vim sudo:file.txt`
-NeoBundle 'sudo.vim'
-
-" shows syntax error on every save
-NeoBundle 'scrooloose/syntastic'
 let g:syntastic_error_symbol='E>'
 let g:syntastic_warning_symbol='W>'
 let g:syntastic_always_populate_loc_list=1
 nmap <Leader>s :SyntasticCheck<CR>
 
-" Search word with * and # also on Visual Mode
-NeoBundle 'thinca/vim-visualstar'
-
-" Move among buffer, quickfix, loclist, ...so many... and encode/decode.
-" ]e to exchange line, ]n to go to next SCM conflict marker.
-NeoBundle 'tpope/vim-unimpaired'
-
-" Add repeat support to some plugins, like surround.vim
-NeoBundle 'tpope/vim-repeat'
-
-" Speedup j and k key
-NeoBundle 'rhysd/accelerated-jk'
 nmap j <Plug>(accelerated_jk_gj)
 nmap k <Plug>(accelerated_jk_gk)
-let g:accelerated_jk_anable_deceleration = 1
 let g:accelerated_jk_acceleration_table = [10,20,15,15]
 
-NeoBundle 'bling/vim-airline'
 let g:airline_highlighting_cache = 1
 let g:airline_mode_map = {
 \   '__' : '-',
@@ -467,8 +478,6 @@ let g:airline_mode_map = {
 \   '' : 'S',
 \}
 
-" Fast file selector
-NeoBundle 'kien/ctrlp.vim'
 let g:ctrlp_map = '<Leader><C-p>'
 let g:ctrlp_max_files = 0
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files --cached --others --exclude-standard'] " speedup
@@ -482,107 +491,41 @@ nmap <Leader>us :CtrlPMRU<CR>
 nmap <Leader>uq :CtrlPQuickfix<CR>
 nmap <Leader>ub :CtrlPBuffer<CR>
 
-" Paste with textobj, use this instead of vi"p
-NeoBundle 'kana/vim-operator-replace', {
-\   'depends' : [
-\       'kana/vim-operator-user',
-\   ]
-\}
+" vim-operator-replace
 nmap R <Plug>(operator-replace)
 nnoremap <Leader>R R
 
-" Lightweight tab key completion plugin
-NeoBundle 'ajh17/VimCompletesMe'
+" VimCompletesMe
 let g:vcm_default_maps = 0
 imap <Esc><Leader> <Plug>vim_completes_me_forward
 
-" Toggle comment
-NeoBundle 'tyru/caw.vim'
+" Toggle comment with caw.vim
 nmap <Esc>/ gcc
 xmap <Esc>/ gccgv
 imap <Esc>/ <Esc>gcca
 
-" Multiple cursors
-NeoBundle 'terryma/vim-multiple-cursors'
-
-" extended % key matching
-NeoBundle "tmhedberg/matchit"
-NeoBundle 'tpope/vim-endwise' " supports ruby, vimscript
-
-" Colorize any parenthesis or brackets
-NeoBundle 'kien/rainbow_parentheses.vim'
+" rainbow_parentheses.vim
 augroup VimrcGlobal
     autocmd VimEnter * :RainbowParenthesesToggle
     autocmd Syntax * call DelayedExecute('RainbowParenthesesLoadRound')
     autocmd Syntax * call DelayedExecute('call rainbow_parentheses#activate()')
 augroup END
 
-" ** }}}
-
-" ** textobj ** {{{2
-
-" select range of text with only two or three keys
-" For example: [ai]w
-" @see http://d.hatena.ne.jp/osyo-manga/20130717/1374069987
-
-NeoBundle 'kana/vim-textobj-user'            " framework for all belows
-NeoBundle 'kana/vim-textobj-fold'            " [ai]z
-NeoBundle 'kana/vim-textobj-function'        " [ai]f
-NeoBundle 'kana/vim-textobj-indent'          " [ai][iI]
-NeoBundle 'kana/vim-textobj-syntax'          " [ai]y
-NeoBundle 'kana/vim-textobj-line'            " [ai]l
-
-" ** }}}
-
-" ** Misc ** {{{2
-
-NeoBundle 'editorconfig/editorconfig-vim'
-
-" :Rename current file on disk
-NeoBundleLazy 'danro/rename.vim', { 'autoload' : { 'commands' : 'Rename' } }
-
-" Bulk renamer
-NeoBundleLazy 'renamer.vim', { 'autoload' : { 'commands' : 'Renamer' } }
-
-" Automatic mkdir on save
-NeoBundle 'travisjeffery/vim-auto-mkdir'
-
-if 0 " NOTE: Conflicting with vim-multiple-cursors keybinding
-
-" a.k.a. yankring
-NeoBundle 'maxbrunsfeld/vim-yankstack'
-let s:yankstack_bundle = neobundle#get('vim-yankstack')
-function! s:yankstack_bundle.hooks.on_post_source(bundle)
-    call yankstack#setup()
-    nmap Y y$
-endfunction
-
-nmap <C-p> <Plug>yankstack_substitute_older_paste
-nmap <C-n> <Plug>yankstack_substitute_newer_paste
-
-let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 'x', 'X', 'y', 'Y'] " without s and S, which are mapped to vim-surround
-
-endif
-
-" ** }}}
+" NeoBundle 'maxbrunsfeld/vim-yankstack'
+" let s:yankstack_bundle = neobundle#get('vim-yankstack')
+" function! s:yankstack_bundle.hooks.on_post_source(bundle)
+"     call yankstack#setup()
+"     nmap Y y$
+" endfunction
+"
+" nmap <C-p> <Plug>yankstack_substitute_older_paste
+" nmap <C-n> <Plug>yankstack_substitute_newer_paste
+"
+" let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 'x', 'X', 'y', 'Y'] " without s and S, which are mapped to vim-surround
 
 " *** }}}
 
 " *** Filetypes *** {{{1
-
-function! s:NeoBundleAutoloadFiletypes(name, filetypes)
-    let g:neobundle#default_options[a:name] = {
-    \   'autoload' : {
-    \       'filetypes' : a:filetypes
-    \   },
-    \ }
-endfunction
-
-" Shell
-call s:NeoBundleAutoloadFiletypes('sh', ['sh'])
-call s:NeoBundleAutoloadFiletypes('fish', ['fish'])
-NeoBundleLazy 'sh.vim', '', 'sh'
-NeoBundleLazy 'dag/vim-fish', '', 'fish'
 
 " VimScript
 autocmd VimrcGlobal FileType vim,help set keywordprg=":help"
@@ -714,19 +657,6 @@ endfunction
 
 " *** }}}
 
-" *** Bleeding Edge *** {{{1
-
-if 0 " Remove this if unnecessary
-
-" Enable blocked I in non-visual-block mode
-NeoBundle 'kana/vim-niceblock'
-xmap I  <Plug>(niceblock-I)
-xmap A  <Plug>(niceblock-A)
-
-end
-
-" *** }}}
-
 " *** Debug *** {{{1
 
 " Refer: http://vim.wikia.com/wiki/Identify_the_syntax_highlighting_group_used_at_the_cursor
@@ -735,7 +665,7 @@ command! CurHl :echo
     \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
     \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"
 
-NeoBundleLazy 'mattn/benchvimrc-vim'
+" NeoBundleLazy 'mattn/benchvimrc-vim'
 
 " *** }}}
 
@@ -747,9 +677,7 @@ if filereadable(expand('~/.vimlocal/.vimrc'))
 endif
 " *** }}}
 
-NeoBundle 'joshdick/onedark.vim'
-
-call neobundle#end()
+" NeoBundle 'joshdick/onedark.vim'
 
 if (has("autocmd"))
   augroup colorextend
@@ -764,13 +692,6 @@ set background=dark
 if has('termguicolors')
     set termguicolors
 endif
-
-" *** Enable Filetype Plugins *** {{{1
-" for neobundle, these are disabled in start up section
-filetype plugin indent on " XXX maybe better to disable this, testing
-" for speedup
-syntax on " for os x
-" *** }}}
 
 set secure
 
