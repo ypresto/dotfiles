@@ -78,7 +78,9 @@ zle -N __ypresto_git_fzf
 bindkey '^G' __ypresto_git_fzf
 
 ## completions
+fpath=($fpath ~/.zsh/functions)
 zplug 'zsh-users/zsh-completions'
+zplug 'docker/cli', use:'contrib/completion/zsh'
 zplug 'docker/compose', use:'contrib/completion/zsh'
 
 # Install plugins if there are plugins that have not been installed
