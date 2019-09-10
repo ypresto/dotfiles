@@ -1,16 +1,23 @@
+set line-graphics = utf-8
+set truncation-delimiter = utf-8
+
+bind generic r refresh
+bind generic R view-refs
 bind generic g move-first-line
 bind generic G move-last-line
 
-bind status  A !git commit --amend
-bind main    F !?git commit --fixup %(commit)
-bind main    Q !git commit --squash %(commit)
-bind status  * !?git clean -df
-bind main    B !git rebase -i %(commit)
-bind status  P !git add -p %(file)
-bind status  _ !?rm %(file)
+bind generic L !sh -c "git reflog --pretty=raw | tig --pretty=raw"
 
-bind generic R !git revert %(commit)
-bind generic r refresh
-bind generic C !git checkout %(commit)
-bind status  C !git commit
-bind generic Y !git cherry-pick %(commit)
+bind generic <Ctrl-R> !?git revert %(commit)
+bind generic Y !bash -euxc 'echo %(commit) | pbcopy'
+
+bind main <Ctrl-O> !git checkout %(commit)
+bind main <Ctrl-F> !?git commit --fixup %(commit)
+bind main <Ctrl-S> !?git commit --squash %(commit)
+bind main ! !?git reset --hard %(commit)
+bind main _ !?git-force-push %(commit)
+bind main <Esc>r !bash -euxc 'git remote set-head origin --auto && git rebase %(commit) -i --autosquash --autostash --rebase-merges'
+bind main <Esc>R !bash -euxc 'git remote set-head origin --auto && git rebase %(commit) --onto origin/HEAD -i --autosquash --autostash --rebase-merges'
+bind main <Esc>f !?bash -euxc 'git commit --fixup %(commit) && git remote set-head origin --auto && git rebase %(commit)~ -i --autosquash --autostash --rebase-merges'
+
+bind status  _ !?rm %(file)

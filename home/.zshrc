@@ -195,6 +195,9 @@ expand-all-aliases() {
 zle -N expand-all-aliases
 bindkey '\e^E' expand-all-aliases
 
+bindkey "^[u" undo
+bindkey "^[r" redo
+
 # Misc.
 
 if [ -f "$HOME/.zshrc_local" ]; then

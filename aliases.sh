@@ -36,12 +36,10 @@ alias fo='git fetch origin'
 alias be='bundle exec'
 alias bi='bundle install'
 alias bu='bundle update'
+alias ut='bundle exec ruby -Itest'
 alias dbe='docker-compose exec spring bin/spring'
-alias dbi='docker-compose run --rm spring bundle install'
+alias dbi='dcm run --rm spring bundle install'
 alias drun='docker-compose exec spring'
-alias git-new-workdir="$HOMEBREW_PATH/share/git-core/contrib/workdir/git-new-workdir"
-
+alias docker-su='docker run -it --rm --privileged --pid=host justincormack/nsenter1'
 alias git-new-workdir="$HOMEBREW_PATH/share/git-core/contrib/workdir/git-new-workdir"
 alias ws='python -m SimpleHTTPServer'
-
-alias ut='bundle exec ruby -Itest'
