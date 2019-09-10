@@ -11,6 +11,7 @@ path=(
 
 # NOTE: OS X precedes PATHs like /usr/bin in /etc/profile.
 # Skip for login shell here and call later in .zprofile .
+# This is for interactive shell and script.
 # http://masasuzu.hatenablog.jp/entry/20120506/1336286016
 if ! [[ -o login ]]; then
     # setup anyenv if exists
