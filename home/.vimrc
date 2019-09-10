@@ -267,6 +267,8 @@ set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so,*.swp,*.swo
 
 if exists("+colorcolumn")
     set colorcolumn=73,74,81,82 " Highlight border of 'long line'
+    " gitcommit overwrites our colorcolumn
+    autocmd VimrcGlobal FileType gitcommit call DelayedExecute('set colorcolumn=73,74,81,82')
 endif
 
 function! s:HighlightSetup()

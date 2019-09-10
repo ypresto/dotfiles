@@ -21,3 +21,5 @@
 *.vue diff=java
 *.kt diff=java
 *.csv diff=ruby
+*.yaml diff=ruby
+*.yml diff=ruby
