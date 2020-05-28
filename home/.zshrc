@@ -74,6 +74,8 @@ zinit for \
     as'completion' 'https://github.com/docker/cli/raw/master/contrib/completion/zsh/_docker' \
     as'completion' 'https://github.com/docker/compose/raw/master/contrib/completion/zsh/_docker-compose' \
 
+zinit add-fpath --front "$HOMEBREW_PATH/share/zsh/site-functions"
+
 autoload compinit && compinit
 autoload bashcompinit && bashcompinit
 
