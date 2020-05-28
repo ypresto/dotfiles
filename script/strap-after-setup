@@ -1,0 +1,4 @@
+#!/bin/bash -eux
+
+zsh -ic 'echo Zsh initial run succeeded.'
+sudo chsh -s /usr/local/bin/zsh $USER
