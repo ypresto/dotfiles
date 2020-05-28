@@ -1,0 +1,7 @@
+#!/bin/bash -eux
+
+mkdir -p ~/.homesick/repos
+git clone https://github.com/andsens/homeshick.git ~/.homesick/repos/homeshick
+
+mkdir -p ~/.zinit
+git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
