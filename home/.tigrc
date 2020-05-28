@@ -1,5 +1,6 @@
 set line-graphics = utf-8
 set truncation-delimiter = utf-8
+set main-view-id = yes
 
 bind generic r refresh
 bind generic R view-refs
@@ -16,8 +17,9 @@ bind main <Ctrl-F> !?git commit --fixup %(commit)
 bind main <Ctrl-S> !?git commit --squash %(commit)
 bind main ! !?git reset --hard %(commit)
 bind main _ !?git-force-push %(commit)
-bind main <Esc>r !bash -euxc 'git remote set-head origin --auto && git rebase %(commit) -i --autosquash --autostash --rebase-merges'
-bind main <Esc>R !bash -euxc 'git remote set-head origin --auto && git rebase %(commit) --onto origin/HEAD -i --autosquash --autostash --rebase-merges'
-bind main <Esc>f !?bash -euxc 'git commit --fixup %(commit) && git remote set-head origin --auto && git rebase %(commit)~ -i --autosquash --autostash --rebase-merges'
+bind main <Esc>r !bash -euxc '( git remote set-head origin --auto || true ) && git rebase %(commit) -i --autosquash --autostash --rebase-merges'
+bind main <Esc>R !bash -euxc '( git remote set-head origin --auto || true ) && git rebase %(commit) --onto origin/HEAD -i --autosquash --autostash --rebase-merges'
+bind main <Esc>f !?bash -euxc 'git commit --fixup %(commit) && ( git remote set-head origin --auto || true ) && git rebase %(commit)~ -i --autosquash --autostash --rebase-merges'
+bind main <Esc>s !?bash -euxc 'git commit --squash %(commit) && ( git remote set-head origin --auto || true ) && git rebase %(commit)~ -i --autosquash --autostash --rebase-merges'
 
 bind status  _ !?rm %(file)

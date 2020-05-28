@@ -20,6 +20,8 @@ path=(
 
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
+command -v direnv > /dev/null && eval "$(direnv hook zsh)"
+
 # Plugins
 
 ZPLUG_HOME=~/.zplug
@@ -132,6 +134,7 @@ source "$DOTFILES_PATH/aliases.sh"
 a() { 1=${1:--A}; git add $*; git status --short }
 
 cm() { git commit -m "$*" }
+cmn() { git commit --no-verify -m "$*" }
 
 submit() {
     local remote=$1
@@ -171,11 +174,12 @@ ranking () {
 }
 
 dc() {
-  local toplevel=$(git rev-parse --show-toplevel 2> /dev/null)
+  # https://stackoverflow.com/questions/7359204/git-command-line-know-if-in-submodule#comment73689214_7359204
+  local toplevel=$(git rev-parse --show-superproject-working-tree --show-toplevel 2> /dev/null | head -1)
 
   (
     chpwd_functions= cd "${toplevel}" &&
-      PRODUCT_WORK_DIR="${toplevel}" docker-compose "$@"
+    PRODUCT_WORK_DIR="${toplevel}" docker-compose "$@"
   )
 }
 compdef dc='docker-compose'
@@ -183,6 +187,10 @@ compdef dc='docker-compose'
 alias dcn="dc -f docker-compose.yml -f docker-compose-nfs.yml"
 alias dcd="dc -f docker-compose.yml -f docker-compose-dev.yml"
 alias dcm="dc -f docker-compose.yml -f docker-compose-mutagen.yml"
+
+random-str() {
+  cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w ${1:-24} | head -n 1
+}
 
 # Custom keybindings
 

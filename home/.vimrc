@@ -160,10 +160,10 @@ augroup END
 
 " ** Undo / Backup / History / Session ** {{{2
 
-if has('persistent_undo')
-    set undofile            " Save undo history to file
-    set undodir=~/.vim/undo " Specify where to save
-endif
+" if has('persistent_undo')
+"     set undofile            " Save undo history to file
+"     set undodir=~/.vim/undo " Specify where to save
+" endif
 set nobackup            " Don't create backup files (foobar~)
 
 " reffer: http://vimwiki.net/?'viminfo'
