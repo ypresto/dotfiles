@@ -1,4 +1,8 @@
 #!/bin/bash -eux
 
+rm -rf ~/.zinit/bin
+mkdir -p ~/.zinit
+git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
+
 zsh -ic 'echo Zsh initial run succeeded.'
 sudo chsh -s /usr/local/bin/zsh $USER
