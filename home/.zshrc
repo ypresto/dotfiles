@@ -24,21 +24,20 @@ command -v direnv > /dev/null && eval "$(direnv hook zsh)"
 
 # Plugins
 
-ZPLUG_HOME=~/.zplug
-source $ZPLUG_HOME/init.zsh
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+source ~/.zinit/bin/zinit.zsh
 
-zplug 'zsh-users/zsh-autosuggestions'
-zplug 'zsh-users/zsh-syntax-highlighting', defer:2
+zinit light 'zsh-users/zsh-autosuggestions'
+zinit light 'zsh-users/zsh-syntax-highlighting'
 
 # pure
-zplug 'mafredri/zsh-async', from:github
-zplug 'sindresorhus/pure', use:pure.zsh, from:github, as:theme
+zinit ice pick'async.zsh' src'pure.zsh'
+zinit light 'sindresorhus/pure'
 
 ## enhancd
 # requires fzf
 ENHANCD_COMMAND=ecd
-zplug 'b4b4r07/enhancd', use:init.sh
+zinit ice pick:'init.sh'
+zinit light 'b4b4r07/enhancd'
 __enhancd_ctrl_v() {
     __enhancd::cd -
     zle reset-prompt
@@ -51,7 +50,8 @@ add-zsh-hook chpwd __enhancd::cd::after
 
 # fzf
 # NOTE: binary is not included.
-zplug 'junegunn/fzf', use:'shell/key-bindings.zsh', from:github
+zinit ice pick:'shell/key-bindings.zsh'
+zinit light 'junegunn/fzf'
 export FZF_DEFAULT_OPTS='--height 20% --layout=reverse --inline-info'
 # https://github.com/junegunn/fzf/wiki/Color-schemes#one-dark without bg+
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
@@ -60,14 +60,6 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 --color=info:#98c379,prompt:#61afef,pointer:#be5046,marker:#e5c07b,spinner:#61afef,header:#61afef
 '
 export FZF_CTRL_R_OPTS='--with-nth=2..'
-
-# TODO
-# zplug 'junegunn/fzf', use:'shell/*.zsh', from:github, hook-load:__zshrc_init_fzf__
-# export FZF_COMPLETION_TRIGGER=''
-# __zshrc_init_fzf__() {
-#     bindkey '^T' fzf-completion
-#     bindkey '^I' $fzf_default_completion
-# }
 
 __ypresto_git_fzf() {
     file=`git ls-files | fzf`
@@ -80,20 +72,12 @@ zle -N __ypresto_git_fzf
 bindkey '^G' __ypresto_git_fzf
 
 ## completions
-fpath=($fpath ~/.zsh/functions)
-zplug 'zsh-users/zsh-completions'
-zplug 'docker/cli', use:'contrib/completion/zsh'
-zplug 'docker/compose', use:'contrib/completion/zsh'
+zinit for \
+    light-mode 'zsh-users/zsh-completions' \
+    light-mode pick:'contrib/completion/zsh' depth:1 'docker/cli' \
+    light-mode pick:'contrib/completion/zsh' depth:1 'docker/compose'
 
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
-
-zplug load
+autoload -Uz compinit && compinit
 
 # Configs
 
@@ -182,7 +166,7 @@ dc() {
     PRODUCT_WORK_DIR="${toplevel}" docker-compose "$@"
   )
 }
-compdef dc='docker-compose'
+# compdef dc='docker-compose'
 
 alias dcn="dc -f docker-compose.yml -f docker-compose-nfs.yml"
 alias dcd="dc -f docker-compose.yml -f docker-compose-dev.yml"

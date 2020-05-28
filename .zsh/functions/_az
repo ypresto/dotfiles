@@ -1,7 +1,0 @@
-#compdef az
-
-local comp_path=/usr/local/etc/bash_completion.d/az
-if [ -f $comp_path ]; then
-  autoload -U +X bashcompinit && bashcompinit
-  source $comp_path
-fi
