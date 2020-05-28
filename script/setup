@@ -4,5 +4,5 @@ rm -rf ~/.homesick/repos/homeshick
 mkdir -p ~/.homesick/repos
 git clone https://github.com/andsens/homeshick.git ~/.homesick/repos/homeshick
 
-ln -s ../../.dotfiles ~/.homeshick/repos/dotfiles
+ln -s ../../.dotfiles ~/.homesick/repos/dotfiles
 ~/.homesick/repos/homeshick/bin/homeshick link -f --verbose dotfiles
