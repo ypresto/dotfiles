@@ -6,9 +6,10 @@
 
 # Envs
 
-HOMEBREW_PATH="/usr/local"
+HOMEBREW_PATH='/usr/local'
 export DOTFILES_PATH="$HOME/.homesick/repos/dotfiles"
 export CLICOLOR=1
+export EDITOR='vim'
 
 # Paths (Also see .zshenv)
 
