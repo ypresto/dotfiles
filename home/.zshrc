@@ -26,9 +26,6 @@ command -v direnv > /dev/null && eval "$(direnv hook zsh)"
 
 source ~/.zinit/bin/zinit.zsh
 
-zinit light 'zsh-users/zsh-autosuggestions'
-zinit light 'zsh-users/zsh-syntax-highlighting'
-
 # pure
 zinit ice pick'async.zsh' src'pure.zsh'
 zinit light 'sindresorhus/pure'
@@ -73,11 +70,17 @@ bindkey '^G' __ypresto_git_fzf
 
 ## completions
 zinit for \
-    light-mode 'zsh-users/zsh-completions' \
-    light-mode pick:'contrib/completion/zsh' depth:1 'docker/cli' \
-    light-mode pick:'contrib/completion/zsh' depth:1 'docker/compose'
+    light-mode blockf 'zsh-users/zsh-completions' \
+    as'completion' 'https://github.com/docker/cli/raw/master/contrib/completion/zsh/_docker' \
+    as'completion' 'https://github.com/docker/compose/raw/master/contrib/completion/zsh/_docker-compose' \
 
-autoload -Uz compinit && compinit
+autoload compinit && compinit
+autoload bashcompinit && bashcompinit
+
+zinit for light-mode as"null" atclone:'npm i' atpull'%atclone' atload:'complete -C `pwd`/tsc-completion.js tsc' 'minestarks/tsc-completion'
+
+zinit light 'zdharma/fast-syntax-highlighting'
+zinit light 'zsh-users/zsh-autosuggestions'
 
 # Configs
 
@@ -166,7 +169,8 @@ dc() {
     PRODUCT_WORK_DIR="${toplevel}" docker-compose "$@"
   )
 }
-# compdef dc='docker-compose'
+
+compdef dc='docker-compose'
 
 alias dcn="dc -f docker-compose.yml -f docker-compose-nfs.yml"
 alias dcd="dc -f docker-compose.yml -f docker-compose-dev.yml"
