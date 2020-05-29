@@ -13,6 +13,7 @@ brew 'jq'
 brew 'mutagen-io/mutagen/mutagen'
 brew 'ncdu'
 brew 'pulumi'
+brew 'tig'
 brew 'zplug'
 brew 'zsh'
 

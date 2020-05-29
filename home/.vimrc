@@ -62,6 +62,8 @@ if dein#load_state(expand('~/.vim/dein'))
   call dein#save_state()
 endif
 
+if !$NO_VIMRC
+
 " Required:
 filetype plugin indent on
 syntax enable
@@ -694,6 +696,8 @@ set background=dark
 if has('termguicolors')
     set termguicolors
 endif
+
+end
 
 set secure
 

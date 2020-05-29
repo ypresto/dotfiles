@@ -4,5 +4,10 @@ rm -rf ~/.homesick/repos/homeshick
 mkdir -p ~/.homesick/repos
 git clone https://github.com/andsens/homeshick.git ~/.homesick/repos/homeshick
 
+rm -f ~/.homesick/repos/dotfiles
 ln -s ../../.dotfiles ~/.homesick/repos/dotfiles
 ~/.homesick/repos/homeshick/bin/homeshick link -f --verbose dotfiles
+
+curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh | bash -s ~/.vim/dein
+
+NO_VIMRC=1 vim +'call dein#install()' +qall
