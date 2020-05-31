@@ -1,5 +1,9 @@
 #!/bin/bash -eux
 
+anyenv install --init
+
+# latest zsh is installed with homebrew, so setup after install.
+
 rm -rf ~/.zinit/bin
 mkdir -p ~/.zinit
 git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
