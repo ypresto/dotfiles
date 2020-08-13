@@ -2,16 +2,29 @@ set incsearch
 set ignorecase
 set smartcase
 
-" Meta to Esc map
-for c in ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-    execute 'map <M-'.c.'> <Esc>'.c
-    execute 'map! <M-'.c.'> <Esc>'.c
-endfor
-for c in ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
-    execute 'map <M-S-'.c.'> <Esc>'.c
-    execute 'map! <M-S-'.c.'> <Esc>'.c
-endfor
-unlet c
+" " Meta to Esc map
+" for c in ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+"     execute 'map <M-'.c.'> <Esc>'.c
+"     execute 'map! <M-'.c.'> <Esc>'.c
+" endfor
+" for c in ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+"     execute 'map <M-S-'.c.'> <Esc>'.c
+"     execute 'map! <M-S-'.c.'> <Esc>'.c
+" endfor
+" unlet c
+
+" TODO: Temporary workaround for bug in `- (void)insertText:(id)aString replacementRange:(NSRange)replacementRange`.
+" <M-J> will be ∆ because that method passes inserted character to vim evaluator.
+imap ∆ <Esc>j
+imap ˚ <Esc>k
+imap ˙ <Esc>h
+imap ¬ <Esc>l
+
+map <M-j> <Esc>j
+map <M-k> <Esc>k
+map <M-h> <Esc>h
+map <M-l> <Esc>l
+
 
 " Fast saving
 noremap ZJ :update<CR>
@@ -56,15 +69,17 @@ inoremap <M-t> <C-d>
 inoremap <C-k> <C-o>D
 " ** }}}
 
+" Done in key bindings
 " Move lines up and down (bubbling) left and right (indent)
-nmap <M-K> [e
-nmap <M-J> ]e,
-vmap <M-K> [egv
-vmap <M-J> ]egv
-nnoremap <M-L> >>
-nnoremap <M-H> <<
-vnoremap <M-L> >gv
-vnoremap <M-H> <gv
+" nmap <M-K> [e
+" nmap <M-J> ]e,
+" vmap <M-K> [egv
+" vmap <M-J> ]egv
+" nnoremap <M-L> >>
+" nnoremap <M-H> <<
+" vnoremap <M-L> >gv
+" vnoremap <M-H> <gv
+
 " visualmodeでインテントを＞＜の連打で変更できるようにする
 vnoremap < <gv
 vnoremap > >gv

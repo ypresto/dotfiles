@@ -1,6 +1,6 @@
 #!/bin/bash -eux
 
-anyenv install --init
+echo y | anyenv install --init
 
 # latest zsh is installed with homebrew, so setup after install.
 

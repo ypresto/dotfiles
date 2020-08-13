@@ -146,6 +146,9 @@ set autoindent    " Use same indent level on next line
 set smartindent   " Auto indent for C-like code with '{...}' blocks
 set shiftround    " Round indent when < or > is used
 
+set modeline
+set modelines=5
+
 " * Filetype specific indent * {{{
 
 augroup VimrcGlobal

@@ -1,3 +1,5 @@
+# vim: noet nosta ts=8 sts=0 sw=8
+
 [user]
 	name = Yuya Tanaka
 	email = yuya.presto@gmail.com
@@ -64,6 +66,8 @@
 	user = ypresto
 [push]
 	default = simple
+[pull]
+	ff = only
 [rerere]
 	enabled = true
 
@@ -73,5 +77,3 @@
 
 [include]
 	path = ~/.gitconfig_local
-
-# vim: noet:nosta:ts=8:sts=0:sw=8
