@@ -42,5 +42,6 @@ alias dbi='dcm run --rm spring bundle install'
 alias drun='docker-compose exec spring'
 alias docker-su='docker run -it --rm --privileged --pid=host justincormack/nsenter1'
 alias git-new-workdir="$HOMEBREW_PATH/share/git-core/contrib/workdir/git-new-workdir"
-alias ws='python2 -m SimpleHTTPServer'
+alias ws='python3 -m http.server'
 alias uuidgen-lower='uuidgen | tr "[:upper:]" "[:lower:]"'
+alias copy-uuid='uuidgen-lower | tr -d "\n" | pbcopy'

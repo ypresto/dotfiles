@@ -7,13 +7,12 @@
 	excludesfile = ~/.gitignore_global
 	attributesfile = ~/.gitattributes_global
 	editor = vim
-	pager = LESS=RSim less
 [log]
 	follow = true
 [merge]
 	tool = vimdiff
 	renamelimit = 3000
-	ff = true
+	ff = false
 	conflictstyle = diff3
 [merge "mergepbx"]
 	name = Xcode project files merger
@@ -47,7 +46,7 @@
 	l = log --stat --decorate
 	lp = log --stat --decorate -p
 	lw = log --stat --decorate -p --color-words
-	lo = log --stat --decorate --oneline
+	lo = log --stat --decorate --pretty=format:\"%C(auto)%h %ad | %s%d [%an]\" --date=short
 	pl = pull
 	pr = pull --rebase
 	rb = rebase
@@ -55,6 +54,8 @@
 	mt = mergetool
 	cp = cherry-pick
 	mb = merge-base
+	find-merge = "!sh -c 'commit=$0 && branch=${1:-HEAD} && (git rev-list $commit..$branch --ancestry-path | cat -n; git rev-list $commit..$branch --first-parent | cat -n) | sort -k2 -s | uniq -f1 -d | sort -n | tail -1 | cut -f2'"
+	show-merge = "!sh -c 'merge=$(git find-merge $0 $1) && [ -n \"$merge\" ] && git show $merge'"
 [diff]
 	tool = vimdiff
 	renames = true
@@ -77,3 +78,5 @@
 
 [include]
 	path = ~/.gitconfig_local
+[init]
+	defaultBranch = main

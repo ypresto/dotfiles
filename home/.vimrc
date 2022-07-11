@@ -11,6 +11,9 @@ if &compatible
   set nocompatible               " Be iMproved
 endif
 
+" https://vi.stackexchange.com/questions/25086/vim-hangs-when-i-open-a-typescript-file
+set regexpengine=2
+
 " Required:
 set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
 

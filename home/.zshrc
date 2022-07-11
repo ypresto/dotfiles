@@ -10,6 +10,7 @@ HOMEBREW_PATH='/usr/local'
 export DOTFILES_PATH="$HOME/.homesick/repos/dotfiles"
 export CLICOLOR=1
 export EDITOR='vim'
+export LESS='-RSiM'
 
 # Paths (Also see .zshenv)
 
@@ -84,6 +85,10 @@ zinit for light-mode as"null" atclone:'npm i' atpull'%atclone' atload:'complete 
 
 zinit light 'zdharma/fast-syntax-highlighting'
 zinit light 'zsh-users/zsh-autosuggestions'
+
+if which kubectl > /dev/null; then
+    source <(kubectl completion zsh)
+fi
 
 # Configs
 

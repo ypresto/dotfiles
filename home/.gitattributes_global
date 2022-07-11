@@ -18,8 +18,11 @@
 *.slim diff=ruby
 *.js diff=java
 *.ts diff=java
+*.jsx diff=java
+*.tsx diff=java
 *.vue diff=java
 *.kt diff=java
 *.csv diff=ruby
 *.yaml diff=ruby
 *.yml diff=ruby
+*.go diff=cpp

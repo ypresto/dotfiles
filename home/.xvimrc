@@ -15,15 +15,15 @@ set smartcase
 
 " TODO: Temporary workaround for bug in `- (void)insertText:(id)aString replacementRange:(NSRange)replacementRange`.
 " <M-J> will be ∆ because that method passes inserted character to vim evaluator.
-imap ∆ <Esc>j
-imap ˚ <Esc>k
-imap ˙ <Esc>h
-imap ¬ <Esc>l
+inoremap ∆ <Esc>j
+inoremap ˚ <Esc>k
+inoremap ˙ <Esc>h
+inoremap ¬ <Esc>l
 
-map <M-j> <Esc>j
-map <M-k> <Esc>k
-map <M-h> <Esc>h
-map <M-l> <Esc>l
+noremap <M-j> <Esc>j
+noremap <M-k> <Esc>k
+noremap <M-h> <Esc>h
+noremap <M-l> <Esc>l
 
 
 " Fast saving

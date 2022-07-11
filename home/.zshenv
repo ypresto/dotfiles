@@ -1,6 +1,6 @@
 export LANG=en_US.UTF-8
 
-export ANDROID_HOME="$HOME/Library/Android/sdk"
+export ANDROID_HOME=/usr/local/share/android-sdk
 export GOPATH="$HOME/go"
 
 path=(
@@ -19,4 +19,8 @@ if ! [[ -o login ]]; then
         export PATH="$HOME/.anyenv/bin:$PATH"
         eval "$(anyenv init - --no-rehash zsh)"
     fi
+fi
+
+if [ -f $HOME/.cargo ]; then
+  . "$HOME/.cargo/env"
 fi
