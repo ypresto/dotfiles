@@ -1,5 +1,7 @@
 #!/bin/bash -eux
 
+PATH="/opt/homebrew/bin:${PATH}"
+
 brew install git zsh anyenv # minimum tools
 
 rm -rf ~/.homesick/repos/homeshick
