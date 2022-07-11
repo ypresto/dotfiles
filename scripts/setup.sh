@@ -14,8 +14,8 @@ rm -rf ~/.zinit/bin
 mkdir -p ~/.zinit
 git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
 
-/usr/local/bin/zsh -ic 'echo Zsh initial run succeeded.'
-sudo chsh -s /usr/local/bin/zsh $USER
+/opt/homebrew/bin/zsh -ic 'echo Zsh initial run succeeded.'
+sudo chsh -s /opt/homebrew/bin/zsh $USER
 
 # Create anyenv dir
 echo y | anyenv install --init
