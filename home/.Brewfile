@@ -49,6 +49,7 @@ cask 'monitorcontrol'
 cask 'musescore'
 cask 'rectangle'
 cask 'tableplus'
+cask 'visual-studio-code'
 cask 'vlc'
 cask 'youtube-to-mp3'
 
