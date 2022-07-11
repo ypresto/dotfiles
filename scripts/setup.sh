@@ -22,4 +22,8 @@ sudo chsh -s /opt/homebrew/bin/zsh $USER
 # Create anyenv dir
 echo y | anyenv install --init
 
+# Install vim package manager
+curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh | bash -s ~/.vim/dein
+NO_VIMRC=1 vim +'call dein#install()' +qall
+
 echo 'Completed. Run brew bundle --global ?'
