@@ -12,9 +12,7 @@ rm -f ~/.homesick/repos/dotfiles
 ln -s ../../.dotfiles ~/.homesick/repos/dotfiles
 ~/.homesick/repos/homeshick/bin/homeshick link -f --verbose dotfiles
 
-rm -rf ~/.zinit/bin
-mkdir -p ~/.zinit
-git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
+NO_INPUT=1 NO_ANNEXES=1 NO_EDIT=1 bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
 
 /opt/homebrew/bin/zsh -ic 'echo Zsh initial run succeeded.'
 sudo chsh -s /opt/homebrew/bin/zsh $USER
