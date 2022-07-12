@@ -9,6 +9,16 @@ path=(
   $path
 )
 
+if [[ $(uname -m) == 'arm64' ]]; then
+    export HOMEBREW_PATH='/opt/homebrew'
+    path=(
+        $HOMEBREW_PATH/bin
+        $path
+    )
+else
+    export HOMEBREW_PATH='/usr/local'
+fi
+
 # NOTE: OS X precedes PATHs like /usr/bin in /etc/profile.
 # Skip for login shell here and call later in .zprofile .
 # This is for interactive shell and script.

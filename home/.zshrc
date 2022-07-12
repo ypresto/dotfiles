@@ -6,24 +6,12 @@
 
 # Envs
 
-if [[ $(uname -m) == 'arm64' ]]; then
-    HOMEBREW_PATH='/opt/homebrew'
-else
-    HOMEBREW_PATH='/usr/local'
-fi
 export DOTFILES_PATH="$HOME/.homesick/repos/dotfiles"
 export CLICOLOR=1
 export EDITOR='vim'
 export LESS='-RSiM'
 
 # Paths (Also see .zshenv)
-#
-if [[ $(uname -m) == 'arm64' ]]; then
-    path=(
-        $HOMEBREW_PATH/bin
-        $path
-    )
-fi
 
 path=(
     $HOME/bin
