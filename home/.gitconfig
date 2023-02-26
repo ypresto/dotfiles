@@ -46,7 +46,7 @@
 	l = log --stat --decorate
 	lp = log --stat --decorate -p
 	lw = log --stat --decorate -p --color-words
-	lo = log --stat --decorate --pretty=format:\"%C(auto)%h %ad | %s%d [%an]\" --date=short
+	lo = log --decorate --pretty=format:\"%C(auto)%h %ad | %s%d [%an]\" --date=short
 	pl = pull
 	pr = pull --rebase
 	rb = rebase

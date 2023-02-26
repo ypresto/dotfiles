@@ -1,6 +1,7 @@
 set line-graphics = utf-8
 set truncation-delimiter = utf-8
 set main-view-id = yes
+set ignore_case = smart-case
 
 bind generic r refresh
 bind generic R view-refs
@@ -15,12 +16,15 @@ bind generic Y !bash -euxc 'echo %(commit) | pbcopy'
 bind main <Ctrl-O> !git checkout %(commit)
 bind main <Ctrl-F> !?git commit --fixup %(commit)
 bind main <Ctrl-S> !?git commit --squash %(commit)
+bind main <Esc>e !?git reset %(commit)
 bind main S !?git reset --soft %(commit)
+bind main M !?git reset --merge %(commit)
 bind main ! !?git reset --hard %(commit)
 bind main _ !?git-force-push %(commit)
 bind main <Esc>r !bash -euxc '( git remote set-head origin --auto || true ) && git rebase %(commit) -i --autosquash --autostash --rebase-merges'
 bind main <Esc>R !?bash -euxc '( git remote set-head origin --auto || true ) && git rebase %(commit) --onto origin/HEAD -i --autosquash --autostash --rebase-merges'
 bind main <Esc>f !?bash -euxc 'git commit --fixup %(commit) && ( git remote set-head origin --auto || true ) && git rebase %(commit)~ -i --autosquash --autostash --rebase-merges'
 bind main <Esc>s !?bash -euxc 'git commit --squash %(commit) && ( git remote set-head origin --auto || true ) && git rebase %(commit)~ -i --autosquash --autostash --rebase-merges'
+bind main <Esc>c @bash -euxc 'echo -n %(commit) | pbcopy'
 
 bind status  _ !?rm %(file)

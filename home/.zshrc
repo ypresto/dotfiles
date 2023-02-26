@@ -10,6 +10,7 @@ export DOTFILES_PATH="$HOME/.homesick/repos/dotfiles"
 export CLICOLOR=1
 export EDITOR='vim'
 export LESS='-RSiM'
+export AWS_VAULT_KEYCHAIN_NAME='login'
 
 # Paths (Also see .zshenv)
 
