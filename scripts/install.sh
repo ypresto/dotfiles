@@ -5,7 +5,8 @@
 # Also installs command line tools and git
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-git clone git@github.com:ypresto/dotfiles ~/.dotfiles
+git clone https://github.com/ypresto/dotfiles.git ~/.dotfiles
 
 cd ~/.dotfiles
+git remote set-url origin git@github.com:ypresto/dotfiles.git
 bash scripts/setup.sh
