@@ -1,7 +1,8 @@
 cask_args appdir: '/Applications'
 
-brew 'awscli'
 brew 'anyenv'
+brew 'aws-vault'
+brew 'awscli'
 brew 'dive'
 brew 'docker'
 brew 'docker-compose'
