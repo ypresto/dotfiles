@@ -50,11 +50,13 @@ cask 'karabiner-elements'
 cask 'keybase'
 cask 'keyboardcleantool'
 cask 'keycastr'
+cask 'kindle'
 cask 'lens'
 cask 'monitorcontrol'
 cask 'musescore'
 cask 'notion'
 cask 'rectangle'
+cask 'slack'
 cask 'tableplus'
 cask 'visual-studio-code'
 cask 'vlc'
@@ -62,10 +64,8 @@ cask 'youtube-to-mp3'
 
 mas 'Amphetamine', id: 937984704
 mas 'GIPHY Capture', id: 668208984
-mas 'Kindle', id: 405399194
 mas 'LINE', id: 539883307
 mas 'Messenger', id: 1480068668
-mas 'Slack', id: 803453959
 mas 'Velja', id: 1607635845
 mas 'Wi-Fi Explorer Lite', id: 1408727408
 mas 'Xcode', id: 497799835
