@@ -1,6 +1,8 @@
 #!/bin/bash -eux
 
-PATH="/opt/homebrew/bin:${PATH}"
+HOMEBREW_PATH=${HOMEBREW_PATH:-/opt/homebrew}
+
+PATH="$HOMEBREW_PATH/bin:${PATH}"
 
 brew install git zsh anyenv # minimum tools
 
@@ -14,14 +16,14 @@ ln -s ../../.dotfiles ~/.homesick/repos/dotfiles
 
 NO_INPUT=1 NO_ANNEXES=1 NO_EDIT=1 bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
 
-/opt/homebrew/bin/zsh -ic 'echo Zsh initial run succeeded.'
-sudo chsh -s /opt/homebrew/bin/zsh $USER
+$HOMEBREW_PATH/bin/zsh -ic 'echo Zsh initial run succeeded.'
+sudo chsh -s $HOMEBREW_PATH/bin/zsh $USER
 
 # Create anyenv dir
 echo y | anyenv install --init
 
 # Install vim package manager
-curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh | bash -s ~/.vim/dein
+git clone https://github.com/Shougo/dein.vim.git ~/.vim/dein/repos/github.com/Shougo/dein.vim
 NO_VIMRC=1 vim +'call dein#install()' +qall
 
 echo 'Completed. Run brew bundle --global ?'

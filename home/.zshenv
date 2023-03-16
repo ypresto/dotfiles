@@ -1,3 +1,5 @@
+# This file is loaded before ~/.zprofile
+
 export LANG=en_US.UTF-8
 
 export ANDROID_HOME=/usr/local/share/android-sdk
@@ -18,12 +20,15 @@ if [[ $(uname -m) == 'arm64' ]]; then
 else
     export HOMEBREW_PATH='/usr/local'
 fi
+export HOMEBREW_PATH='/Volumes/ypresto/homebrew'
 
 # NOTE: OS X precedes PATHs like /usr/bin in /etc/profile.
-# Skip for login shell here and call later in .zprofile .
+# So bins in homebrew won't be used if same command is in /usr/bin.
+# For workaround, skip for login shell here and call later in .zprofile .
 # This is for interactive shell and script.
 # http://masasuzu.hatenablog.jp/entry/20120506/1336286016
 if ! [[ -o login ]]; then
+    export PATH="$HOMEBREW_PATH/bin:$PATH"
     # setup anyenv if exists
     if [ -d "$HOME/.anyenv" ]; then
         export PATH="$HOME/.anyenv/bin:$PATH"

@@ -18,6 +18,7 @@ brew 'kubectl'
 brew 'lima'
 brew 'mutagen-io/mutagen/mutagen'
 brew 'ncdu'
+brew 'openssh'
 brew 'pngquant'
 brew 'rsync'
 brew 'shellcheck'
@@ -66,5 +67,5 @@ mas 'LINE', id: 539883307
 mas 'Messenger', id: 1480068668
 mas 'Slack', id: 803453959
 mas 'Velja', id: 1607635845
-mac 'Wi-Fi Explorer Lite', id: 1408727408
+mas 'Wi-Fi Explorer Lite', id: 1408727408
 mas 'Xcode', id: 497799835
