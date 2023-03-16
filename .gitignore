@@ -1,2 +1,3 @@
 /node_modules/*
 /vendor
+/home/.config/karabiner/automatic_backups
