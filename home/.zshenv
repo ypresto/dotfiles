@@ -20,7 +20,6 @@ if [[ $(uname -m) == 'arm64' ]]; then
 else
     export HOMEBREW_PATH='/usr/local'
 fi
-export HOMEBREW_PATH='/Volumes/ypresto/homebrew'
 
 # NOTE: OS X precedes PATHs like /usr/bin in /etc/profile.
 # So bins in homebrew won't be used if same command is in /usr/bin.
