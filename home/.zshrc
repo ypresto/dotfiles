@@ -4,6 +4,31 @@
 # functions, options, key bindings, etc.
 #
 
+# Configs
+
+bindkey -e
+
+setopt auto_cd
+setopt auto_pushd
+setopt interactive_comments
+
+# Make Ctrl+Q work.
+unsetopt flow_control
+stty start undef
+stty stop undef
+
+WORDCHARS="${WORDCHARS//\/}"
+
+# History
+
+setopt extended_history
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+setopt share_history
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+
 # Envs
 
 export DOTFILES_PATH="$HOME/.homesick/repos/dotfiles"
@@ -90,32 +115,6 @@ zinit light 'zsh-users/zsh-autosuggestions'
 if which kubectl > /dev/null; then
     source <(kubectl completion zsh)
 fi
-
-# Configs
-
-bindkey -e
-
-setopt auto_cd
-setopt auto_pushd
-setopt interactive_comments
-
-# Make Ctrl+Q work.
-unsetopt flow_control
-stty start undef
-stty stop undef
-
-
-WORDCHARS="${WORDCHARS//\/}"
-
-# History
-
-setopt extended_history
-setopt hist_ignore_all_dups
-setopt hist_ignore_space
-setopt share_history
-HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
 
 # Aliases
 
