@@ -97,28 +97,31 @@ zle -N __ypresto_git_fzf
 bindkey '^G' __ypresto_git_fzf
 
 ## completions
-zinit for \
-    light-mode blockf 'zsh-users/zsh-completions' \
-    as'completion' 'https://github.com/docker/cli/raw/master/contrib/completion/zsh/_docker' \
-    as'completion' 'https://github.com/docker/compose/raw/master/contrib/completion/zsh/_docker-compose' \
 
-zinit add-fpath --front "$HOMEBREW_PATH/share/zsh/site-functions"
+# https://docs.brew.sh/Shell-Completion
+if type brew &>/dev/null; then
+    zinit add-fpath --front "$HOMEBREW_PATH/share/zsh/site-functions"
+fi
 
 autoload compinit && compinit
 autoload bashcompinit && bashcompinit
+
+if type terraform &>/dev/null; then
+    complete -o nospace -C "$HOMEBREW_PATH//bin/terraform" terraform
+fi
 
 zinit for light-mode as"null" atclone:'npm i' atpull'%atclone' atload:'complete -C `pwd`/tsc-completion.js tsc' 'minestarks/tsc-completion'
 
 zinit light 'zdharma/fast-syntax-highlighting'
 zinit light 'zsh-users/zsh-autosuggestions'
 
-if which kubectl > /dev/null; then
+if type kubectl &>/dev/null; then
     source <(kubectl completion zsh)
 fi
 
 # Aliases
 
-if which hub > /dev/null; then
+if type hub &>/dev/null; then
     eval "$(hub alias -s zsh)"
 fi
 
@@ -211,3 +214,5 @@ if [ -f "$HOME/.zshrc_local" ]; then
 fi
 
 typeset -U path
+
+echo 'Call "zinit self-update" and "zinit update --all" once in a while'
