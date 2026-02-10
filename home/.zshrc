@@ -40,10 +40,16 @@ export AWS_VAULT_KEYCHAIN_NAME='login'
 # Paths (Also see .zshenv)
 
 path=(
-    $HOME/bin
-    $DOTFILES_PATH/bin
-    $path
+  "$HOME/bin"
+  "$HOME/.local/bin"
+  "$DOTFILES_PATH/bin"
+  $path
 )
+
+if type go &>/dev/null; then
+  path+="$(go env GOPATH)/bin"
+fi
+
 
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
@@ -107,7 +113,7 @@ autoload compinit && compinit
 autoload bashcompinit && bashcompinit
 
 if type terraform &>/dev/null; then
-    complete -o nospace -C "$HOMEBREW_PATH//bin/terraform" terraform
+    complete -o nospace -C "$HOMEBREW_PATH/bin/terraform" terraform
 fi
 
 zinit for light-mode as"null" atclone:'npm i' atpull'%atclone' atload:'complete -C `pwd`/tsc-completion.js tsc' 'minestarks/tsc-completion'
@@ -115,15 +121,18 @@ zinit for light-mode as"null" atclone:'npm i' atpull'%atclone' atload:'complete 
 zinit light 'zdharma/fast-syntax-highlighting'
 zinit light 'zsh-users/zsh-autosuggestions'
 
+zinit ice atload"zpcdreplay" atclone"./zplug.zsh" atpull"%atclone"
+zinit light g-plane/pnpm-shell-completion
+
+if type docker &>/dev/null; then
+    source <(docker completion zsh)
+fi
+
 if type kubectl &>/dev/null; then
     source <(kubectl completion zsh)
 fi
 
 # Aliases
-
-if type hub &>/dev/null; then
-    eval "$(hub alias -s zsh)"
-fi
 
 source "$DOTFILES_PATH/aliases.sh"
 
@@ -181,11 +190,7 @@ dc() {
   )
 }
 
-compdef dc='docker-compose'
-
-alias dcn="dc -f docker-compose.yml -f docker-compose-nfs.yml"
-alias dcd="dc -f docker-compose.yml -f docker-compose-dev.yml"
-alias dcm="dc -f docker-compose.yml -f docker-compose-mutagen.yml"
+compdef dc='docker compose'
 
 random-str() {
   cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w ${1:-24} | head -n 1
@@ -215,4 +220,4 @@ fi
 
 typeset -U path
 
-echo 'Call "zinit self-update" and "zinit update --all" once in a while'
+echo 'Call "zinit self-update" and "zinit update --all" once in a while. brew upgrade also necessary for zsh, fzf and etc.'

@@ -43,7 +43,7 @@
 	cc = diff  --color-words --ignore-space-change -M40 --cached
 	dn = diff --name-only
 	cn = diff --cached --name-only
-	l = log --stat --decorate
+	l = log --stat
 	lp = log --stat --decorate -p
 	lw = log --stat --decorate -p --color-words
 	lo = log --decorate --pretty=format:\"%C(auto)%h %ad | %s%d [%an]\" --date=short
@@ -69,6 +69,7 @@
 	default = simple
 [pull]
 	ff = only
+	autostash = true
 [rerere]
 	enabled = true
 
@@ -80,3 +81,10 @@
 	path = ~/.gitconfig_local
 [init]
 	defaultBranch = main
+[rebase]
+	autostash = true
+
+# for Go lang private repo packages
+[url "ssh://git@github.com/"]
+	insteadOf = https://github.com/
+

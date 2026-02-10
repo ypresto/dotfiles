@@ -702,6 +702,8 @@ set background=dark
 if has('termguicolors')
     set termguicolors
 endif
+highlight NonText ctermbg=NONE guibg=NONE
+highlight Normal ctermbg=NONE guibg=NONE
 
 end
 

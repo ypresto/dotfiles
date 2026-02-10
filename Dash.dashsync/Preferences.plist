@@ -9,7 +9,7 @@
 			<key>HTTP_Header_Fields</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T07:52:43Z</date>
+				<date>2024-02-09T10:10:48Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -25,7 +25,7 @@
 			<key>HTTP_Status_Codes</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T07:52:43Z</date>
+				<date>2024-02-09T10:10:48Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -41,7 +41,7 @@
 			<key>OCMock</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T07:52:43Z</date>
+				<date>2024-02-09T10:10:48Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -70,7 +70,7 @@
 			<key>iOS_Design</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T07:52:43Z</date>
+				<date>2024-02-09T10:10:48Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -122,11 +122,13 @@
 	<key>DHGitHubRepo</key>
 	<dict>
 		<key>installed</key>
+		<dict/>
+		<key>uninstalled</key>
 		<dict>
 			<key>microsoft/playwright</key>
 			<dict>
 				<key>date</key>
-				<date>2023-06-21T17:32:55Z</date>
+				<date>2024-08-19T02:13:56Z</date>
 				<key>entry</key>
 				<dict>
 					<key>name</key>
@@ -137,23 +139,6 @@
 					<string>microsoft/playwright</string>
 				</dict>
 			</dict>
-			<key>mui/material-ui</key>
-			<dict>
-				<key>date</key>
-				<date>2024-01-28T16:00:28Z</date>
-				<key>entry</key>
-				<dict>
-					<key>name</key>
-					<string>mui/material-ui</string>
-					<key>platform</key>
-					<string>github</string>
-					<key>uniqueIdentifier</key>
-					<string>mui/material-ui</string>
-				</dict>
-			</dict>
-		</dict>
-		<key>uninstalled</key>
-		<dict>
 			<key>mui-org/material-ui</key>
 			<dict>
 				<key>date</key>
@@ -168,6 +153,20 @@
 					<string>mui-org/material-ui</string>
 				</dict>
 			</dict>
+			<key>mui/material-ui</key>
+			<dict>
+				<key>date</key>
+				<date>2024-08-19T02:13:58Z</date>
+				<key>entry</key>
+				<dict>
+					<key>name</key>
+					<string>mui/material-ui</string>
+					<key>platform</key>
+					<string>github</string>
+					<key>uniqueIdentifier</key>
+					<string>mui/material-ui</string>
+				</dict>
+			</dict>
 		</dict>
 	</dict>
 	<key>DHGoRepo</key>
@@ -177,7 +176,7 @@
 			<key>database/sql</key>
 			<dict>
 				<key>date</key>
-				<date>2024-01-25T04:52:48Z</date>
+				<date>2026-02-06T02:12:05Z</date>
 				<key>entry</key>
 				<dict>
 					<key>name</key>
@@ -459,7 +458,7 @@
 			<key>slim</key>
 			<dict>
 				<key>date</key>
-				<date>2024-01-21T16:15:59Z</date>
+				<date>2024-02-09T10:19:22Z</date>
 				<key>entry</key>
 				<dict>
 					<key>name</key>
@@ -930,7 +929,7 @@
 			<key>Android_Gradle_Plugin</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-16T17:06:54Z</date>
+				<date>2024-02-09T10:10:54Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -953,7 +952,7 @@
 			<key>Bokeh</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T08:36:25Z</date>
+				<date>2024-02-09T10:11:19Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -978,7 +977,7 @@
 			<key>Jest</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T08:36:18Z</date>
+				<date>2024-02-09T10:10:54Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -1009,7 +1008,7 @@
 			<key>React_Native</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T08:36:26Z</date>
+				<date>2024-02-09T10:11:19Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -1038,7 +1037,7 @@
 			<key>Seaborn</key>
 			<dict>
 				<key>date</key>
-				<date>2023-10-10T04:00:21Z</date>
+				<date>2024-02-09T10:11:23Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -1064,7 +1063,7 @@
 			<key>Solidity</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T08:36:16Z</date>
+				<date>2024-02-09T10:10:54Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -1083,10 +1082,34 @@
 					<string>Solidity</string>
 				</dict>
 			</dict>
+			<key>Tailwind_CSS</key>
+			<dict>
+				<key>date</key>
+				<date>2025-02-16T19:08:09Z</date>
+				<key>entry</key>
+				<dict>
+					<key>aliases</key>
+					<array>
+						<string>tailwind</string>
+						<string>TailwindCSS</string>
+						<string>tailwind CSS</string>
+					</array>
+					<key>authorLinkHref</key>
+					<string>https://github.com/Kapeli/Dash-User-Contributions/tree/master/docsets/Tailwind_CSS#readme</string>
+					<key>authorLinkText</key>
+					<string>Ben Booth, Guill Lo, Akinori Musha</string>
+					<key>name</key>
+					<string>Tailwind CSS</string>
+					<key>platform</key>
+					<string>usercontribTailwind_CSS</string>
+					<key>uniqueIdentifier</key>
+					<string>Tailwind_CSS</string>
+				</dict>
+			</dict>
 			<key>Terraform</key>
 			<dict>
 				<key>date</key>
-				<date>2024-01-24T03:29:02Z</date>
+				<date>2025-07-11T01:58:22Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -1222,6 +1245,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>DHWKWebViewTextSizeMultiplier</key>
+	<real>1</real>
 	<key>actuallyDarkWebView</key>
 	<true/>
 	<key>annotationsAreShown</key>
@@ -1240,46 +1265,50 @@
 			<string>rails:</string>
 			<key>~/Library/Application Support/Dash/GitHub/microsoftplaywright/microsoft-playwright.docset</key>
 			<string>playwright:</string>
+			<key>~/Library/Application Support/Dash/GitHub/muimaterialui/mui-material-ui.docset</key>
+			<string>mui:</string>
+			<key>~/Library/Application Support/Dash/User Contributed/Tailwind CSS/Tailwind_CSS.docset</key>
+			<string>tw:</string>
 		</dict>
 	</dict>
 	<key>feeds</key>
 	<dict>
 		<key>installed</key>
 		<dict>
-			<key>http://kapeli.com/feeds/Apple_API_Reference.xml</key>
-			<dict>
-				<key>date</key>
-				<date>2023-04-17T16:53:04Z</date>
-			</dict>
 			<key>http://kapeli.com/feeds/Bash.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T08:36:23Z</date>
+				<date>2024-02-09T10:10:54Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/CSS.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T08:36:45Z</date>
+				<date>2024-02-09T10:11:37Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Django.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T08:36:23Z</date>
+				<date>2024-02-09T10:11:01Z</date>
+			</dict>
+			<key>http://kapeli.com/feeds/Docker.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2026-01-28T07:17:28Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Go.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T08:36:25Z</date>
+				<date>2024-02-09T10:11:47Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/HTML.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T08:36:47Z</date>
+				<date>2024-02-09T10:11:35Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Jasmine.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-16T17:06:57Z</date>
+				<date>2024-02-09T10:11:01Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/JavaScript.xml</key>
 			<dict>
@@ -1289,22 +1318,22 @@
 			<key>http://kapeli.com/feeds/Lo-Dash.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T08:36:53Z</date>
+				<date>2024-02-09T10:12:11Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/MatPlotLib.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T09:13:05Z</date>
+				<date>2024-02-09T10:13:37Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/MongoDB.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-16T17:07:12Z</date>
+				<date>2024-02-09T10:12:11Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Nginx.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T08:36:53Z</date>
+				<date>2024-02-09T10:11:38Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/NodeJS.xml</key>
 			<dict>
@@ -1314,62 +1343,57 @@
 			<key>http://kapeli.com/feeds/NumPy.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T08:42:56Z</date>
+				<date>2024-02-09T10:12:55Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Pandas.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T09:02:29Z</date>
+				<date>2024-02-09T10:12:37Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/PostgreSQL.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-16T17:07:02Z</date>
+				<date>2024-02-09T10:12:42Z</date>
 			</dict>
-			<key>http://kapeli.com/feeds/Python_2.xml</key>
+			<key>http://kapeli.com/feeds/Python.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-16T17:07:00Z</date>
-			</dict>
-			<key>http://kapeli.com/feeds/Python_3.xml</key>
-			<dict>
-				<key>date</key>
-				<date>2023-03-15T08:38:46Z</date>
+				<date>2026-01-19T16:07:33Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/React.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T09:02:59Z</date>
+				<date>2024-02-09T10:12:57Z</date>
 			</dict>
-			<key>http://kapeli.com/feeds/Ruby_2.xml</key>
+			<key>http://kapeli.com/feeds/Ruby.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T09:10:22Z</date>
+				<date>2026-01-19T16:07:35Z</date>
 			</dict>
-			<key>http://kapeli.com/feeds/Ruby_on_Rails_5.xml</key>
+			<key>http://kapeli.com/feeds/Ruby_on_Rails.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T09:05:04Z</date>
+				<date>2026-01-19T16:08:02Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/SVG.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T09:05:40Z</date>
+				<date>2024-02-09T10:11:47Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/TypeScript.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-15T08:51:35Z</date>
+				<date>2024-02-09T10:12:25Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/VueJS.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-16T17:07:08Z</date>
+				<date>2024-02-09T10:13:03Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/jQuery.xml</key>
 			<dict>
 				<key>date</key>
-				<date>2023-03-16T17:07:12Z</date>
+				<date>2024-02-09T10:12:09Z</date>
 			</dict>
 		</dict>
 		<key>uninstalled</key>
@@ -1378,6 +1402,11 @@
 			<dict>
 				<key>date</key>
 				<date>2019-06-06T08:32:06Z</date>
+			</dict>
+			<key>http://kapeli.com/feeds/Apple_API_Reference.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2024-03-04T01:48:43Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Arduino.xml</key>
 			<dict>
@@ -1438,11 +1467,6 @@
 			<dict>
 				<key>date</key>
 				<date>2017-11-23T19:45:00Z</date>
-			</dict>
-			<key>http://kapeli.com/feeds/Ruby.xml</key>
-			<dict>
-				<key>date</key>
-				<date>2017-07-10T15:16:48Z</date>
 			</dict>
 			<key>http://kapeli.com/feeds/Ruby_on_Rails_4.xml</key>
 			<dict>
@@ -1664,7 +1688,7 @@
 				<key>5.7</key>
 				<dict>
 					<key>date</key>
-					<date>2023-03-15T08:36:23Z</date>
+					<date>2024-02-09T10:10:54Z</date>
 				</dict>
 			</dict>
 		</dict>

@@ -1,6 +1,7 @@
 set incsearch
 set ignorecase
 set smartcase
+set surround
 
 " Meta to Esc map
 " for c in ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
@@ -71,3 +72,7 @@ vnoremap <A-H> <gv
 " visualmodeでインテントを＞＜の連打で変更できるようにする
 vnoremap < <gv
 vnoremap > >gv
+
+inoremap <C-w> <Esc>ldbi
+
+noremap p P
