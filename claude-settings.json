@@ -146,5 +146,6 @@
       "gh"
     ]
   },
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "model": "sonnet[1m]"
 }
