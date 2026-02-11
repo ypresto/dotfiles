@@ -1,0 +1,15 @@
+registries:
+- type: standard
+  ref: v4.459.0 # renovate: depName=aquaproj/aqua-registry
+
+packages:
+- name: rhysd/actionlint@v1.7.7
+- name: ast-grep/ast-grep@0.22.4
+- name: wagoodman/dive@v0.11.0
+- name: junegunn/fzf@v0.63.0
+- name: cli/cli@v2.64.0
+- name: jqlang/jq@jq-1.7.1
+- name: koalaman/shellcheck@v0.11.0
+- name: noborus/trdsql@v1.1.0
+- name: astral-sh/uv@0.8.5
+- name: neovim/neovim@v0.11.5

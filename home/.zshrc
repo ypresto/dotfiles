@@ -218,6 +218,9 @@ if [ -f "$HOME/.zshrc_local" ]; then
     source $HOME/.zshrc_local
 fi
 
+# Append personal aqua config (company config takes precedence)
+export AQUA_GLOBAL_CONFIG="${AQUA_GLOBAL_CONFIG:+${AQUA_GLOBAL_CONFIG}:}${HOME}/.config/aquaproj-aqua/personal.yaml"
+
 typeset -U path
 
 echo 'Call "zinit self-update" and "zinit update --all" once in a while. brew upgrade also necessary for zsh, fzf and etc.'
