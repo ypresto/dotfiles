@@ -26,4 +26,9 @@ echo y | anyenv install --init
 git clone https://github.com/Shougo/dein.vim.git ~/.vim/dein/repos/github.com/Shougo/dein.vim
 NO_VIMRC=1 vim +'call dein#install()' +qall
 
-echo 'Completed. Run brew bundle --global ?'
+brew bundle
+
+# Install aqua-managed CLI tools
+aqua i -a
+
+echo 'Completed.'
