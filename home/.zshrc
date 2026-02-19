@@ -53,7 +53,12 @@ fi
 
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
-command -v direnv > /dev/null && eval "$(direnv hook zsh)"
+# Aqua
+
+# Append personal aqua config (company config takes precedence)
+export AQUA_GLOBAL_CONFIG="${AQUA_GLOBAL_CONFIG:+${AQUA_GLOBAL_CONFIG}:}${HOME}/.config/aquaproj-aqua/personal.yaml"
+
+export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
 
 # Plugins
 
@@ -80,9 +85,7 @@ autoload -Uz add-zsh-hook
 add-zsh-hook chpwd __enhancd::cd::after
 
 # fzf
-# NOTE: binary is not included.
-zinit ice pick:'shell/key-bindings.zsh'
-zinit light 'junegunn/fzf'
+command -v fzf > /dev/null && source <(fzf --zsh)
 export FZF_DEFAULT_OPTS='--height 20% --layout=reverse --inline-info'
 # https://github.com/junegunn/fzf/wiki/Color-schemes#one-dark without bg+
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
@@ -211,13 +214,6 @@ bindkey '\e^E' expand-all-aliases
 
 bindkey "^[u" undo
 bindkey "^[r" redo
-
-# Aqua
-
-# Append personal aqua config (company config takes precedence)
-export AQUA_GLOBAL_CONFIG="${AQUA_GLOBAL_CONFIG:+${AQUA_GLOBAL_CONFIG}:}${HOME}/.config/aquaproj-aqua/personal.yaml"
-
-export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
 
 # Bun
 
