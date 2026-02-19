@@ -212,14 +212,27 @@ bindkey '\e^E' expand-all-aliases
 bindkey "^[u" undo
 bindkey "^[r" redo
 
+# Aqua
+
+# Append personal aqua config (company config takes precedence)
+export AQUA_GLOBAL_CONFIG="${AQUA_GLOBAL_CONFIG:+${AQUA_GLOBAL_CONFIG}:}${HOME}/.config/aquaproj-aqua/personal.yaml"
+
+export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+
+# Bun
+
+# bun completions
+[ -s "/Users/yuya.tanaka.001/.bun/_bun" ] && source "/Users/yuya.tanaka.001/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
 # Misc.
 
 if [ -f "$HOME/.zshrc_local" ]; then
     source $HOME/.zshrc_local
 fi
-
-# Append personal aqua config (company config takes precedence)
-export AQUA_GLOBAL_CONFIG="${AQUA_GLOBAL_CONFIG:+${AQUA_GLOBAL_CONFIG}:}${HOME}/.config/aquaproj-aqua/personal.yaml"
 
 typeset -U path
 

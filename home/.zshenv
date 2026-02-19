@@ -11,30 +11,17 @@ path=(
   $path
 )
 
-if [[ $(uname -m) == 'arm64' ]]; then
-    export HOMEBREW_PATH='/opt/homebrew'
-    path=(
-        $HOMEBREW_PATH/bin
-        $path
-    )
-else
-    export HOMEBREW_PATH='/usr/local'
-fi
-
 # NOTE: OS X precedes PATHs like /usr/bin in /etc/profile.
 # So bins in homebrew won't be used if same command is in /usr/bin.
 # For workaround, skip for login shell here and call later in .zprofile .
 # This is for interactive shell and script.
 # http://masasuzu.hatenablog.jp/entry/20120506/1336286016
 if ! [[ -o login ]]; then
+    export HOMEBREW_PATH=/opt/homebrew
     export PATH="$HOMEBREW_PATH/bin:$PATH"
     # setup anyenv if exists
     if [ -d "$HOME/.anyenv" ]; then
         export PATH="$HOME/.anyenv/bin:$PATH"
         eval "$(anyenv init - --no-rehash zsh)"
     fi
-fi
-
-if [ -f $HOME/.cargo ]; then
-  . "$HOME/.cargo/env"
 fi

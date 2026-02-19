@@ -54,11 +54,11 @@ cask 'dash'
 cask 'daisydisk'
 cask 'discord'
 cask 'ghostty'
+cask 'google-japanese-ime'
 cask 'istat-menus'
 cask 'karabiner-elements'
 cask 'keyboardcleantool'
 cask 'keycastr'
-cask 'kindle'
 cask 'lm-studio'
 cask 'notion'
 cask 'raycast'
@@ -66,9 +66,7 @@ cask 'rectangle'
 cask 'slack'
 cask 'tableplus'
 cask 'visual-studio-code'
-cask 'vlc'
-cask 'voicevox'
-cask 'youtube-to-mp3'
+cask 'VOICEVOX/voicevox'
 
 mas '1Password for Safari', id: 1569813296
 mas 'Amazon Kindle', id: 302584613
@@ -76,7 +74,4 @@ mas 'Amphetamine', id: 937984704
 mas 'GIPHY Capture', id: 668208984
 mas 'LINE', id: 539883307
 mas 'MeetingBar', id: 1532419400
-mas 'Messenger', id: 1480068668
-mas 'Velja', id: 1607635845
-mas 'Wi-Fi Explorer Lite', id: 1408727408
 mas 'Xcode', id: 497799835

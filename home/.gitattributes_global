@@ -16,10 +16,11 @@
 *.rb diff=ruby
 *.rake diff=ruby
 *.slim diff=ruby
-*.js diff=java
-*.ts diff=java
-*.jsx diff=java
-*.tsx diff=java
+# causes fatal: invalid regular expression:
+# *.js diff=java
+# *.ts diff=java
+# *.jsx diff=java
+# *.tsx diff=java
 *.vue diff=java
 *.kt diff=java
 *.csv diff=ruby

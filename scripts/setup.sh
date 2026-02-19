@@ -31,4 +31,8 @@ brew bundle
 # Install aqua-managed CLI tools
 aqua i -a
 
+curl -fsSL https://bun.com/install | bash
+
+curl -fsSL https://claude.ai/install.sh | bash
+
 echo 'Completed.'
